@@ -16,41 +16,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 
 class MainActivity : ComponentActivity() {
-    private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        auth = Firebase.auth
-
-        setContent {
-
-            val currentUser = auth.currentUser
-
-            ExcursionsTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ExcursionsTheme {
-        Greeting("Android")
+        setContent { MyApp() }
     }
 }
