@@ -95,12 +95,15 @@ fun AuthenticationScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            /*
+            // User auth
+
             Button(
                 onClick = {
                     viewModel.signInWithEmailAndPassword()
 
                 },
-                enabled = true,
+                enabled = false,
                 modifier = Modifier
                     .weight(1f)
                     .padding(18.dp)
@@ -112,12 +115,25 @@ fun AuthenticationScreen(
                     // viewModel.createUserWithEmailAndPassword()
                     navController.navigate("createAccount")
                 },
-                enabled = true,
+                enabled = false,
                 modifier = Modifier
                     .weight(1f)
                     .padding(18.dp)
             ) {
                 Text("Create")
+            }
+
+            */
+            Button(
+                onClick = {
+                    viewModel.signInAnonymously()
+                    navController.navigate("mainActivity")
+                },
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(18.dp)
+            ) {
+                Text(text = "Anonymous sign-in")
             }
 
         }
