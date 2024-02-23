@@ -1,6 +1,7 @@
 package com.example.excursions
 
 import android.app.Application
+import androidx.navigation.compose.rememberNavController
 import com.google.android.libraries.places.api.Places
 import timber.log.Timber
 
@@ -24,6 +25,7 @@ class ExcursionsApp : Application() {
 
         // Initialize the SDK
         Places.initializeWithNewPlacesApiEnabled(applicationContext, apiKey)
+
 
 
     }

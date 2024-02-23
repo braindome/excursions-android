@@ -1,7 +1,5 @@
 package com.example.excursions.ui.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,9 +26,9 @@ import com.example.excursions.ui.theme.OrangePolestar
 import com.example.excursions.ui.theme.polestarFontFamily
 
 @Composable
-fun ExcursionsButton(label: String) {
+fun ExcursionsButton(label: String, onClick: () -> Unit) {
     Button(
-        onClick = { /*TODO*/ },
+        onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Black
         ),
@@ -58,8 +55,10 @@ fun ExcursionsButton(label: String) {
     }
 }
 
+
 @Preview
 @Composable
 fun ExcursionsButtonPreview() {
-    ExcursionsButton("Log In")
+    ExcursionsButton("Log In", onClick = {})
 }
+

@@ -21,7 +21,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.excursions.ui.screens.AuthenticationScreen
+import com.example.excursions.ui.screens.CategoryScreen
+import com.example.excursions.ui.screens.FavoriteScreen
 import com.example.excursions.ui.screens.LoginScreen
+import com.example.excursions.ui.screens.ProfileScreen
+import com.example.excursions.ui.screens.SearchScreen
 import com.example.excursions.ui.theme.ExcursionsTheme
 import com.example.excursions.ui.theme.polestarFontFamily
 import com.google.android.gms.common.api.ApiException
@@ -40,89 +48,24 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
 
-
         setContent {
-            //MyApp()
-            LoginScreen()
+            val navController = rememberNavController()
 
-            /*
-            ExcursionsTheme {
-                Surface(
-                    modifier = Modifier.padding(10.dp)
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .padding(12.dp)
-                            .fillMaxWidth()
-                    ) {
-                        ElevatedButton(onClick = { getNearbyPlaces() }) {
-                            Text(
-                                text = "Get Nearby Places",
-                                fontFamily = polestarFontFamily,
-                                fontWeight = FontWeight.Normal
-                            )
-                        }
-
-                    }
-                }
+            NavHost(navController = navController, startDestination = "login") {
+                composable("auth") { AuthenticationScreen(navController = navController) }
+                //composable("createAccount") { CreateAccountScreen(navController, viewModel) }
+                composable("mainActivity") { AppScreen() }
+                composable("login") { LoginScreen(navController) }
+                composable("categories") { CategoryScreen(navController = navController) }
+                composable("search") { SearchScreen(navController = navController) }
+                composable("favorites") { FavoriteScreen(navController = navController) }
+                composable("profile") { ProfileScreen(navController = navController) }
             }
-
-            */
         }
 
 
     }
 
-    private fun getPlacesWithingRadius(coordinates: LatLng, radiusInMeters: Int) {
-        Places.initializeWithNewPlacesApiEnabled(application, apiKey)
-
-        val placesClient = Places.createClient(application)
-        val placeFields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.TYPES)
-
-    }
-
-    private fun getNearbyPlaces() {
-        Places.initializeWithNewPlacesApiEnabled(application, apiKey)
-
-        val placesClient = Places.createClient(application)
-        val placeFields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.TYPES)
-
-
-        // Use the builder to create a FindCurrentPlaceRequest.
-        val request: FindCurrentPlaceRequest = FindCurrentPlaceRequest.newInstance(placeFields)
-
-
-        // Call findCurrentPlace and handle the response (first check that the user has granted permission).
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
-            PackageManager.PERMISSION_GRANTED) {
-
-            val placeResponse = placesClient.findCurrentPlace(request)
-
-            placeResponse.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val response = task.result
-                    for (placeLikelihood: PlaceLikelihood in response?.placeLikelihoods ?: emptyList()) {
-                        // Timber.i("Place '" + placeLikelihood.place.name + "' has likelihood: " + placeLikelihood.likelihood)
-                        Timber.i("Place found: ${placeLikelihood.place.name} with id ${placeLikelihood.place.id}")
-                    }
-                } else {
-                    val exception = task.exception
-                    if (exception is ApiException) {
-                        Timber.e("Place not found: " + exception.statusCode)
-                    }
-                }
-            }
-        } else {
-            // A local method to request required permissions;
-            // See https://developer.android.com/training/permissions/requesting
-            //getLocationPermission()
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                0
-            )
-        }
-    }
 
 
 }

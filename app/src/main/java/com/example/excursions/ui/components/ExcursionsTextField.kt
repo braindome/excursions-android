@@ -55,8 +55,6 @@ fun ExcursionsTextField(label: String, input: String) {
                     color = GrayPolestar
                 )
                 .clipToBounds()
-                //.background(Color.Gray)
-                //.padding(8.dp),
 
         ) {
 
@@ -101,23 +99,6 @@ fun ExcursionsTextField(label: String, input: String) {
                     )
                 )
             }
-
-
-            
-            /*
-            BasicTextField(
-                value = inputState,
-                onValueChange = { inputState = it },
-                textStyle = TextStyle(fontSize = 16.sp, fontFamily = polestarFontFamily),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(0.dp)
-                    .height(48.dp),
-                ) {
-                
-            }
-
-             */
             Spacer(modifier = Modifier)
         }
     }

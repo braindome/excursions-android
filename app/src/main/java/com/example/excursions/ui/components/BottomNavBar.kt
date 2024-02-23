@@ -12,11 +12,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,8 +27,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.excursions.R
+import com.example.excursions.ui.theme.GrayPolestar
 import com.example.excursions.ui.theme.OrangePolestar
 
 @Composable
@@ -118,9 +123,13 @@ fun BottomNavBar(
 }
 
 @Composable
-fun ExcursionsBottomBar() {
+fun ExcursionsBottomBar(navController: NavHostController) {
 
-    var selectedItem by remember { mutableIntStateOf(0) }
+    //var selectedItem by rememberSaveable { mutableIntStateOf(0) }
+
+    var selectedItem by rememberSaveable {
+        mutableIntStateOf(getSelectedIndex(navController.currentDestination?.route))
+    }
     val navBarIcons = listOf<Int>(
         R.drawable.bottom_bar_icon_grid,
         R.drawable.bottom_bar_icon_search,
@@ -133,22 +142,47 @@ fun ExcursionsBottomBar() {
             .padding(5.dp)
             .height(56.dp)
             .fillMaxWidth()
-            .background(Color.White)
+            .background(Color.White),
+        containerColor = Color.White
     ) {
         navBarIcons.forEachIndexed { index, item ->
             NavigationBarItem(
                 selected = selectedItem == index,
                 onClick = {
+
                     selectedItem = index
+
+                    val destination = when (index){
+                        0 -> "categories"
+                        1 -> "search"
+                        2 -> "favorites"
+                        3 -> "profile"
+                        else -> {
+                            "categories"
+                        }
+                    }
+
+                    navController.navigate(destination)
                 },
                 icon = { Icon(
                     painter = painterResource(id = navBarIcons[index]),
                     contentDescription = null,
                     tint = if (selectedItem == index) activeColor else LocalContentColor.current
                 ) },
+                colors = NavigationBarItemDefaults.colors(indicatorColor = GrayPolestar)
 
             )
         }
+    }
+}
+
+fun getSelectedIndex(route: String?): Int {
+    return when (route) {
+        "categories" -> 0
+        "search" -> 1
+        "favorites" -> 2
+        "profile" -> 3
+        else -> 0
     }
 }
 
@@ -163,5 +197,5 @@ fun BottomNavBarPreview() {
 @Preview(showBackground = true, backgroundColor = 4294967295L)
 @Composable
 fun BottomAppPreview() {
-    ExcursionsBottomBar()
+    ExcursionsBottomBar(navController = rememberNavController())
 }
