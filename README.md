@@ -3,9 +3,10 @@
 ## Tech stack
 - Android Studio
 - Kotlin
-- Firebase
-- Google Places SDK
-- Room
+- Firebase Firestore
+- Firebas Auth
+- Google Places API/SDK
+- Retrofit
 - Jetpack Compose
 
 
