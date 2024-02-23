@@ -8,13 +8,10 @@ import com.example.excursions.ui.theme.ExcursionsTheme
 
 @Composable
 fun AppScreen() {
-    ExcursionsTheme {
-        Surface(
-            color = MaterialTheme.colorScheme.background
-        ) {
-            Text(text = "This is the main screen!")
+    Surface {
+        Text(text = "This is the main screen!")
 
-        }
     }
+
 }
 
