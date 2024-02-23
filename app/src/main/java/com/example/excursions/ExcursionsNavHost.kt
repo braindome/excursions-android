@@ -23,6 +23,7 @@ import com.example.excursions.ui.components.ExcursionsBottomBar
 import com.example.excursions.ui.components.ExcursionsTopBar
 import com.example.excursions.ui.screens.AuthenticationScreen
 import com.example.excursions.ui.screens.CreateAccountScreen
+import com.example.excursions.ui.screens.LoginScreen
 
 @Composable
 fun ExcursionsNavHost(
@@ -71,10 +72,11 @@ fun MyApp() {
      */
 
 
-    NavHost(navController = navController, startDestination = "auth") {
+    NavHost(navController = navController, startDestination = "login") {
         composable("auth") { AuthenticationScreen(navController = navController) }
         composable("createAccount") { CreateAccountScreen(navController, viewModel) }
         composable("mainActivity") { AppScreen() }
+        composable("login") { LoginScreen() }
     }
 
     Scaffold(
