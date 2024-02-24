@@ -16,7 +16,7 @@ fun ProfileScreen(
     navController: NavHostController
 ) {
     Scaffold(
-        topBar = { ExcursionsTopBar() },
+        topBar = { ExcursionsTopBar(navController = navController, backDestination = "categories") },
         bottomBar = { ExcursionsBottomBar(navController = navController) }
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {

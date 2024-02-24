@@ -26,7 +26,7 @@ fun CategoryScreen(navController: NavHostController) {
     val mockCats = listOf("Eeny", "Meeny", "Miny", "Moe!", "Chip", "Chop")
 
     Scaffold(
-        topBar = { ExcursionsTopBar() },
+        //topBar = { ExcursionsTopBar(navController = navController, backDestination = "login") },
         bottomBar = { ExcursionsBottomBar(navController = navController) }
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
@@ -37,7 +37,7 @@ fun CategoryScreen(navController: NavHostController) {
                 columns = GridCells.Fixed(2),
                 content = {
                     items(mockCats.size) { index ->
-                        GridCard(title = mockCats[index])
+                        GridCard(title = mockCats[index], navController)
                     }
                 },
                 modifier = Modifier.padding(5.dp))

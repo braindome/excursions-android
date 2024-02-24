@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material3.Button
 import androidx.compose.material3.DismissValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,20 +29,23 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.excursions.R
 import com.example.excursions.ui.theme.GrayPolestar
 import com.example.excursions.ui.theme.YellowPolestar
 import com.example.excursions.ui.theme.polestarFontFamily
 
 @Composable
-fun GridCard(title: String) {
+fun GridCard(title: String, navController: NavHostController) {
     var categoryNameState by rememberSaveable { mutableStateOf(title) }
     Surface(
         modifier = Modifier
             .width(173.dp)
             .height(206.dp)
             .padding(3.dp),
-        color = YellowPolestar
+        color = YellowPolestar,
+        onClick = { navController.navigate("swipeScreen") }
     ) {
         Column(
             modifier = Modifier
@@ -69,5 +73,5 @@ fun GridCard(title: String) {
 @Preview(showBackground = true)
 @Composable
 fun GridCardPreview() {
-    GridCard("Category name")
+    GridCard("Category name", rememberNavController())
 }

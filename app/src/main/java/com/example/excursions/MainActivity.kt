@@ -30,6 +30,7 @@ import com.example.excursions.ui.screens.FavoriteScreen
 import com.example.excursions.ui.screens.LoginScreen
 import com.example.excursions.ui.screens.ProfileScreen
 import com.example.excursions.ui.screens.SearchScreen
+import com.example.excursions.ui.screens.SwipeScreen
 import com.example.excursions.ui.theme.ExcursionsTheme
 import com.example.excursions.ui.theme.polestarFontFamily
 import com.google.android.gms.common.api.ApiException
@@ -60,6 +61,7 @@ class MainActivity : ComponentActivity() {
                 composable("search") { SearchScreen(navController = navController) }
                 composable("favorites") { FavoriteScreen(navController = navController) }
                 composable("profile") { ProfileScreen(navController = navController) }
+                composable("swipeScreen") { SwipeScreen(navController = navController) }
             }
         }
 
