@@ -13,6 +13,7 @@ val Pink40 = Color(0xFF7D5260)
 val OrangePolestar = Color(0xFFFF6E00)
 val GrayPolestar = Color(0xFFb1b3b6)
 val WhitePolestar = Color(0xFFFFFFFF)
+val YellowPolestar = Color(0xFFF7EA48)
  // background: #F06E00;
 
 // rgba(177, 179, 179, 0.15)
