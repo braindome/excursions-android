@@ -3,6 +3,6 @@
     <font
         android:fontStyle="normal"
         android:fontWeight="400"
-        android:font="@font/polestar_unica77_tt" />
+        android:font="@font/polestar_unica77_tt_medium" />
 
 </font-family>
