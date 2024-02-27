@@ -1,6 +1,5 @@
 package com.example.excursions.data.api_models
 
-import com.google.gson.annotations.JsonAdapter
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 

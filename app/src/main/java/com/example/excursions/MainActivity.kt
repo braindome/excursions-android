@@ -51,12 +51,15 @@ class MainActivity : ComponentActivity() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val result = excursionsApp.api.searchNearbyPlaces(requestUrl, request
-                ).execute()
+                val result = excursionsApp.api.searchNearbyPlaces(requestUrl, request).execute()
 
                 if (result.isSuccessful) {
                     val searchNearbyResponse = result.body()
-                    Timber.d("Successful call: $searchNearbyResponse")
+                    //Timber.d("Successful call: $searchNearbyResponse")
+                    Timber.d("Successful API call:")
+                    searchNearbyResponse?.places?.forEachIndexed { index, place ->
+                        Timber.d("Place #$index: $place")
+                    }
                 } else {
                     Timber.e("Request failed with code ${result.code()}")
                 }
