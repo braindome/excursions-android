@@ -20,8 +20,10 @@ import androidx.compose.ui.Modifier.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.excursions.auth.AuthenticationViewModel
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -140,5 +142,11 @@ fun AuthenticationScreen(
 
 
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun AuthScreenPreview() {
+    AuthenticationScreen(navController = rememberNavController())
 }
 

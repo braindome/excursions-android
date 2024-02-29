@@ -95,7 +95,8 @@ fun ExcursionsTextField(label: String, input: String) {
                     contentPadding = PaddingValues(start = 3.dp), // this is how you can remove the padding,
                     colors = TextFieldDefaults.colors(
                         unfocusedContainerColor = GrayPolestar,
-                        focusedContainerColor = WhitePolestar
+                        focusedContainerColor = WhitePolestar,
+                        focusedIndicatorColor = Color.Black
                     )
                 )
             }
