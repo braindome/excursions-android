@@ -28,7 +28,7 @@ import com.example.excursions.ui.theme.polestarFontFamily
 @Composable
 fun SwipeScreen(navController: NavHostController) {
     Scaffold(
-        topBar = { ExcursionsTopBar(navController = navController, backDestination = "categories") },
+        topBar = { ExcursionsTopBar(navController = navController, backDestination = "categories", rightButtonDestination = "", rightButtonLabel = "") },
         bottomBar = { ExcursionsBottomBar(navController = navController) }
     ) { innerPadding ->
         Column(

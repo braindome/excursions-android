@@ -42,7 +42,7 @@ fun LoginScreen(navController: NavHostController) {
         modifier = Modifier.padding(20.dp)
     ) { PaddingValues(5.dp)
         Column(
-            verticalArrangement = Arrangement.Center,
+                verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
             ) {

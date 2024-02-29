@@ -32,7 +32,7 @@ import com.example.excursions.ui.theme.polestarFontFamily
 @Composable
 fun FavoriteScreen(navController: NavHostController) {
     Scaffold(
-        topBar = { ExcursionsTopBar(navController = navController, backDestination = "categories") },
+        topBar = { ExcursionsTopBar(navController = navController, backDestination = "categories", rightButtonLabel = "", rightButtonDestination = "") },
         bottomBar = { ExcursionsBottomBar(navController = navController) }
     ) { innerPadding ->
         Column(

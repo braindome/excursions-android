@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,10 +40,8 @@ fun SavedDestinationListItem() {
         Image(
             painter = painterResource(id = R.drawable.location_placeholder),
             contentDescription = null,
-            modifier = Modifier
-                .fillMaxWidth(1f)
-                .size(width = 343.dp, height = 145.dp)
-                .clip(RectangleShape)
+            modifier = Modifier.height(145.dp).width(342.dp),
+            contentScale = ContentScale.Crop
         )
 
 

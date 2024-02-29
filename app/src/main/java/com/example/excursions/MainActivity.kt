@@ -3,14 +3,19 @@ package com.example.excursions
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.excursions.api.ExcursionsAPI
 import com.example.excursions.data.api_models.Center
 import com.example.excursions.data.api_models.Circle
 import com.example.excursions.data.api_models.LocationRestriction
 import com.example.excursions.data.api_models.SearchNearbyRequest
+import com.example.excursions.ui.screens.AddSearchProfileScreen
 import com.example.excursions.ui.screens.AuthenticationScreen
 import com.example.excursions.ui.screens.CategoryScreen
 import com.example.excursions.ui.screens.FavoriteScreen
@@ -26,8 +31,22 @@ const val apiKey = BuildConfig.PLACES_API_KEY
 
 class MainActivity : ComponentActivity() {
 
+    private lateinit var viewModel: ExcursionsViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Create ViewModelFactory with the ExcursionsAPI instance
+        val viewModelFactory = ExcursionsViewModelFactory((application as ExcursionsApp).api)
+
+        // Initialize ViewModel using ViewModelProvider with the factory
+        viewModel = ViewModelProvider(this, viewModelFactory).get(ExcursionsViewModel::class.java)
+
+        //viewModel.searchPlacesByLocationAndRadius()
+
+
+
+        /*
 
         /**
          * POST-request
@@ -81,6 +100,8 @@ class MainActivity : ComponentActivity() {
 
         */
 
+         */
+
         setContent {
             val navController = rememberNavController()
 
@@ -94,6 +115,8 @@ class MainActivity : ComponentActivity() {
                 composable("favorites") { FavoriteScreen(navController = navController) }
                 composable("profile") { ProfileScreen(navController = navController) }
                 composable("swipeScreen") { SwipeScreen(navController = navController) }
+                composable("addSearchProfile") { AddSearchProfileScreen(navController = navController) }
+
             }
         }
 
@@ -103,5 +126,7 @@ class MainActivity : ComponentActivity() {
 
 
 }
+
+
 
 
