@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.excursions.ExcursionsRoutes
 import com.example.excursions.R
 import com.example.excursions.ui.screens.SavedDestinationsScreen
 import com.example.excursions.ui.theme.GrayPolestar
@@ -46,7 +47,7 @@ fun SavedDestinationsFolderCard(title: String, navController: NavHostController)
             .height(206.dp)
             .padding(3.dp),
         color = GrayPolestar,
-        onClick = { navController.navigate("saved") }
+        onClick = { navController.navigate(ExcursionsRoutes.Saved.route) }
     ) {
         Column(
             modifier = Modifier

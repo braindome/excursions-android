@@ -67,20 +67,18 @@ fun ExcursionsSlider() {
             value = sliderPosition,
             onValueChange = { sliderPosition = it },
             colors = SliderDefaults.colors(
-                //thumbColor = Color.Black,
                 activeTrackColor = Color.Black,
                 inactiveTrackColor = GrayPolestar
             ),
             //interactionSource = interactionSource,
-            steps = 300,
-            valueRange = 0f..300f, // Max range 300km,
+            steps = 50,
+            valueRange = 0f..50f, // Max range 50km,
             thumb = {
                 SliderDefaults.Thumb(
                     interactionSource = interactionSource,
                     colors = SliderDefaults.colors(
                         thumbColor = Color.Black
                     ),
-                    //thumbSize = DpSize(16.dp, 16.dp),
 
                 )
             },

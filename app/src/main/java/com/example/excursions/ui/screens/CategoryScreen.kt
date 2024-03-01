@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.excursions.ExcursionsApp
+import com.example.excursions.ExcursionsRoutes
 import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.ui.components.ExcursionsBottomBar
 import com.example.excursions.ui.components.ExcursionsTopBar
@@ -28,7 +29,13 @@ fun CategoryScreen(navController: NavHostController) {
     val mockCats = listOf("Eeny", "Meeny", "Miny", "Moe!", "Chip", "Chop", "Qui", "Quo", "Qua")
 
     Scaffold(
-        topBar = { ExcursionsTopBar(navController = navController, backDestination = "login", rightButtonLabel = "Add", rightButtonDestination = "addSearchProfile") },
+        topBar = {
+            ExcursionsTopBar(
+                navController = navController,
+                backDestination = ExcursionsRoutes.Login.route,
+                rightButtonLabel = "Add",
+                rightButtonDestination = ExcursionsRoutes.AddSearchProfile.route
+            )},
         bottomBar = { ExcursionsBottomBar(navController = navController) }
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {

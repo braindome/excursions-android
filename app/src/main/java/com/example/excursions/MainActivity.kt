@@ -31,6 +31,20 @@ import timber.log.Timber
 
 const val apiKey = BuildConfig.PLACES_API_KEY
 
+enum class ExcursionsRoutes(val route: String) {
+    Intro("intro"),
+    Authentication("auth"),
+    MainActivity("mainActivity"),
+    Login("login"),
+    Categories("categories"),
+    Search("search"),
+    Favorites("favorites"),
+    Profile("profile"),
+    SwipeScreen("swipeScreen"),
+    AddSearchProfile("addSearchProfile"),
+    Saved("saved")
+}
+
 class MainActivity : ComponentActivity() {
 
     private lateinit var viewModel: ExcursionsViewModel
@@ -45,8 +59,6 @@ class MainActivity : ComponentActivity() {
         viewModel = ViewModelProvider(this, viewModelFactory).get(ExcursionsViewModel::class.java)
 
         //viewModel.searchPlacesByLocationAndRadius()
-
-
 
         /*
 
@@ -107,22 +119,22 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
 
-            NavHost(navController = navController, startDestination = "intro") {
-                composable("intro") { IntroScreen(navController = navController) }
-                composable("auth") { AuthenticationScreen(navController = navController) }
+            NavHost(navController = navController, startDestination = ExcursionsRoutes.Intro.route) {
+                composable(ExcursionsRoutes.Intro.route) { IntroScreen(navController = navController) }
+                composable(ExcursionsRoutes.Authentication.route) { AuthenticationScreen(navController = navController) }
                 //composable("createAccount") { CreateAccountScreen(navController, viewModel) }
-                composable("mainActivity") { AppScreen() }
-                composable("login") { LoginScreen(navController) }
-                composable("categories") { CategoryScreen(navController = navController) }
-                composable("search") { SearchScreen(navController = navController) }
-                composable("favorites") { 
+                composable(ExcursionsRoutes.MainActivity.route) { AppScreen() }
+                composable(ExcursionsRoutes.Login.route) { LoginScreen(navController) }
+                composable(ExcursionsRoutes.Categories.route) { CategoryScreen(navController = navController) }
+                composable(ExcursionsRoutes.Search.route) { SearchScreen(navController = navController) }
+                composable(ExcursionsRoutes.Favorites.route) {
                     //FavoriteScreen(navController = navController) 
                     SavedDestinationsScreen(navController = navController)
                 }
-                composable("profile") { ProfileScreen(navController = navController) }
-                composable("swipeScreen") { SwipeScreen(navController = navController) }
-                composable("addSearchProfile") { AddSearchProfileScreen(navController = navController) }
-                composable("saved") { FavoriteScreen(navController = navController) }
+                composable(ExcursionsRoutes.Profile.route) { ProfileScreen(navController = navController) }
+                composable(ExcursionsRoutes.SwipeScreen.route) { SwipeScreen(navController = navController) }
+                composable(ExcursionsRoutes.AddSearchProfile.route) { AddSearchProfileScreen(navController = navController) }
+                composable(ExcursionsRoutes.Saved.route) { FavoriteScreen(navController = navController) }
 
             }
         }

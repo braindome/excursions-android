@@ -34,11 +34,15 @@ import com.example.excursions.ui.theme.OrangePolestar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExcursionsTopBar(navController: NavHostController, backDestination: String, rightButtonDestination: String, rightButtonLabel: String) {
+fun ExcursionsTopBar(navController: NavHostController, backDestination: String?, rightButtonDestination: String?, rightButtonLabel: String?) {
     TopAppBar(
         title = { /*TODO*/ },
         navigationIcon = {
-            IconButton(onClick = { navController.navigate(backDestination) }) {
+            IconButton(onClick = {
+                if (backDestination != null) {
+                    navController.navigate(backDestination)
+                }
+            }) {
                 Icon(
                     painter = painterResource(id = R.drawable.arrow_left),
                     contentDescription = null,
@@ -55,7 +59,11 @@ fun ExcursionsTopBar(navController: NavHostController, backDestination: String, 
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Button(
-                    onClick = { navController.navigate(rightButtonDestination) },
+                    onClick = {
+                        if (rightButtonDestination != null) {
+                            navController.navigate(rightButtonDestination)
+                        }
+                    },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.White
                     ),
@@ -65,14 +73,16 @@ fun ExcursionsTopBar(navController: NavHostController, backDestination: String, 
                     shape = CutCornerShape(0.dp),
                     contentPadding = PaddingValues(0.dp),
                 ) {
-                    Text(
-                        text = rightButtonLabel,
-                        style = TextStyle(
-                            fontSize = 16.sp,
-                            lineHeight = 18.sp,
-                            color = Color.Black
-                        ),
-                    )
+                    if (rightButtonLabel != null) {
+                        Text(
+                            text = rightButtonLabel,
+                            style = TextStyle(
+                                fontSize = 16.sp,
+                                lineHeight = 18.sp,
+                                color = Color.Black
+                            ),
+                        )
+                    }
 
                 }
             }

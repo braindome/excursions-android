@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.excursions.ExcursionsRoutes
 import com.example.excursions.ui.components.ExcursionsButton
 import com.example.excursions.ui.components.PlainTextArrowButton
 import com.example.excursions.ui.components.ScreenTitleSubtitle
@@ -51,7 +52,7 @@ fun IntroScreen(navController: NavHostController) {
         //ExcursionsButton(label = "Log in") { navController.navigate("login") })
         ExcursionsButton(
             label = "Log in",
-            onClick = { navController.navigate("login") },
+            onClick = { navController.navigate(ExcursionsRoutes.Login.route) },
             modifier = Modifier//.weight(0.05f)
         )
         //Spacer(modifier = Modifier.padding(top = 16.dp))

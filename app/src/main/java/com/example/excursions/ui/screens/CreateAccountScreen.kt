@@ -27,6 +27,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.excursions.ExcursionsRoutes
 import com.example.excursions.auth.AuthenticationViewModel
 import com.example.excursions.ui.theme.ExcursionsTheme
 
@@ -139,7 +140,7 @@ fun CreateAccountScreen(
                     }
                     */
                     viewModel.createUserWithEmailAndPassword()
-                    navController.navigate("mainActivity")
+                    navController.navigate(ExcursionsRoutes.MainActivity.route)
                 },
                 enabled = true,
                 modifier = Modifier

@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.excursions.ExcursionsRoutes
 import com.example.excursions.R
 import com.example.excursions.ui.theme.GrayPolestar
 import com.example.excursions.ui.theme.OrangePolestar
@@ -125,12 +126,8 @@ fun BottomNavBar(
 @Composable
 fun ExcursionsBottomBar(navController: NavHostController) {
 
-    //var selectedItem by rememberSaveable { mutableIntStateOf(0) }
-
-    var selectedItem by rememberSaveable {
-        mutableIntStateOf(getSelectedIndex(navController.currentDestination?.route))
-    }
-    val navBarIcons = listOf<Int>(
+    var selectedItem by rememberSaveable { mutableIntStateOf(getSelectedIndex(navController.currentDestination?.route)) }
+    val navBarIcons = listOf(
         R.drawable.bottom_bar_icon_grid,
         R.drawable.bottom_bar_icon_search,
         R.drawable.bottom_bar_icon_favorite,
@@ -149,19 +146,16 @@ fun ExcursionsBottomBar(navController: NavHostController) {
             NavigationBarItem(
                 selected = selectedItem == index,
                 onClick = {
-
                     selectedItem = index
-
                     val destination = when (index){
-                        0 -> "categories"
-                        1 -> "search"
-                        2 -> "favorites"
-                        3 -> "profile"
+                        0 -> ExcursionsRoutes.Categories.route
+                        1 -> ExcursionsRoutes.Search.route
+                        2 -> ExcursionsRoutes.Favorites.route
+                        3 -> ExcursionsRoutes.Profile.route
                         else -> {
                             "categories"
                         }
                     }
-
                     navController.navigate(destination)
                 },
                 icon = { Icon(

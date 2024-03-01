@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.excursions.ExcursionsApp
+import com.example.excursions.ExcursionsRoutes
 import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.ui.components.ExcursionsBottomBar
 import com.example.excursions.ui.components.ExcursionsTopBar
@@ -29,7 +30,7 @@ fun SavedDestinationsScreen(navController: NavHostController) {
     val mockCats = listOf("Beaches", "Monuments", "Hiking", "Explorations", "Swimming Spots")
 
     Scaffold(
-        topBar = { ExcursionsTopBar(navController = navController, backDestination = "categories", rightButtonLabel = "", rightButtonDestination = "addSearchProfile") },
+        topBar = { ExcursionsTopBar(navController = navController, backDestination = ExcursionsRoutes.Categories.route, rightButtonLabel = "", rightButtonDestination = ExcursionsRoutes.AddSearchProfile.route) },
         bottomBar = { ExcursionsBottomBar(navController = navController) }
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {

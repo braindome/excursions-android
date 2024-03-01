@@ -2,6 +2,7 @@ package com.example.excursions.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -21,9 +23,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.excursions.ExcursionsRoutes
 import com.example.excursions.ui.components.BottomNavBar
 import com.example.excursions.ui.components.ExcursionsBottomBar
 import com.example.excursions.ui.components.ExcursionsDropDown
+import com.example.excursions.ui.components.ExcursionsFilterChip
 import com.example.excursions.ui.components.ExcursionsSlider
 import com.example.excursions.ui.components.ExcursionsTextField
 import com.example.excursions.ui.components.ExcursionsTopBar
@@ -33,7 +37,7 @@ import com.example.excursions.ui.components.ScreenTitleText
 @Composable
 fun AddSearchProfileScreen(navController: NavHostController) {
     Scaffold(
-        topBar = { ExcursionsTopBar(navController = navController, backDestination = "categories", rightButtonDestination = "", rightButtonLabel = "Add") },
+        topBar = { ExcursionsTopBar(navController = navController, backDestination = ExcursionsRoutes.Categories.route, rightButtonDestination = ExcursionsRoutes.Categories.route, rightButtonLabel = "Save") },
         bottomBar = { ExcursionsBottomBar(navController = navController) }
 
     ) {innerPadding ->
@@ -56,13 +60,22 @@ fun AddSearchProfileScreen(navController: NavHostController) {
             ExcursionsSlider()
             Spacer(modifier = Modifier.size(30.dp))
             Text(text = "Filter chips")
-            LazyHorizontalGrid(
-                rows = GridCells.Fixed(3),
-                modifier = Modifier.height(96.dp).padding(8.dp)
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(minSize = 128.dp),
+                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(24.dp),
+                modifier = Modifier
+                    //.height(96.dp)
+                    .padding(8.dp)
             ) {
                 val chipLabels = listOf("Beaches", "Parks", "Natural Reserves", "Monuments", "Hiking", "Trails", "Seaside")
                 items(chipLabels.size) { index ->
-                    FilterChipExample(label = chipLabels[index])
+                    //FilterChipExample(label = chipLabels[index])
+
+                        ExcursionsFilterChip(label = chipLabels[index])
+                        //Spacer(modifier = Modifier.padding())
+
                 }
             }
         }
