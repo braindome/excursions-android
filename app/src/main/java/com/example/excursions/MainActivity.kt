@@ -19,8 +19,10 @@ import com.example.excursions.ui.screens.AddSearchProfileScreen
 import com.example.excursions.ui.screens.AuthenticationScreen
 import com.example.excursions.ui.screens.CategoryScreen
 import com.example.excursions.ui.screens.FavoriteScreen
+import com.example.excursions.ui.screens.IntroScreen
 import com.example.excursions.ui.screens.LoginScreen
 import com.example.excursions.ui.screens.ProfileScreen
+import com.example.excursions.ui.screens.SavedDestinationsScreen
 import com.example.excursions.ui.screens.SearchScreen
 import com.example.excursions.ui.screens.SwipeScreen
 import kotlinx.coroutines.Dispatchers
@@ -105,17 +107,22 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
 
-            NavHost(navController = navController, startDestination = "login") {
+            NavHost(navController = navController, startDestination = "intro") {
+                composable("intro") { IntroScreen(navController = navController) }
                 composable("auth") { AuthenticationScreen(navController = navController) }
                 //composable("createAccount") { CreateAccountScreen(navController, viewModel) }
                 composable("mainActivity") { AppScreen() }
                 composable("login") { LoginScreen(navController) }
                 composable("categories") { CategoryScreen(navController = navController) }
                 composable("search") { SearchScreen(navController = navController) }
-                composable("favorites") { FavoriteScreen(navController = navController) }
+                composable("favorites") { 
+                    //FavoriteScreen(navController = navController) 
+                    SavedDestinationsScreen(navController = navController)
+                }
                 composable("profile") { ProfileScreen(navController = navController) }
                 composable("swipeScreen") { SwipeScreen(navController = navController) }
                 composable("addSearchProfile") { AddSearchProfileScreen(navController = navController) }
+                composable("saved") { FavoriteScreen(navController = navController) }
 
             }
         }

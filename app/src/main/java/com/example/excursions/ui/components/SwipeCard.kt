@@ -43,9 +43,8 @@ fun SwipeCard() {
             )
             Text(text = stringResource(id = R.string.lorem_ipsum))
             Spacer(modifier = Modifier.size(10.dp))
-            PlainTextArrowButton(label = "Read more") {
-                
-            }
+            PlainTextArrowButton(label = "Read more", onClick = {}, modifier = Modifier)
+
         }
     }
 }

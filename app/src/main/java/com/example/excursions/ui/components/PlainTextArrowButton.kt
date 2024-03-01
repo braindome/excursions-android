@@ -1,10 +1,13 @@
 package com.example.excursions.ui.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -25,22 +28,24 @@ import com.example.excursions.ui.theme.OrangePolestar
 import com.example.excursions.ui.theme.polestarFontFamily
 
 @Composable
-fun PlainTextArrowButton(label: String, onClick: () -> Unit) {
+fun PlainTextArrowButton(label: String, onClick: () -> Unit, modifier: Modifier) {
     Button(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.White
         ),
-        modifier = Modifier
-            .clip(shape = RectangleShape)
-            //.width(342.dp)
+        modifier = modifier
+            //.clip(shape = RectangleShape)
+            //.fillMaxWidth(),
+            .width(342.dp)
             .height(22.dp),
         shape = CutCornerShape(0.dp),
-        contentPadding = PaddingValues(start = 1.dp, end = 3.dp),
+        contentPadding = PaddingValues(start = 0.dp, end = 0.dp),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
+            horizontalArrangement = Arrangement.Start,
+            modifier = Modifier.fillMaxWidth().height(22.dp)
                 //.padding(start = 10.dp)
 
         ) {
@@ -62,7 +67,5 @@ fun PlainTextArrowButton(label: String, onClick: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun PlainTextArrowButtonPreview() {
-    PlainTextArrowButton(label = "Read more") {
-
-    }
+    PlainTextArrowButton(label = "Read more", modifier = Modifier, onClick = {})
 }

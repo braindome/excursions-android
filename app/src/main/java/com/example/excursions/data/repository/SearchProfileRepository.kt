@@ -51,7 +51,7 @@ class SearchProfileRepository {
             "bowling_alley"
         )
 
-        val roadTripEssentials = listOf(
+        val carServices = listOf(
             "gas_station",
             "car_dealer",
             "car_rental",

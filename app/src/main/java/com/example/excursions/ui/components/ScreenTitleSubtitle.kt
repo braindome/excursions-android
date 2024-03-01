@@ -19,9 +19,9 @@ import com.example.excursions.ui.theme.GrayPolestar
 import com.example.excursions.ui.theme.polestarFontFamily
 
 @Composable
-fun ScreenTitleSubtitle(title: String, subtitle: String) {
+fun ScreenTitleSubtitle(title: String, subtitle: String, modifier: Modifier) {
     Column(
-        modifier = Modifier.padding(start = 8.dp)
+        modifier = modifier.padding(start = 8.dp)
     ) {
         Text(
             text = title,
@@ -49,5 +49,5 @@ fun ScreenTitleSubtitle(title: String, subtitle: String) {
 @Preview(showBackground = true)
 @Composable
 fun ScreenTitleSubtitlePreview() {
-    ScreenTitleSubtitle("Title", "Subtitle")
+    ScreenTitleSubtitle("Title", "Subtitle", modifier = Modifier)
 }

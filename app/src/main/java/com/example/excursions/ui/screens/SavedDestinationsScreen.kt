@@ -19,28 +19,29 @@ import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.ui.components.ExcursionsBottomBar
 import com.example.excursions.ui.components.ExcursionsTopBar
 import com.example.excursions.ui.components.GridCard
+import com.example.excursions.ui.components.SavedDestinationsFolderCard
 import com.example.excursions.ui.components.ScreenTitleSubtitle
 import com.example.excursions.ui.theme.polestarFontFamily
 
 @Composable
-fun CategoryScreen(navController: NavHostController) {
+fun SavedDestinationsScreen(navController: NavHostController) {
 
-    val mockCats = listOf("Eeny", "Meeny", "Miny", "Moe!", "Chip", "Chop", "Qui", "Quo", "Qua")
+    val mockCats = listOf("Beaches", "Monuments", "Hiking", "Explorations", "Swimming Spots")
 
     Scaffold(
-        topBar = { ExcursionsTopBar(navController = navController, backDestination = "login", rightButtonLabel = "Add", rightButtonDestination = "addSearchProfile") },
+        topBar = { ExcursionsTopBar(navController = navController, backDestination = "categories", rightButtonLabel = "", rightButtonDestination = "addSearchProfile") },
         bottomBar = { ExcursionsBottomBar(navController = navController) }
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
             //Text(text = "Excursions", fontFamily = polestarFontFamily, fontSize = 32.sp, modifier = Modifier.padding(start = 10.dp))
             //Text(text = "Categories", fontFamily = polestarFontFamily, fontSize = 32.sp, modifier = Modifier.padding(start = 10.dp))
-            ScreenTitleSubtitle(title = "Excursions", subtitle = "Categories", modifier = Modifier)
+            ScreenTitleSubtitle(title = "Excursions", subtitle = "Saved Destinations", modifier = Modifier)
             Spacer(modifier = Modifier.padding(10.dp))
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 content = {
                     items(mockCats.size) { index ->
-                        GridCard(
+                        SavedDestinationsFolderCard(
                             title = mockCats[index],
                             navController
                         )
@@ -55,6 +56,6 @@ fun CategoryScreen(navController: NavHostController) {
 
 @Preview(showBackground = true)
 @Composable
-fun CategoryScreenPreview() {
-    CategoryScreen(navController = rememberNavController())
+fun SavedDestinationsScreenPreview() {
+    SavedDestinationsScreen(navController = rememberNavController())
 }

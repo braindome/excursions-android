@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -31,6 +32,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.excursions.AppScreen
 import com.example.excursions.ui.components.ExcursionsButton
 import com.example.excursions.ui.components.ExcursionsTextField
+import com.example.excursions.ui.components.PlainTextArrowButton
+import com.example.excursions.ui.components.ScreenTitleSubtitle
 import com.example.excursions.ui.theme.ExcursionsTheme
 import com.example.excursions.ui.theme.GrayPolestar
 import com.example.excursions.ui.theme.polestarFontFamily
@@ -38,57 +41,33 @@ import com.example.excursions.ui.theme.polestarFontFamily
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun LoginScreen(navController: NavHostController) {
-    Scaffold(
-        modifier = Modifier.padding(20.dp)
-    ) { PaddingValues(5.dp)
-        Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-            ) {
-            Spacer(modifier = Modifier.padding(top = 150.dp))
-            Text(
-                text = "Welcome to Excursions",
-                fontFamily = polestarFontFamily,
-                fontSize = 32.sp,
-                modifier = Modifier
-                    .width(342.dp)
-            )
-            //Spacer(modifier = Modifier.padding(5.dp))
-            Text(
-                text = "Log In",
-                fontFamily = polestarFontFamily,
-                fontSize = 32.sp,
-                style = TextStyle(color = GrayPolestar),
-                modifier = Modifier
-                    .width(342.dp)
+    Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(24.dp)
+        ) {
+        //Spacer(modifier = Modifier.padding(top = 178.dp))
+        ScreenTitleSubtitle(
+            title = "Welcome to Excursions",
+            subtitle = "Log in",
+            modifier = Modifier.weight(0.2f).padding(top = 200.dp)
+        )
+        //Spacer(modifier = Modifier.padding(32.dp))
+        ExcursionsTextField(label = "Email", input = "input", modifier = Modifier.weight(0.05f).padding(vertical = 8.dp))
+        ExcursionsTextField(label = "Password", input = "input", modifier = Modifier.weight(0.05f).padding(vertical = 8.dp) )
+        Spacer(modifier = Modifier.padding(40.dp))
+        ExcursionsButton(
+            label = "Log in",
+            onClick =  { navController.navigate("categories") },
+            modifier = Modifier.padding(vertical = 4.dp)
+        )
+        //Spacer(modifier = Modifier.padding(8.dp))
+        PlainTextArrowButton(label = "Forgot password?", onClick = {}, modifier = Modifier)
+        //Spacer(modifier = Modifier.padding(0.dp))
+        PlainTextArrowButton(label = "Privacy", onClick = {}, modifier = Modifier)
 
-            )
-            ExcursionsTextField(label = "Email", input = "input")
-            ExcursionsTextField(label = "Password", input = "input" )
-            Spacer(modifier = Modifier.padding(20.dp))
-            ExcursionsButton(label = "Log in", onClick =  { navController.navigate("categories") })
 
-        }
     }
-
-
-
-
-
-    /*
-    Column(modifier = Modifier.padding(5.dp)) {
-        ExcursionsTextField(label = "Email", input = "input")
-        ExcursionsTextField(label = "Password", input = "input" )
-        Spacer(modifier = Modifier.padding(20.dp))
-        ExcursionsButton(label = "Log in")
-    }
-
-     */
-
-
-
-
 }
 
 @Preview(showBackground = true)

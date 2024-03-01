@@ -48,9 +48,7 @@ fun SavedDestinationListItem() {
         Text(text = "5 km")
         Text(text = "Miami Beach", fontFamily = polestarFontFamily, fontSize = 30.sp)
         Spacer(modifier = Modifier.size(10.dp))
-        PlainTextArrowButton(label = "Read More") {
-            
-        }
+        PlainTextArrowButton(label = "Read More", onClick = {}, modifier = Modifier)
 
 
 

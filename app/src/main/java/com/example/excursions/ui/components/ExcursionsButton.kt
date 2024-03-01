@@ -26,13 +26,13 @@ import com.example.excursions.ui.theme.OrangePolestar
 import com.example.excursions.ui.theme.polestarFontFamily
 
 @Composable
-fun ExcursionsButton(label: String, onClick: () -> Unit) {
+fun ExcursionsButton(label: String, onClick: () -> Unit, modifier: Modifier) {
     Button(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Black
         ),
-        modifier = Modifier
+        modifier = modifier
             .clip(shape = RectangleShape)
             .width(342.dp)
             .height(48.dp),
@@ -59,6 +59,6 @@ fun ExcursionsButton(label: String, onClick: () -> Unit) {
 @Preview
 @Composable
 fun ExcursionsButtonPreview() {
-    ExcursionsButton("Log In", onClick = {})
+    ExcursionsButton("Log In", onClick = {}, modifier = Modifier)
 }
 
