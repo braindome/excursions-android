@@ -1,6 +1,11 @@
 package com.example.excursions.data.repository
 
+import androidx.compose.ui.text.capitalize
+import java.util.InputMismatchException
+
 class SearchProfileRepository {
+
+    val formattedOutdoorAdventure = formatListForUi(outdoorAdventure)
     companion object {
         val outdoorAdventure = listOf(
             "hiking_area",
@@ -60,5 +65,15 @@ class SearchProfileRepository {
             "parking",
             "rest_stop"
         )
+
+        fun formatListForUi(list: List<String>): List<String> {
+            return list.map { formatStringForUI(it) }
+        }
+
+        private fun formatStringForUI(input: String): String {
+            val words = input.split("_").map { it.capitalize() }
+
+            return words.joinToString(" ")
+        }
     }
 }

@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -68,13 +69,20 @@ fun ExcursionsTextField(label: String, input: String, modifier: Modifier) {
             ),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = GrayPolestar,
-                unfocusedContainerColor = GrayPolestar,
+                unfocusedContainerColor = Color.Black.copy(alpha = 0.08f),
                 cursorColor = Color.Black,
                 focusedIndicatorColor = Color.Black,
 
             ),
             shape = RoundedCornerShape(0.dp),
-            modifier = Modifier.fillMaxWidth().padding(0.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                //.padding(0.dp)
+        )
+        Divider(
+            color = Color.Black,
+            thickness = 1.dp,
+            modifier = Modifier
         )
 
     }

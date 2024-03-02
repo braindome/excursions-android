@@ -15,6 +15,7 @@ import com.example.excursions.data.api_models.Center
 import com.example.excursions.data.api_models.Circle
 import com.example.excursions.data.api_models.LocationRestriction
 import com.example.excursions.data.api_models.SearchNearbyRequest
+import com.example.excursions.data.repository.SearchProfileRepository
 import com.example.excursions.ui.screens.AddSearchProfileScreen
 import com.example.excursions.ui.screens.AuthenticationScreen
 import com.example.excursions.ui.screens.CategoryScreen
@@ -56,9 +57,10 @@ class MainActivity : ComponentActivity() {
         val viewModelFactory = ExcursionsViewModelFactory((application as ExcursionsApp).api)
 
         // Initialize ViewModel using ViewModelProvider with the factory
-        viewModel = ViewModelProvider(this, viewModelFactory).get(ExcursionsViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory)[ExcursionsViewModel::class.java]
 
-        //viewModel.searchPlacesByLocationAndRadius()
+        viewModel.searchPlacesByLocationAndRadius(center = Center(41.274, 16.4207), radius = 50.00, includedTypes = SearchProfileRepository.culturalExploration)
+        Timber.d(SearchProfileRepository.formatListForUi(SearchProfileRepository.outdoorAdventure).toString())
 
         /*
 
@@ -131,7 +133,7 @@ class MainActivity : ComponentActivity() {
                     //FavoriteScreen(navController = navController) 
                     SavedDestinationsScreen(navController = navController)
                 }
-                composable(ExcursionsRoutes.Profile.route) { ProfileScreen(navController = navController) }
+                composable(ExcursionsRoutes.Profile.route) { ProfileScreen(navController = navController, viewModel = viewModel) }
                 composable(ExcursionsRoutes.SwipeScreen.route) { SwipeScreen(navController = navController) }
                 composable(ExcursionsRoutes.AddSearchProfile.route) { AddSearchProfileScreen(navController = navController) }
                 composable(ExcursionsRoutes.Saved.route) { FavoriteScreen(navController = navController) }

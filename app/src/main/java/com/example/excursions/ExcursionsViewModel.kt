@@ -25,6 +25,8 @@ import java.util.concurrent.TimeUnit
 
 class ExcursionsViewModel(private val api: ExcursionsAPI) : ViewModel() {
 
+    val searchProfileRepository = SearchProfileRepository
+
     fun searchPlacesByLocationAndRadius(center: Center, radius: Double, includedTypes: List<String>) {
         //val includedTypes = listOf("hiking_area", "national_park", "campground", "ski_resort", "marina", "dog_park", "farmstay", "rv_park", "extended_stay_hotel")
         //val locationRestriction = LocationRestriction(Circle(Center(58.2726, 11.6399), 10000.00))

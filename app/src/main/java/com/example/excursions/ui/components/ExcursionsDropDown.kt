@@ -66,7 +66,7 @@ fun ExcursionsDropDown(label: String) {
                 modifier = Modifier
                     .fillMaxSize()
                     .clickable(onClick = { expanded = true } )
-                    .background(GrayPolestar)
+                    .background(Color.Black.copy(alpha = 0.08f))
                     .padding(10.dp)
                     //.width(342.dp)
             ) {
