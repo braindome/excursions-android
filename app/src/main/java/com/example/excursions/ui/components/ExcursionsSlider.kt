@@ -32,7 +32,9 @@ import com.example.excursions.ui.theme.polestarFontFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExcursionsSlider() {
+fun ExcursionsSlider(
+    onValueChanged: (Float) -> Unit
+) {
     var sliderPosition by remember { mutableFloatStateOf(0f) }
     val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
 
@@ -65,12 +67,13 @@ fun ExcursionsSlider() {
         }
         Slider(
             value = sliderPosition,
-            onValueChange = { sliderPosition = it },
+            onValueChange = {
+                sliderPosition = it
+                onValueChanged(it) },
             colors = SliderDefaults.colors(
                 activeTrackColor = Color.Black,
                 inactiveTrackColor = GrayPolestar
             ),
-            //interactionSource = interactionSource,
             steps = 50,
             valueRange = 0f..50f, // Max range 50km,
             thumb = {
@@ -101,6 +104,6 @@ fun ExcursionsSlider() {
 @Preview(showBackground = true)
 @Composable
 fun ExcursionsSliderPreview() {
-    ExcursionsSlider()
+    ExcursionsSlider(onValueChanged = {})
 }
 

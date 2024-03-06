@@ -6,6 +6,15 @@ import java.util.InputMismatchException
 class SearchProfileRepository {
 
     val formattedOutdoorAdventure = formatListForUi(outdoorAdventure)
+    val formattedCulturalExploration = formatListForUi(culturalExploration)
+    val formattedLandmarkDiscovery = formatListForUi(landmarkDiscovery)
+    val formattedRelaxationAndWellness = formatListForUi(relaxationAndWellness)
+    val formattedEntertainmentHub = formatListForUi(entertainmentHub)
+    val formattedCarServices = formatListForUi(carServices)
+
+
+
+
     companion object {
         val outdoorAdventure = listOf(
             "hiking_area",
@@ -64,6 +73,15 @@ class SearchProfileRepository {
             "car_wash",
             "parking",
             "rest_stop"
+        )
+
+        val categories = listOf(
+            Category("01", "Outdoor Adventure", outdoorAdventure),
+            Category("02", "Cultural Exploration", culturalExploration),
+            Category("03", "Landmark Discovery", landmarkDiscovery),
+            Category("04", "Relaxation and Wellness", relaxationAndWellness),
+            Category("05", "Entertainment Hub", entertainmentHub),
+            Category("06", "Car Services", carServices)
         )
 
         fun formatListForUi(list: List<String>): List<String> {

@@ -28,11 +28,7 @@ fun ProfileScreen(
             Text(text = "User settings and prefs")
             Button(
                 onClick = {
-                    viewModel.searchPlacesByLocationAndRadius(
-                        center = Center(41.274, 16.4207),
-                        radius = 50000.00,
-                        includedTypes = SearchProfileRepository.culturalExploration)
-                    Timber.d(SearchProfileRepository.formatListForUi(SearchProfileRepository.culturalExploration).toString())
+
                 }
             ) {
                 Text(text = "Print places")

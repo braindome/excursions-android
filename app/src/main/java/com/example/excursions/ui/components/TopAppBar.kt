@@ -3,7 +3,6 @@ package com.example.excursions.ui.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -34,7 +33,7 @@ import com.example.excursions.ui.theme.OrangePolestar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExcursionsTopBar(navController: NavHostController, backDestination: String?, rightButtonDestination: String?, rightButtonLabel: String?) {
+fun ExcursionsTopBar(navController: NavHostController, backDestination: String?, rightButtonDestination: String?, rightButtonLabel: String?, onEndButtonClick: (() -> Unit)? = null ) {
     TopAppBar(
         title = { /*TODO*/ },
         navigationIcon = {
@@ -62,6 +61,9 @@ fun ExcursionsTopBar(navController: NavHostController, backDestination: String?,
                     onClick = {
                         if (rightButtonDestination != null) {
                             navController.navigate(rightButtonDestination)
+                        }
+                        if (onEndButtonClick != null) {
+                            onEndButtonClick()
                         }
                     },
                     colors = ButtonDefaults.buttonColors(

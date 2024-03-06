@@ -18,14 +18,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.excursions.ui.components.ExcursionsBottomBar
 import com.example.excursions.ui.components.ExcursionsTopBar
 import com.example.excursions.ui.components.SavedDestinationListItem
-import com.example.excursions.ui.components.SwipeActionBar
-import com.example.excursions.ui.components.SwipeCard
 import com.example.excursions.ui.theme.GrayPolestar
 import com.example.excursions.ui.theme.polestarFontFamily
 

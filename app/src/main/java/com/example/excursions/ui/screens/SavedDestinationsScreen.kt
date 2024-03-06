@@ -6,23 +6,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.excursions.ExcursionsApp
 import com.example.excursions.ExcursionsRoutes
-import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.ui.components.ExcursionsBottomBar
 import com.example.excursions.ui.components.ExcursionsTopBar
-import com.example.excursions.ui.components.GridCard
 import com.example.excursions.ui.components.SavedDestinationsFolderCard
 import com.example.excursions.ui.components.ScreenTitleSubtitle
-import com.example.excursions.ui.theme.polestarFontFamily
 
 @Composable
 fun SavedDestinationsScreen(navController: NavHostController) {
@@ -30,7 +24,7 @@ fun SavedDestinationsScreen(navController: NavHostController) {
     val mockCats = listOf("Beaches", "Monuments", "Hiking", "Explorations", "Swimming Spots")
 
     Scaffold(
-        topBar = { ExcursionsTopBar(navController = navController, backDestination = ExcursionsRoutes.Categories.route, rightButtonLabel = "", rightButtonDestination = ExcursionsRoutes.AddSearchProfile.route) },
+        topBar = { ExcursionsTopBar(navController = navController, backDestination = ExcursionsRoutes.Categories.route, rightButtonLabel = "", rightButtonDestination = ExcursionsRoutes.EditSearchProfile.route) },
         bottomBar = { ExcursionsBottomBar(navController = navController) }
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
