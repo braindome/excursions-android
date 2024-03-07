@@ -84,7 +84,40 @@ class ExcursionsViewModel(private val api: ExcursionsAPI) : ViewModel() {
      * Retrofit can't deal with colons in endpoint string.
      */
 
+    fun searchPlacesByLocationAndRadiusTest(center: Center, types: List<String>, range: Float) {
+        Timber.d("Search by types and range")
+        val locationRestriction = LocationRestriction(Circle(center, range.toDouble()))
+        val maxResultCount = 20
+        val requestUrl = "https://places.googleapis.com/v1/places:searchNearby"
+
+        val request = SearchNearbyRequest(
+            types,
+            locationRestriction,
+            maxResultCount
+        )
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val result = api.searchNearbyPlaces(requestUrl, request).execute()
+
+                if (result.isSuccessful) {
+                    val searchNearbyResponse = result.body()
+                    //Timber.d("Successful call: $searchNearbyResponse")
+                    Timber.d("Successful API call:")
+                    searchNearbyResponse?.places?.forEachIndexed { index, place ->
+                        Timber.d("Place #$index: $place")
+                    }
+                } else {
+                    Timber.e("Request failed with code ${result.code()}")
+                }
+            } catch (e: Exception) {
+                Timber.e("Exception during API call: ${e.message}")
+            }
+        }
+    }
+
     fun searchPlacesByLocationAndRadius(center: Center, searchProfile: SearchProfile) {
+        Timber.d("Search by searchprofile")
         val locationRestriction = LocationRestriction(Circle(center, searchProfile.range.toDouble()))
         val maxResultCount = 20
         val requestUrl = "https://places.googleapis.com/v1/places:searchNearby"

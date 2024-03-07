@@ -71,6 +71,9 @@ fun ExcursionsSlider(
             onValueChange = {
                 sliderPosition = it
                 onValueChanged(it) },
+            onValueChangeFinished = {
+                onValueChanged(sliderPosition)
+            },
             colors = SliderDefaults.colors(
                 activeTrackColor = Color.Black,
                 inactiveTrackColor = GrayPolestar

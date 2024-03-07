@@ -29,7 +29,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.excursions.ExcursionsRoutes
 import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.data.api_models.Center
+import com.example.excursions.data.model.SearchProfile
 import com.example.excursions.data.repository.Category
+import com.example.excursions.data.repository.SearchProfileRepository
 import com.example.excursions.ui.components.DummyExcursionsAPI
 import com.example.excursions.ui.components.ExcursionsBottomBar
 import com.example.excursions.ui.components.ExcursionsFilterChip
@@ -107,6 +109,7 @@ fun EditSearchProfileScreen(
 
             ExcursionsSlider(value = sliderPosition) { updatedValue ->
                 sliderPosition = updatedValue
+                Timber.d("Slider value: $sliderPosition")
             }
 
             /*
@@ -139,15 +142,15 @@ fun EditSearchProfileScreen(
             }
             Button(
                 onClick = {
-                    val updatedRange = searchProfile.range
-                    val updatedState = updatedRange.let { searchProfile.copy(range = it) }
-                    viewModel.updateSearchProfileUiState(updatedState)
-                    searchProfile.let {
-                        viewModel.searchPlacesByLocationAndRadius(
-                            center = Center(40.3525, 18.1709),
-                            searchProfile = it
-                        )
-                    }
+                    Timber.d("Current slider value: $sliderPosition")
+
+                    viewModel.searchPlacesByLocationAndRadiusTest(
+                        center = Center(40.3548, 18.1717),
+                        types = searchProfile.category.types,
+                        range = sliderPosition * 1000
+                    )
+
+
                 },
                 ) {
                 Text(text = "Log API call")

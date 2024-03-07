@@ -60,7 +60,7 @@ fun CategoryScreen(
                 columns = GridCells.Fixed(2),
                 content = {
                     items(searchProfilesList) { searchProfile ->
-                        Timber.d("Search profile from CategoryScreen to GridCard: $searchProfile")
+                        //Timber.d("Search profile from CategoryScreen to GridCard: $searchProfile")
                         GridCard(navController = navController, searchProfile = searchProfile)
                     }
                 },

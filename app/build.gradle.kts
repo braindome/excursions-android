@@ -130,6 +130,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
     implementation("com.squareup.moshi:moshi:1.15.0")
     implementation("com.squareup.moshi:moshi-kotlin:1.15.0")
+    implementation("com.github.sparklexin:moshi-kotlin-nullsafe:1.0.0")
 
     // View Model
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")

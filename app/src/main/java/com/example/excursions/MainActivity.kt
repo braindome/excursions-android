@@ -14,6 +14,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.excursions.data.api_models.Center
+import com.example.excursions.data.repository.SearchProfileRepository
 import com.example.excursions.ui.screens.EditSearchProfileScreen
 import com.example.excursions.ui.screens.AuthenticationScreen
 import com.example.excursions.ui.screens.CategoryScreen
@@ -26,6 +28,7 @@ import com.example.excursions.ui.screens.SearchScreen
 import com.example.excursions.ui.screens.SwipeScreen
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import timber.log.Timber
 
 const val apiKey = BuildConfig.PLACES_API_KEY
 
@@ -71,6 +74,15 @@ class MainActivity : ComponentActivity() {
 
         // Initialize ViewModel using ViewModelProvider with the factory
         viewModel = ViewModelProvider(this, viewModelFactory)[ExcursionsViewModel::class.java]
+
+        /*
+        viewModel.searchPlacesByLocationAndRadiusTest(
+            center = Center(40.3548, 18.1717),
+            range = 50000f,
+            types = SearchProfileRepository.landmarkDiscovery
+        )
+
+         */
 
         setContent {
             val navController = rememberNavController()
