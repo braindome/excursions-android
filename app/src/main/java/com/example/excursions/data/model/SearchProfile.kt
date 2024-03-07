@@ -1,4 +1,4 @@
-package com.example.excursions.ui.states
+package com.example.excursions.data.model
 
 import android.os.Parcelable
 import com.example.excursions.data.repository.Category

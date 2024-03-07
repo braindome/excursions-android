@@ -17,6 +17,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,24 +50,14 @@ fun EditSearchProfileScreen(
 
     //val searchProfile by remember { mutableStateOf(viewModel.getSearchProfileById(searchProfileId)) }
     val searchProfile by remember { mutableStateOf(viewModel.getSearchProfileById(searchProfileId)) }
+    var sliderPosition by rememberSaveable { mutableStateOf(searchProfile.range) }
     //val searchProfile by viewModel.searchProfile.collectAsState()
     Timber.d("Collected search profile from vm: $searchProfile")
-
-    //val searchProfileUiState by rememberSaveable { mutableStateOf(searchProfile) }
-
-    //val updatedSearchProfileUiState = rememberUpdatedState(searchProfileUiState)
-
     //val navBackStackEntry by navController.currentBackStackEntryAsState()
     //navBackStackEntry?.savedStateHandle?.set("updatedSearchProfile", searchProfile)
 
-    //val searchProfile = viewModel.searchProfile.collectAsState()
-
     //Timber.d("Search profile id: $searchProfileId")
     //Timber.d("Received search profile from card: $searchProfile")
-
-    //val searchProfileUiState by remember { mutableStateOf(searchProfile) }
-
-
 
     Scaffold(
         topBar = { ExcursionsTopBar(
@@ -82,6 +74,7 @@ fun EditSearchProfileScreen(
                 }
 
                 viewModel.updateSearchProfileUiState(updatedState)
+                viewModel.updateSearchProfileSliderPosition(searchProfileId, sliderPosition)
             })},
         bottomBar = { ExcursionsBottomBar(navController = navController) }
 
@@ -94,8 +87,6 @@ fun EditSearchProfileScreen(
             verticalArrangement = Arrangement.SpaceBetween
 
         ) {
-
-
             ScreenTitleText(title = "Edit Search Profile")
             Spacer(modifier = Modifier.size(20.dp))
             ExcursionsTextField(
@@ -113,6 +104,12 @@ fun EditSearchProfileScreen(
             //ExcursionsDropDown("Type")
             ExcursionsSearchField(label = "Search", input = "input", modifier = Modifier)
             Spacer(modifier = Modifier.size(10.dp))
+
+            ExcursionsSlider(value = sliderPosition) { updatedValue ->
+                sliderPosition = updatedValue
+            }
+
+            /*
             ExcursionsSlider { updatedValue ->
                 //searchProfileUiState?.range ?: 0f //= updatedValue
                 //viewModel.searchProfile.value.range = searchProfileUiState?.range!!
@@ -121,6 +118,8 @@ fun EditSearchProfileScreen(
                     viewModel.updateSearchProfileUiState(updatedState)
                 }
             }
+
+             */
             Spacer(modifier = Modifier.size(30.dp))
             Text(text = "Filter chips")
             LazyVerticalGrid(

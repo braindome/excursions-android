@@ -1,6 +1,5 @@
 package com.example.excursions.ui.components
 
-import android.os.Bundle
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,16 +17,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.os.bundleOf
 import androidx.navigation.NavHostController
-import androidx.navigation.NavOptions
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.example.excursions.ExcursionsRoutes
-import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.R
 import com.example.excursions.data.repository.Category
-import com.example.excursions.ui.states.SearchProfile
+import com.example.excursions.data.model.SearchProfile
 import com.example.excursions.ui.theme.YellowPolestar
 import com.example.excursions.ui.theme.polestarFontFamily
 
@@ -36,7 +31,7 @@ fun GridCard(
     navController: NavHostController,
     searchProfile: SearchProfile,
 
-) {
+    ) {
     val searchProfileId = searchProfile.id
     Surface(
         modifier = Modifier

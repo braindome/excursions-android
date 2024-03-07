@@ -33,9 +33,10 @@ import com.example.excursions.ui.theme.polestarFontFamily
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExcursionsSlider(
+    value: Float,
     onValueChanged: (Float) -> Unit
 ) {
-    var sliderPosition by remember { mutableFloatStateOf(0f) }
+    var sliderPosition by remember { mutableFloatStateOf(value) }
     val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
 
 
@@ -104,6 +105,6 @@ fun ExcursionsSlider(
 @Preview(showBackground = true)
 @Composable
 fun ExcursionsSliderPreview() {
-    ExcursionsSlider(onValueChanged = {})
+    ExcursionsSlider(onValueChanged = {}, value = 0f)
 }
 

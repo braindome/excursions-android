@@ -23,7 +23,7 @@ import com.example.excursions.ui.components.ExcursionsBottomBar
 import com.example.excursions.ui.components.ExcursionsTopBar
 import com.example.excursions.ui.components.GridCard
 import com.example.excursions.ui.components.ScreenTitleSubtitle
-import com.example.excursions.ui.states.SearchProfile
+import com.example.excursions.data.model.SearchProfile
 import com.example.excursions.ui.theme.ExcursionsTheme
 import timber.log.Timber
 

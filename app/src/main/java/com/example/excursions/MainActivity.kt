@@ -24,10 +24,8 @@ import com.example.excursions.ui.screens.ProfileScreen
 import com.example.excursions.ui.screens.SavedDestinationsScreen
 import com.example.excursions.ui.screens.SearchScreen
 import com.example.excursions.ui.screens.SwipeScreen
-import com.example.excursions.ui.states.SearchProfile
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import timber.log.Timber
 
 const val apiKey = BuildConfig.PLACES_API_KEY
 
@@ -73,66 +71,6 @@ class MainActivity : ComponentActivity() {
 
         // Initialize ViewModel using ViewModelProvider with the factory
         viewModel = ViewModelProvider(this, viewModelFactory)[ExcursionsViewModel::class.java]
-
-        //viewModel.searchPlacesByLocationAndRadius(center = Center(41.274, 16.4207), radius = 50.00, includedTypes = SearchProfileRepository.culturalExploration)
-        //viewModel.searchPlacesByLocationAndRadius(center = Center(41.274, 16.4207), sear)
-        //Timber.d(SearchProfileRepository.formatListForUi(SearchProfileRepository.outdoorAdventure).toString())
-
-        /*
-
-        /**
-         * POST-request
-         * Fetches places in defined range from coordinates, corresponding
-         * to defined types. Max number of results defined.
-         * Using entire request url in the a string,
-         * Retrofit can't deal with colons in endpoint string.
-         */
-
-        val excursionsApp = application as ExcursionsApp
-        val includedTypes = listOf("hiking_area", "national_park", "campground", "ski_resort", "marina", "dog_park", "farmstay", "rv_park", "extended_stay_hotel")
-        val locationRestriction = LocationRestriction(Circle(Center(58.2726, 11.6399), 10000.00))
-        val maxResultCount = 20
-        val requestUrl = "https://places.googleapis.com/v1/places:searchNearby"
-
-        val request = SearchNearbyRequest(
-            includedTypes,
-            locationRestriction,
-            maxResultCount
-        )
-
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val result = excursionsApp.api.searchNearbyPlaces(requestUrl, request).execute()
-
-                if (result.isSuccessful) {
-                    val searchNearbyResponse = result.body()
-                    //Timber.d("Successful call: $searchNearbyResponse")
-                    Timber.d("Successful API call:")
-                    searchNearbyResponse?.places?.forEachIndexed { index, place ->
-                        Timber.d("Place #$index: $place")
-                    }
-                } else {
-                    Timber.e("Request failed with code ${result.code()}")
-                }
-            } catch (e: Exception) {
-                Timber.e("Exception during API call: ${e.message}")
-            }
-        }
-
-        // Old request
-        /*
-        lifecycleScope.launch(Dispatchers.IO) {
-            val result = excursionsApp.api.searchNearbyPlaces("https://places.googleapis.com/v1/places:searchNearby", request).execute()
-            if (result.isSuccessful) {
-                Timber.d("Successful call: $result")
-            } else {
-                Timber.e("Request failed with code ${result.code()}")
-            }
-        }
-
-        */
-
-         */
 
         setContent {
             val navController = rememberNavController()

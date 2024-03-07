@@ -1,7 +1,5 @@
 package com.example.excursions
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -10,9 +8,8 @@ import com.example.excursions.data.api_models.Center
 import com.example.excursions.data.api_models.Circle
 import com.example.excursions.data.api_models.LocationRestriction
 import com.example.excursions.data.api_models.SearchNearbyRequest
-import com.example.excursions.data.repository.Category
 import com.example.excursions.data.repository.SearchProfileRepository
-import com.example.excursions.ui.states.SearchProfile
+import com.example.excursions.data.model.SearchProfile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -116,6 +113,17 @@ class ExcursionsViewModel(private val api: ExcursionsAPI) : ViewModel() {
                 Timber.e("Exception during API call: ${e.message}")
             }
         }
+    }
+
+    fun updateSearchProfileSliderPosition(searchProfileId: Int, sliderPosition: Float) {
+        val updatedProfiles = _searchProfilesList.value.map {
+            if (it.id == searchProfileId) {
+                it.copy(range = sliderPosition)
+            } else {
+                it
+            }
+        }
+        _searchProfilesList.value = updatedProfiles
     }
 
 
