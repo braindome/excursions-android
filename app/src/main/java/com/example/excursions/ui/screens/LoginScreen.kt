@@ -33,8 +33,8 @@ fun LoginScreen(navController: NavHostController) {
             modifier = Modifier.weight(0.2f).padding(top = 200.dp)
         )
         //Spacer(modifier = Modifier.padding(32.dp))
-        ExcursionsTextField(label = "Email", input = "input", modifier = Modifier.weight(0.05f).padding(vertical = 8.dp))
-        ExcursionsTextField(label = "Password", input = "input", modifier = Modifier.weight(0.05f).padding(vertical = 8.dp) )
+        ExcursionsTextField(label = "Email", input = "input", modifier = Modifier.weight(0.05f).padding(vertical = 8.dp), onInputChanged = {})
+        ExcursionsTextField(label = "Password", input = "input", modifier = Modifier.weight(0.05f).padding(vertical = 8.dp), onInputChanged = {} )
         Spacer(modifier = Modifier.padding(40.dp))
         ExcursionsButton(
             label = "Log in",
