@@ -1,11 +1,17 @@
 package com.example.excursions.ui.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
@@ -20,20 +26,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.excursions.R
 import com.example.excursions.ui.theme.polestarFontFamily
 
 
+@SuppressLint("UnusedBoxWithConstraintsScope")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExcursionsFilterChip(label: String) {
     var selected by remember { mutableStateOf(false) }
 
-    BoxWithConstraints {
+    Box(
+        modifier = Modifier//.wrapContentWidth()
+    ) {
         FilterChip(
             selected = selected,
             onClick = { selected = !selected },
@@ -41,13 +54,19 @@ fun ExcursionsFilterChip(label: String) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier//.fillMaxSize()
                 ) {
                     Text(
                         text = label,
                         fontFamily = polestarFontFamily,
+                        style = TextStyle(
+                            fontSize = 16.sp,
+                            lineHeight = 18.sp,
+                            letterSpacing = (-1).sp
+                        ),
                         color = if (selected) Color.White else Color.Black
                     )
+                    Spacer(modifier = Modifier.padding(8.dp))
 
                     Icon(
                         painter = painterResource(id = if (selected) R.drawable.check else R.drawable.plus),
@@ -62,7 +81,9 @@ fun ExcursionsFilterChip(label: String) {
                 selectedLabelColor = Color.White
             ),
             shape = RectangleShape,
-            modifier = Modifier.size(height = 32.dp, width = 156.dp)
+            modifier = Modifier
+                .height(48.dp)
+                .wrapContentWidth()
         )
     }
 

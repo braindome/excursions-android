@@ -48,7 +48,7 @@ fun GridCard(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = searchProfile.category.name, //categoryUiState.name,
+                text = searchProfile.name, //categoryUiState.name,
                 fontSize = 22.sp,
                 fontFamily = polestarFontFamily,
                 modifier = Modifier.padding(2.dp)
@@ -72,7 +72,7 @@ fun GridCard(
 fun GridCardPreview() {
     GridCard(
         navController = rememberNavController(),
-        searchProfile = SearchProfile(id = -1, Category(name = "Test"))
+        searchProfile = SearchProfile(id = -1)
     )
 }
 

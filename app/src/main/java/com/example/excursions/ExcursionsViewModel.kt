@@ -8,8 +8,8 @@ import com.example.excursions.data.api_models.Center
 import com.example.excursions.data.api_models.Circle
 import com.example.excursions.data.api_models.LocationRestriction
 import com.example.excursions.data.api_models.SearchNearbyRequest
-import com.example.excursions.data.repository.SearchProfileRepository
 import com.example.excursions.data.model.SearchProfile
+import com.example.excursions.data.repository.SearchProfileRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -33,7 +33,8 @@ class ExcursionsViewModel(private val api: ExcursionsAPI) : ViewModel() {
 
 
     init {
-        generateDefaultSearchProfiles()
+        //generateDefaultSearchProfiles()
+        _searchProfilesList.value = SearchProfileRepository.defaultSearchProfiles
         //Timber.d("Search profile list (view model): $searchProfilesList")
     }
 
@@ -41,6 +42,7 @@ class ExcursionsViewModel(private val api: ExcursionsAPI) : ViewModel() {
         return searchProfilesList.value.find { it.id == searchProfileId } ?: SearchProfile()
     }
 
+    /*
     private fun generateDefaultSearchProfiles() {
         val newSearchProfiles = mutableListOf<SearchProfile>()
         for ((index, category) in SearchProfileRepository.categories.withIndex()) {
@@ -57,6 +59,9 @@ class ExcursionsViewModel(private val api: ExcursionsAPI) : ViewModel() {
         _searchProfilesList.value = newSearchProfiles
     }
 
+     */
+
+
     fun updateSearchProfilesList(updatedSearchProfiles: List<SearchProfile>) {
         _searchProfilesList.value = updatedSearchProfiles
     }
@@ -64,7 +69,7 @@ class ExcursionsViewModel(private val api: ExcursionsAPI) : ViewModel() {
     fun updateSearchProfileName(searchProfileId: Int, newName: String) {
         val updatedProfiles = _searchProfilesList.value.map {
             if (it.id == searchProfileId) {
-                it.copy(category = it.category.copy(name = newName))
+                it.copy(name = newName)
             } else {
                 it
             }
@@ -85,7 +90,7 @@ class ExcursionsViewModel(private val api: ExcursionsAPI) : ViewModel() {
      */
 
     fun searchPlacesByLocationAndRadiusTest(center: Center, types: List<String>, range: Float) {
-        Timber.d("Search by types and range")
+        Timber.d("Received range value: $range")
         val locationRestriction = LocationRestriction(Circle(center, range.toDouble()))
         val maxResultCount = 20
         val requestUrl = "https://places.googleapis.com/v1/places:searchNearby"
@@ -118,12 +123,14 @@ class ExcursionsViewModel(private val api: ExcursionsAPI) : ViewModel() {
 
     fun searchPlacesByLocationAndRadius(center: Center, searchProfile: SearchProfile) {
         Timber.d("Search by searchprofile")
+        val typeStrings = searchProfile.types.map { it.jsonName }
         val locationRestriction = LocationRestriction(Circle(center, searchProfile.range.toDouble()))
         val maxResultCount = 20
         val requestUrl = "https://places.googleapis.com/v1/places:searchNearby"
 
+
         val request = SearchNearbyRequest(
-            searchProfile.category.types,
+            typeStrings,
             locationRestriction,
             maxResultCount
         )
