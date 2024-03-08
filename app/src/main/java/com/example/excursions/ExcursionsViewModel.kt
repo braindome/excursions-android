@@ -90,7 +90,7 @@ class ExcursionsViewModel(private val api: ExcursionsAPI) : ViewModel() {
      */
 
     fun searchPlacesByLocationAndRadiusTest(center: Center, types: List<String>, range: Float) {
-        Timber.d("Search by types and range")
+        Timber.d("Received range value: $range")
         val locationRestriction = LocationRestriction(Circle(center, range.toDouble()))
         val maxResultCount = 20
         val requestUrl = "https://places.googleapis.com/v1/places:searchNearby"

@@ -12,8 +12,10 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TimeInput
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -49,9 +51,12 @@ fun EditSearchProfileScreen(
 
     //val searchProfile by remember { mutableStateOf(viewModel.getSearchProfileById(searchProfileId)) }
     val searchProfile by remember { mutableStateOf(viewModel.getSearchProfileById(searchProfileId)) }
-    var sliderPosition by rememberSaveable { mutableStateOf(searchProfile.range) }
+    var sliderPosition by rememberSaveable { mutableFloatStateOf(searchProfile.range/1000) }
     //val searchProfile by viewModel.searchProfile.collectAsState()
-    Timber.d("Collected search profile from vm: $searchProfile")
+    //Timber.d("Collected search profile from vm: $searchProfile")
+    Timber.d("Initial sliderPosition value: $sliderPosition")
+    Timber.d("Initial searchProfile.range: ${searchProfile.range}")
+
     //val navBackStackEntry by navController.currentBackStackEntryAsState()
     //navBackStackEntry?.savedStateHandle?.set("updatedSearchProfile", searchProfile)
 
@@ -153,7 +158,7 @@ fun EditSearchProfileScreen(
 
                      */
 
-
+                    Timber.d("Range value for api request: ${sliderPosition * 1000}")
                     viewModel.searchPlacesByLocationAndRadiusTest(
                         center = Center(40.3548, 18.1717),
                         types = searchProfile.types.map { it.jsonName },
