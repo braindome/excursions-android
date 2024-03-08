@@ -1,22 +1,16 @@
 package com.example.excursions.data.repository
 
 import androidx.compose.ui.text.capitalize
+import com.example.excursions.data.model.LocationType
+import com.example.excursions.data.model.SearchProfile
 import java.util.InputMismatchException
 
 class SearchProfileRepository {
 
-    val formattedOutdoorAdventure = formatListForUi(outdoorAdventure)
-    val formattedCulturalExploration = formatListForUi(culturalExploration)
-    val formattedLandmarkDiscovery = formatListForUi(landmarkDiscovery)
-    val formattedRelaxationAndWellness = formatListForUi(relaxationAndWellness)
-    val formattedEntertainmentHub = formatListForUi(entertainmentHub)
-    val formattedCarServices = formatListForUi(carServices)
-
-
 
 
     companion object {
-        val outdoorAdventure = listOf(
+        val outdoorAdventure : List<LocationType> = createLocationTypes(
             "hiking_area",
             "national_park",
             "campground",
@@ -28,7 +22,7 @@ class SearchProfileRepository {
             "extended_stay_hotel"
         )
 
-        val culturalExploration = listOf(
+        val culturalExploration : List<LocationType> = createLocationTypes(
             "art_gallery",
             "museum",
             "performing_arts_theater",
@@ -38,7 +32,7 @@ class SearchProfileRepository {
             "university"
         )
 
-        val landmarkDiscovery = listOf(
+        val landmarkDiscovery : List<LocationType> = createLocationTypes(
             "historical_landmark",
             "museum",
             "tourist_attraction",
@@ -48,7 +42,7 @@ class SearchProfileRepository {
             "embassy"
         )
 
-        val relaxationAndWellness = listOf(
+        val relaxationAndWellness : List<LocationType> = createLocationTypes(
             "spa",
             "resort_hotel",
             "bed_and_breakfast",
@@ -56,7 +50,7 @@ class SearchProfileRepository {
             "extended_stay_hotel"
         )
 
-        val entertainmentHub = listOf(
+        val entertainmentHub : List<LocationType> = createLocationTypes(
             "amusement_park",
             "casino",
             "night_club",
@@ -65,7 +59,7 @@ class SearchProfileRepository {
             "bowling_alley"
         )
 
-        val carServices = listOf(
+        val carServices : List<LocationType> = createLocationTypes(
             "gas_station",
             "car_dealer",
             "car_rental",
@@ -75,18 +69,34 @@ class SearchProfileRepository {
             "rest_stop"
         )
 
-        val categories = listOf(
-            Category("01", "Outdoor Adventure", outdoorAdventure),
-            Category("02", "Cultural Exploration", culturalExploration),
-            Category("03", "Landmark Discovery", landmarkDiscovery),
-            Category("04", "Relaxation and Wellness", relaxationAndWellness),
-            Category("05", "Entertainment Hub", entertainmentHub),
-            Category("06", "Car Services", carServices)
+        val defaultTypeLists = listOf(
+            outdoorAdventure, culturalExploration, landmarkDiscovery, relaxationAndWellness, entertainmentHub, carServices
         )
 
-        fun formatListForUi(list: List<String>): List<String> {
-            return list.map { formatStringForUI(it) }
+        val defaultSearchProfiles : List<SearchProfile> = listOf(
+            SearchProfile(id = 1, name = "Outdoor Adventure", types = outdoorAdventure),
+            SearchProfile(id = 2, name = "Cultural Exploration", types = culturalExploration),
+            SearchProfile(id = 3, name = "Landmark Discovery", types = landmarkDiscovery),
+            SearchProfile(id = 4, name = "Relaxation and Wellness", types = relaxationAndWellness),
+            SearchProfile(id = 5, name = "Entertainment hub", types = entertainmentHub),
+            SearchProfile(id = 6, name = "Car Services", types = carServices)
+        )
+
+        fun createLocationTypes(vararg names: String): List<LocationType> {
+            return names.mapIndexed { index, name ->
+                LocationType(
+                    id = index + 1,
+                    jsonName = name,
+                    formattedName = formatStringForUI(name),
+                    isChecked = false
+                )
+            }
         }
+
+        fun formatListForUi(list: List<LocationType>): List<LocationType> {
+            return list.map { it.copy(formattedName = formatStringForUI(it.jsonName)) }
+        }
+
 
         private fun formatStringForUI(input: String): String {
             val words = input.split("_").map { it.capitalize() }
