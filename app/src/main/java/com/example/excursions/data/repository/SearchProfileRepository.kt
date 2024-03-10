@@ -10,7 +10,7 @@ class SearchProfileRepository {
 
 
     companion object {
-        val outdoorAdventure : List<LocationType> = createLocationTypes(
+        val outdoorAdventure : MutableList<LocationType> = createLocationTypes(
             "hiking_area",
             "national_park",
             "campground",
@@ -22,7 +22,7 @@ class SearchProfileRepository {
             "extended_stay_hotel"
         )
 
-        val culturalExploration : List<LocationType> = createLocationTypes(
+        val culturalExploration : MutableList<LocationType> = createLocationTypes(
             "art_gallery",
             "museum",
             "performing_arts_theater",
@@ -32,7 +32,7 @@ class SearchProfileRepository {
             "university"
         )
 
-        val landmarkDiscovery : List<LocationType> = createLocationTypes(
+        val landmarkDiscovery : MutableList<LocationType> = createLocationTypes(
             "historical_landmark",
             "museum",
             "tourist_attraction",
@@ -42,7 +42,7 @@ class SearchProfileRepository {
             "embassy"
         )
 
-        val relaxationAndWellness : List<LocationType> = createLocationTypes(
+        val relaxationAndWellness : MutableList<LocationType> = createLocationTypes(
             "spa",
             "resort_hotel",
             "bed_and_breakfast",
@@ -50,7 +50,7 @@ class SearchProfileRepository {
             "extended_stay_hotel"
         )
 
-        val entertainmentHub : List<LocationType> = createLocationTypes(
+        val entertainmentHub : MutableList<LocationType> = createLocationTypes(
             "amusement_park",
             "casino",
             "night_club",
@@ -59,7 +59,7 @@ class SearchProfileRepository {
             "bowling_alley"
         )
 
-        val carServices : List<LocationType> = createLocationTypes(
+        val carServices : MutableList<LocationType> = createLocationTypes(
             "gas_station",
             "car_dealer",
             "car_rental",
@@ -82,15 +82,15 @@ class SearchProfileRepository {
             SearchProfile(id = 6, name = "Car Services", types = carServices)
         )
 
-        fun createLocationTypes(vararg names: String): List<LocationType> {
+        private fun createLocationTypes(vararg names: String): MutableList<LocationType> {
             return names.mapIndexed { index, name ->
                 LocationType(
                     id = index + 1,
                     jsonName = name,
                     formattedName = formatStringForUI(name),
-                    isChecked = false
+                    isChecked = true
                 )
-            }
+            }.toMutableList()
         }
 
         fun formatListForUi(list: List<LocationType>): List<LocationType> {

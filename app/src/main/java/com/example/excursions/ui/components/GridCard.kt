@@ -21,7 +21,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.excursions.ExcursionsRoutes
 import com.example.excursions.R
-import com.example.excursions.data.repository.Category
 import com.example.excursions.data.model.SearchProfile
 import com.example.excursions.ui.theme.YellowPolestar
 import com.example.excursions.ui.theme.polestarFontFamily
@@ -48,7 +47,7 @@ fun GridCard(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = searchProfile.name, //categoryUiState.name,
+                text = searchProfile.name,
                 fontSize = 22.sp,
                 fontFamily = polestarFontFamily,
                 modifier = Modifier.padding(2.dp)

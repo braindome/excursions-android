@@ -5,19 +5,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TimeInput
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -29,7 +30,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.excursions.ExcursionsRoutes
 import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.data.api_models.Center
-import com.example.excursions.data.repository.Category
+import com.example.excursions.data.model.SearchProfile
 import com.example.excursions.ui.components.DummyExcursionsAPI
 import com.example.excursions.ui.components.ExcursionsBottomBar
 import com.example.excursions.ui.components.ExcursionsFilterChip
@@ -38,8 +39,8 @@ import com.example.excursions.ui.components.ExcursionsSlider
 import com.example.excursions.ui.components.ExcursionsTextField
 import com.example.excursions.ui.components.ExcursionsTopBar
 import com.example.excursions.ui.components.ScreenTitleText
+import com.example.excursions.ui.theme.Typography
 import timber.log.Timber
-import java.util.Locale
 
 @Composable
 fun EditSearchProfileScreen(
@@ -49,21 +50,14 @@ fun EditSearchProfileScreen(
     //currentLocation: Center
 ) {
 
-    //val searchProfile by remember { mutableStateOf(viewModel.getSearchProfileById(searchProfileId)) }
-    val searchProfile by remember { mutableStateOf(viewModel.getSearchProfileById(searchProfileId)) }
-    var sliderPosition by rememberSaveable { mutableFloatStateOf(searchProfile.range/1000) }
-    //val searchProfile by viewModel.searchProfile.collectAsState()
+    val searchProfile by rememberSaveable(searchProfileId) { mutableStateOf(viewModel.getSearchProfileById(searchProfileId)) }
+    var sliderPosition by rememberSaveable { mutableFloatStateOf(searchProfile.range) }
+
     //Timber.d("Collected search profile from vm: $searchProfile")
-    Timber.d("Initial sliderPosition value: $sliderPosition")
-    Timber.d("Initial searchProfile.range: ${searchProfile.range}")
+    //Timber.d("Initial sliderPosition value: $sliderPosition")
+    //Timber.d("Initial searchProfile.range: ${searchProfile.range}")
 
-    //val navBackStackEntry by navController.currentBackStackEntryAsState()
-    //navBackStackEntry?.savedStateHandle?.set("updatedSearchProfile", searchProfile)
-
-    //Timber.d("Search profile id: $searchProfileId")
-    //Timber.d("Received search profile from card: $searchProfile")
-
-
+    for (type in searchProfile.types) { Timber.d("Initial searchProfile.types: ${type.formattedName}, ${type.isChecked}") }
 
     Scaffold(
         topBar = { ExcursionsTopBar(
@@ -74,13 +68,16 @@ fun EditSearchProfileScreen(
             onEndButtonClick = {
                 val updatedRange = searchProfile.range
                 val updatedName = searchProfile.name
-                val updatedState = updatedRange.let {
-                    Category(name = updatedName)
-                        .let { it2 -> searchProfile.copy(range = it) }
-                }
+                val updatedTypes = searchProfile.types
+                val updatedState = SearchProfile(
+                    name = updatedName,
+                    range = updatedRange,
+                    types = updatedTypes
+
+                )
 
                 viewModel.updateSearchProfileUiState(updatedState)
-                viewModel.updateSearchProfileSliderPosition(searchProfileId, sliderPosition)
+                viewModel.updateSearchProfileSliderPosition(searchProfile, sliderPosition)
             })},
         bottomBar = { ExcursionsBottomBar(navController = navController) }
 
@@ -100,7 +97,6 @@ fun EditSearchProfileScreen(
                 input = searchProfile.name,
                 onInputChanged = { updatedText ->
                     searchProfile.let { currentState ->
-                        //val updatedState = currentState.copy(category = currentState.category.copy(name = updatedText))
                         val updatedState = currentState.copy(name = updatedText)
                         viewModel.updateSearchProfileUiState(updatedState)
                         viewModel.updateSearchProfileName(searchProfileId, updatedText)
@@ -114,59 +110,55 @@ fun EditSearchProfileScreen(
 
             ExcursionsSlider(value = sliderPosition) { updatedValue ->
                 sliderPosition = updatedValue
-                Timber.d("Slider value: $sliderPosition")
+                //Timber.d("Slider value: $sliderPosition")
             }
 
-            /*
-            ExcursionsSlider { updatedValue ->
-                //searchProfileUiState?.range ?: 0f //= updatedValue
-                //viewModel.searchProfile.value.range = searchProfileUiState?.range!!
-                searchProfile.let { currentState ->
-                    val updatedState = currentState.copy(range = updatedValue)
-                    viewModel.updateSearchProfileUiState(updatedState)
+            Spacer(modifier = Modifier.size(30.dp))
+            Text(
+                text = "Types",
+                style = Typography.labelSmall,
+                modifier = Modifier
+                    .width(342.dp)
+                    .height(26.dp),
+            )
+
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                contentPadding = PaddingValues(start = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.Start
+            ) {
+                items(searchProfile.types) { locationType ->
+                    ExcursionsFilterChip(
+                        label = locationType.formattedName,
+                        isSelected = locationType.isChecked,
+                        onChipClicked = {
+                            //val updatedTypes = searchProfile.types.toMutableList()
+                            //val index = updatedTypes.indexOf(locationType)
+                            //updatedTypes[index] = locationType.copy(isChecked = !locationType.isChecked)
+                            //val updatedProfile = searchProfile.copy(types = updatedTypes)
+                            //viewModel.updateSearchProfileUiState(updatedProfile)
+                            //Timber.d("Updated types: $updatedTypes")
+                            Timber.d("Clicked on type: ${locationType.formattedName}, isChecked: ${!locationType.isChecked}")
+                            viewModel.updateLocationTypes(searchProfileId, locationType.id, !locationType.isChecked)
+                        }
+                    )
                 }
             }
 
-             */
-            Spacer(modifier = Modifier.size(30.dp))
-            Text(text = "Filter chips")
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-                horizontalArrangement = Arrangement.spacedBy(24.dp),
-                modifier = Modifier
-                    //.height(96.dp)
-                    .padding(8.dp)
-            ) {
-                val types = searchProfile.types.map { it.jsonName }
-
-                Timber.d("Filter chips types: $types")
-                items(types.size) { index ->
-                        ExcursionsFilterChip(label = formatStringForUI(types[index]))
-                    }
-            }
             Button(
                 onClick = {
-                    Timber.d("Current slider value: $sliderPosition")
-                    /*
+                    //Timber.d("Range value for api request: ${sliderPosition * 1000}")
+                    val types = searchProfile.types
+                        .filter { it.isChecked }
+                        .map { it.jsonName }
+                    Timber.d("Types into api request: $types")
                     viewModel.searchPlacesByLocationAndRadius(
                         center = Center(40.3548, 18.1717),
-                        //center = currentLocation,
-                        searchProfile = searchProfile
+                        //types = searchProfile.types.map { it.jsonName },
+                        types = types,
+                        range = sliderPosition
                     )
-
-                     */
-
-                    Timber.d("Range value for api request: ${sliderPosition * 1000}")
-                    viewModel.searchPlacesByLocationAndRadiusTest(
-                        center = Center(40.3548, 18.1717),
-                        types = searchProfile.types.map { it.jsonName },
-                        range = sliderPosition * 1000
-                    )
-
-
-
 
                 },
                 ) {
@@ -177,23 +169,12 @@ fun EditSearchProfileScreen(
     }
 }
 
-fun formatStringForUI(input: String): String {
-    val words = input.split("_").map { it.replaceFirstChar {
-        if (it.isLowerCase()) it.titlecase(
-            Locale.ROOT
-        )else it.toString()
-    } }
-
-    return words.joinToString(" ")
-}
-
 
 @Preview(showBackground = true)
 @Composable
 fun AddSearchProfilePreview() {
     EditSearchProfileScreen(
         navController = rememberNavController(),
-        //currentLocation = Center(0.0000, 0.0000),
         searchProfileId = 1,
         viewModel = ExcursionsViewModel(
             api = DummyExcursionsAPI(),
