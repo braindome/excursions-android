@@ -18,16 +18,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.excursions.ui.theme.GrayPolestar
+import com.example.excursions.ui.theme.Typography
 import com.example.excursions.ui.theme.polestarFontFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,7 +39,7 @@ fun ExcursionsSlider(
     value: Float,
     onValueChanged: (Float) -> Unit
 ) {
-    var sliderPosition by remember { mutableFloatStateOf(value) }
+    var sliderPosition by rememberSaveable { mutableFloatStateOf(value) }
     val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
 
 
@@ -44,33 +47,25 @@ fun ExcursionsSlider(
         modifier = Modifier.size(height = 84.dp, width = 342.dp)
     ) {
         Row(
-            modifier = Modifier.width(342.dp).weight(0.5f)
+            modifier = Modifier
+                .width(342.dp)
+                .weight(0.5f)
         ) {
             Text(
                 text = "Range",
-                fontFamily = polestarFontFamily,
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    lineHeight = 18.sp,
-                    color = Color.Black
-                )
+                style = Typography.labelSmall
             )
             Spacer(modifier = Modifier.weight(1f))
             Text(
                 text = "Km",
-                fontFamily = polestarFontFamily,
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    lineHeight = 18.sp,
-                    color = Color.Black
-                )
+                style = Typography.labelSmall
             )
         }
         Slider(
-            value = sliderPosition,
+            value = sliderPosition / 1000,
             onValueChange = {
-                sliderPosition = it
-                onValueChanged(it) },
+                sliderPosition = it * 1000
+                onValueChanged(it * 1000) },
             onValueChangeFinished = {
                 onValueChanged(sliderPosition)
             },
@@ -89,17 +84,15 @@ fun ExcursionsSlider(
 
                 )
             },
-            modifier = Modifier.size(width = 342.dp, height = 48.dp).weight(1f)
+            modifier = Modifier
+                .size(width = 342.dp, height = 48.dp)
+                .weight(1f)
 
         )
         Text(
-            text = "%d km".format(sliderPosition.toInt()),
-            fontFamily = polestarFontFamily,
-            style = TextStyle(
-                fontSize = 16.sp,
-                lineHeight = 18.sp,
-                color = Color.Black
-            )
+            //text = "${(sliderPosition.toInt())/1000} km",
+            text = "${(sliderPosition/1000).toInt()} km",
+            style = Typography.labelSmall
         )
     }
 

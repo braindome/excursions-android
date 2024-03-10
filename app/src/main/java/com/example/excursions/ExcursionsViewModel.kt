@@ -19,18 +19,11 @@ import timber.log.Timber
 
 class ExcursionsViewModel(private val api: ExcursionsAPI) : ViewModel() {
 
-
-    //var searchProfilesList : MutableList<SearchProfile> = mutableListOf()
-
     private val _searchProfilesList = MutableStateFlow<List<SearchProfile>>(emptyList())
     val searchProfilesList: StateFlow<List<SearchProfile>> = _searchProfilesList.asStateFlow()
 
-
-
     private val _searchProfile = MutableStateFlow(SearchProfile())
     val searchProfile: StateFlow<SearchProfile> = _searchProfile.asStateFlow()
-
-
 
     init {
         //generateDefaultSearchProfiles()
@@ -38,28 +31,27 @@ class ExcursionsViewModel(private val api: ExcursionsAPI) : ViewModel() {
         //Timber.d("Search profile list (view model): $searchProfilesList")
     }
 
+    fun updateLocationTypes(searchProfileID: Int, locationTypeID: Int, isChecked: Boolean) {
+        val updatedProfiles = _searchProfilesList.value.map { searchProfile ->
+            if (searchProfile.id == searchProfileID) {
+                val updatedTypes = searchProfile.types.map { locationType ->
+                    if (locationType.id == locationTypeID) {
+                        locationType.copy(isChecked = isChecked)
+                    } else {
+                        locationType
+                    }
+                }
+                searchProfile.copy(types = updatedTypes.toMutableList())
+            } else {
+                searchProfile
+            }
+        }
+        _searchProfilesList.value = updatedProfiles
+    }
+
     fun getSearchProfileById(searchProfileId: Int): SearchProfile {
         return searchProfilesList.value.find { it.id == searchProfileId } ?: SearchProfile()
     }
-
-    /*
-    private fun generateDefaultSearchProfiles() {
-        val newSearchProfiles = mutableListOf<SearchProfile>()
-        for ((index, category) in SearchProfileRepository.categories.withIndex()) {
-            newSearchProfiles.add(
-                SearchProfile(
-                    id = index + 1,
-                    category = category,
-                    range = 1f,
-                    lat = 57.7099,
-                    lng = 11.9438
-                )
-            )
-        }
-        _searchProfilesList.value = newSearchProfiles
-    }
-
-     */
 
 
     fun updateSearchProfilesList(updatedSearchProfiles: List<SearchProfile>) {
@@ -89,7 +81,7 @@ class ExcursionsViewModel(private val api: ExcursionsAPI) : ViewModel() {
      * Retrofit can't deal with colons in endpoint string.
      */
 
-    fun searchPlacesByLocationAndRadiusTest(center: Center, types: List<String>, range: Float) {
+    fun searchPlacesByLocationAndRadius(center: Center, types: List<String>, range: Float) {
         Timber.d("Received range value: $range")
         val locationRestriction = LocationRestriction(Circle(center, range.toDouble()))
         val maxResultCount = 20
@@ -121,7 +113,7 @@ class ExcursionsViewModel(private val api: ExcursionsAPI) : ViewModel() {
         }
     }
 
-    fun searchPlacesByLocationAndRadius(center: Center, searchProfile: SearchProfile) {
+    fun searchPlacesByLocationAndRadius_old(center: Center, searchProfile: SearchProfile) {
         Timber.d("Search by searchprofile")
         val typeStrings = searchProfile.types.map { it.jsonName }
         val locationRestriction = LocationRestriction(Circle(center, searchProfile.range.toDouble()))
@@ -154,10 +146,9 @@ class ExcursionsViewModel(private val api: ExcursionsAPI) : ViewModel() {
             }
         }
     }
-
-    fun updateSearchProfileSliderPosition(searchProfileId: Int, sliderPosition: Float) {
+    fun updateSearchProfileSliderPosition(searchProfile: SearchProfile, sliderPosition: Float) {
         val updatedProfiles = _searchProfilesList.value.map {
-            if (it.id == searchProfileId) {
+            if (it.id == searchProfile.id) {
                 it.copy(range = sliderPosition)
             } else {
                 it
@@ -165,8 +156,6 @@ class ExcursionsViewModel(private val api: ExcursionsAPI) : ViewModel() {
         }
         _searchProfilesList.value = updatedProfiles
     }
-
-
 }
 
 /**

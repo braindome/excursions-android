@@ -1,7 +1,6 @@
 package com.example.excursions.data.model
 
 import android.os.Parcelable
-import com.example.excursions.data.repository.Category
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
 
@@ -21,7 +20,7 @@ data class SearchProfile(
 data class SearchProfile(
     val name : String = "",
     val id: Int = 0,
-    val types: @RawValue List<LocationType> = emptyList(),
+    val types: @RawValue MutableList<LocationType> = mutableListOf(),
     val range: Float = 50000f,
     val lat: Double = 0.00,
     val lng: Double = 0.00

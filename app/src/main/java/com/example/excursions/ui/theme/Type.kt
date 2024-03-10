@@ -8,6 +8,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.excursions.R
 
+val polestarFontFamily = FontFamily(
+    Font(R.font.polestar_unica77_tt, FontWeight.Normal)
+)
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodyLarge = TextStyle(
@@ -15,6 +18,13 @@ val Typography = Typography(
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
+    labelSmall = TextStyle(
+        fontFamily = polestarFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        lineHeight = 18.sp,
         letterSpacing = 0.5.sp
     )
     /* Other default text styles to override
@@ -35,6 +45,3 @@ val Typography = Typography(
     */
 )
 
-val polestarFontFamily = FontFamily(
-    Font(R.font.polestar_unica77_tt, FontWeight.Normal)
-)

@@ -75,15 +75,6 @@ class MainActivity : ComponentActivity() {
         // Initialize ViewModel using ViewModelProvider with the factory
         viewModel = ViewModelProvider(this, viewModelFactory)[ExcursionsViewModel::class.java]
 
-        /*
-        viewModel.searchPlacesByLocationAndRadiusTest(
-            center = Center(40.3548, 18.1717),
-            range = 50000f,
-            types = SearchProfileRepository.landmarkDiscovery
-        )
-
-         */
-
         setContent {
             val navController = rememberNavController()
 

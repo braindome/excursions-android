@@ -3,14 +3,13 @@ package com.example.excursions.ui.components
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -21,40 +20,45 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.modifier.modifierLocalConsumer
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.excursions.R
+import com.example.excursions.ui.theme.OrangePolestar
 import com.example.excursions.ui.theme.polestarFontFamily
 
 
 @SuppressLint("UnusedBoxWithConstraintsScope")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExcursionsFilterChip(label: String) {
-    var selected by remember { mutableStateOf(false) }
+fun ExcursionsFilterChip(
+    label: String,
+    isSelected: Boolean,
+    onChipClicked: () -> Unit
+) {
+    var selected by rememberSaveable { mutableStateOf(isSelected) }
 
     Box(
-        modifier = Modifier//.wrapContentWidth()
+        modifier = Modifier.wrapContentSize()
     ) {
         FilterChip(
             selected = selected,
-            onClick = { selected = !selected },
+            onClick = {
+                selected = !selected
+                onChipClicked()
+            },
             label = {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier//.fillMaxSize()
+                    modifier = Modifier.wrapContentSize()
                 ) {
                     Text(
                         text = label,
@@ -69,14 +73,17 @@ fun ExcursionsFilterChip(label: String) {
                     Spacer(modifier = Modifier.padding(8.dp))
 
                     Icon(
-                        painter = painterResource(id = if (selected) R.drawable.check else R.drawable.plus),
+                        painter = painterResource(id = if (selected) R.drawable.cancel else R.drawable.plus),
                         contentDescription = null,
-                        tint = if (selected) Color.White else Color.Black
+                        //tint = if (selected) Color.White else Color.Black
+                        tint = OrangePolestar,
+                        modifier = Modifier.size(16.dp)
                     )
                 }
             },
             colors = FilterChipDefaults.filterChipColors(
                 containerColor = Color.White,
+                //labelColor = Color.Black,
                 selectedContainerColor = Color.Black,
                 selectedLabelColor = Color.White
             ),
@@ -93,5 +100,5 @@ fun ExcursionsFilterChip(label: String) {
 @Preview(showBackground = true)
 @Composable
 fun ExcursionsFilterChipPreview() {
-    ExcursionsFilterChip(label = "Typesgohere")
+    ExcursionsFilterChip(label = "Typegoeshere", isSelected = false, onChipClicked = {})
 }
