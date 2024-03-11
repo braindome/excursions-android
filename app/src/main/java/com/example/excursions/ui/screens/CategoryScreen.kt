@@ -70,10 +70,15 @@ fun CategoryScreen(
                 content = {
                     items(searchProfilesList) { searchProfile ->
                         //Timber.d("Search profile from CategoryScreen to GridCard: $searchProfile")
-                        GridCard(navController = navController, searchProfile = searchProfile)
+                        GridCard(
+                            navController = navController,
+                            searchProfile = searchProfile,
+                            viewModel = viewModel
+                        )
                     }
                 },
-                modifier = Modifier.padding(8.dp))
+                modifier = Modifier.padding(start = 8.dp, end = 8.dp)
+            )
 
         }
     }

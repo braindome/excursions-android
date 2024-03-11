@@ -20,16 +20,19 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.excursions.ExcursionsRoutes
+import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.R
+import com.example.excursions.data.api_models.Center
 import com.example.excursions.data.model.SearchProfile
 import com.example.excursions.ui.theme.YellowPolestar
 import com.example.excursions.ui.theme.polestarFontFamily
+import timber.log.Timber
 
 @Composable
 fun GridCard(
     navController: NavHostController,
     searchProfile: SearchProfile,
-
+    viewModel: ExcursionsViewModel
     ) {
     val searchProfileId = searchProfile.id
     Surface(
@@ -71,7 +74,8 @@ fun GridCard(
 fun GridCardPreview() {
     GridCard(
         navController = rememberNavController(),
-        searchProfile = SearchProfile(id = -1)
+        searchProfile = SearchProfile(id = -1),
+        viewModel = ExcursionsViewModel(api = DummyExcursionsAPI())
     )
 }
 

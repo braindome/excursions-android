@@ -7,6 +7,7 @@ import com.example.excursions.api.ExcursionsAPI
 import com.example.excursions.data.api_models.Center
 import com.example.excursions.data.api_models.Circle
 import com.example.excursions.data.api_models.LocationRestriction
+import com.example.excursions.data.api_models.Place
 import com.example.excursions.data.api_models.SearchNearbyRequest
 import com.example.excursions.data.model.SearchProfile
 import com.example.excursions.data.repository.SearchProfileRepository
@@ -21,6 +22,9 @@ class ExcursionsViewModel(private val api: ExcursionsAPI) : ViewModel() {
 
     private val _searchProfilesList = MutableStateFlow<List<SearchProfile>>(emptyList())
     val searchProfilesList: StateFlow<List<SearchProfile>> = _searchProfilesList.asStateFlow()
+
+    private val _resultPlaceList = MutableStateFlow<MutableList<Place>>(mutableListOf())
+    val resultPlaceList: StateFlow<MutableList<Place>> = _resultPlaceList.asStateFlow()
 
     private val _searchProfile = MutableStateFlow(SearchProfile())
     val searchProfile: StateFlow<SearchProfile> = _searchProfile.asStateFlow()
@@ -82,6 +86,7 @@ class ExcursionsViewModel(private val api: ExcursionsAPI) : ViewModel() {
      */
 
     fun searchPlacesByLocationAndRadius(center: Center, types: List<String>, range: Float) {
+        val updatedPlaces = _resultPlaceList.value
         Timber.d("Received range value: $range")
         val locationRestriction = LocationRestriction(Circle(center, range.toDouble()))
         val maxResultCount = 20
@@ -103,6 +108,7 @@ class ExcursionsViewModel(private val api: ExcursionsAPI) : ViewModel() {
                     Timber.d("Successful API call:")
                     searchNearbyResponse?.places?.forEachIndexed { index, place ->
                         Timber.d("Place #$index: $place")
+                        updatedPlaces.add(place)
                     }
                 } else {
                     Timber.e("Request failed with code ${result.code()}")
@@ -111,6 +117,8 @@ class ExcursionsViewModel(private val api: ExcursionsAPI) : ViewModel() {
                 Timber.e("Exception during API call: ${e.message}")
             }
         }
+
+        _resultPlaceList.value = updatedPlaces
     }
 
     fun searchPlacesByLocationAndRadius_old(center: Center, searchProfile: SearchProfile) {

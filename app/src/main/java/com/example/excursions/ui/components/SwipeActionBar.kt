@@ -19,14 +19,17 @@ import com.example.excursions.ui.theme.OrangePolestar
 import com.example.excursions.ui.theme.polestarFontFamily
 
 @Composable
-fun SwipeActionBar() {
+fun SwipeActionBar(
+    onYayClick: () -> Unit,
+    onNayClick: () -> Unit
+) {
     Row(
         modifier = Modifier
             .width(342.dp)
             .height(36.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        IconButton(onClick = { /*TODO*/ }) {
+        IconButton(onClick = { onNayClick() }) {
             Icon(
                 painter = painterResource(id = R.drawable.arrow_left),
                 contentDescription = null, tint = OrangePolestar,
@@ -45,7 +48,7 @@ fun SwipeActionBar() {
             fontSize = 20.sp,
             fontFamily = polestarFontFamily
         )
-        IconButton(onClick = { /*TODO*/ }) {
+        IconButton(onClick = { onYayClick() }) {
             Icon(
                 painter = painterResource(id = R.drawable.arrow_right),
                 contentDescription = null, tint = OrangePolestar,
@@ -58,5 +61,7 @@ fun SwipeActionBar() {
 @Preview(showBackground = true)
 @Composable
 fun SwipeActionBarPreview() {
-    SwipeActionBar()
+    SwipeActionBar(
+        {}, {}
+    )
 }
