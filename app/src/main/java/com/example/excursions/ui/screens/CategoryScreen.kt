@@ -12,6 +12,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.DisposableEffectResult
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -32,6 +34,8 @@ import com.example.excursions.ui.components.ScreenTitleSubtitle
 import com.example.excursions.data.model.SearchProfile
 import com.example.excursions.ui.components.GridCard
 import com.example.excursions.ui.theme.ExcursionsTheme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import timber.log.Timber
 
 @Composable
@@ -39,6 +43,11 @@ fun CategoryScreen(
     navController: NavHostController,
     viewModel: ExcursionsViewModel
 ) {
+
+    DisposableEffect(Unit) {
+        viewModel.fetchUserLocation()
+        onDispose {  }
+    }
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     //val updatedSearchProfile = navBackStackEntry?.savedStateHandle?.get<SearchProfile>("updatedSearchProfile")
