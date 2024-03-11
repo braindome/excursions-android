@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,6 +28,7 @@ import com.example.excursions.data.model.SearchProfile
 import com.example.excursions.ui.theme.YellowPolestar
 import com.example.excursions.ui.theme.polestarFontFamily
 import timber.log.Timber
+import kotlin.coroutines.coroutineContext
 
 @Composable
 fun GridCard(
@@ -75,7 +77,7 @@ fun GridCardPreview() {
     GridCard(
         navController = rememberNavController(),
         searchProfile = SearchProfile(id = -1),
-        viewModel = ExcursionsViewModel(api = DummyExcursionsAPI())
+        viewModel = ExcursionsViewModel(api = DummyExcursionsAPI(), appContext = LocalContext.current)
     )
 }
 

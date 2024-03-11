@@ -10,19 +10,30 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.R
+import com.example.excursions.data.api_models.Center
+import com.example.excursions.data.api_models.DisplayName
+import com.example.excursions.data.api_models.Location
 import com.example.excursions.data.api_models.Place
+import com.example.excursions.data.api_models.toCenter
 import com.example.excursions.ui.theme.polestarFontFamily
 
 @Composable
 fun SwipeCard(
-    place: Place
+    place: Place,
+    viewModel: ExcursionsViewModel
 ) {
 
     /*
@@ -37,6 +48,10 @@ fun SwipeCard(
 
      */
 
+    val currentLocation by viewModel.location.observeAsState()
+    val nullCheckedLocation: Center = currentLocation ?: Center(0.00,0.00)
+    val placeCoordinates = place.location.toCenter()
+    val distanceToLocation = viewModel.distanceBetweenCenters(nullCheckedLocation, placeCoordinates)
 
     Surface(
         modifier = Modifier
@@ -63,7 +78,7 @@ fun SwipeCard(
 
             Spacer(modifier = Modifier.size(10.dp))
             Text(
-                text = "5 km",
+                text = "${distanceToLocation.toInt()} km",
                 fontFamily = polestarFontFamily,
                 fontSize = 16.sp
             )
@@ -92,35 +107,23 @@ fun SwipeCard(
     }
 }
 
-/*
+
 @Preview(showBackground = true)
 @Composable
 fun SwipeCardPreview() {
     SwipeCard(
-        place =
-            Place(
-                displayName = DisplayName("", "Test name"),
-                formattedAddress = "Address",
-                primaryType = "Primary type",
-                id = "1",
-                location = Location(0.00, 0.00),
-                types = listOf("marina", "hiking_area"),
-                photos = listOf(
-                    Photo(
-                        authorAttributions = listOf(
-                            AuthorAttribution(
-                                displayName = "Author name",
-                                photoUri = "//lh3.googleusercontent.com/a-/ALV-UjWnBRgwussq-jhV9VlXGhpvShPjaTuyctzXrc9jf2Opog=s100-p-k-no-mo",
-                                uri = "//maps.google.com/maps/contrib/105369839496978573490"
-                            ),
-                    ),
-                    heightPx = 200,
-                    widthPx = 200,
-                    name = "Photo name?"
-                )
-            )
+        place = Place(
+            displayName = DisplayName(languageCode = "EN", text = "Display Name"),
+            formattedAddress = "Test formatted address",
+            id = "hehehe",
+            location = Location(0.00,0.00),
+            primaryType = "Marina",
+            types = listOf("Marina", "Hotel")
+        ),
+        viewModel = ExcursionsViewModel(
+            appContext = LocalContext.current,
+            api = DummyExcursionsAPI()
         )
     )
 }
 
- */

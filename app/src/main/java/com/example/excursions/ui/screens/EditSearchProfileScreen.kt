@@ -17,12 +17,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -52,6 +54,10 @@ fun EditSearchProfileScreen(
 
     val searchProfile by rememberSaveable(searchProfileId) { mutableStateOf(viewModel.getSearchProfileById(searchProfileId)) }
     var sliderPosition by rememberSaveable { mutableFloatStateOf(searchProfile.range) }
+
+    val currentLocation by viewModel.location.observeAsState()
+    val nullCheckedLocation: Center = currentLocation ?: Center(0.00,0.00)
+    Timber.d("NullCheckedLocation: ${nullCheckedLocation}")
 
     //Timber.d("Collected search profile from vm: $searchProfile")
     //Timber.d("Initial sliderPosition value: $sliderPosition")
@@ -154,11 +160,11 @@ fun EditSearchProfileScreen(
                         .map { it.jsonName }
                     Timber.d("Types into api request: $types")
                     viewModel.searchPlacesByLocationAndRadius(
-                        center = Center(40.3548, 18.1717),
-                        //types = searchProfile.types.map { it.jsonName },
+                        center = nullCheckedLocation,
                         types = types,
                         range = sliderPosition
                     )
+
 
                 },
                 ) {
@@ -178,6 +184,7 @@ fun AddSearchProfilePreview() {
         searchProfileId = 1,
         viewModel = ExcursionsViewModel(
             api = DummyExcursionsAPI(),
+            appContext = LocalContext.current
         )
     )
 }

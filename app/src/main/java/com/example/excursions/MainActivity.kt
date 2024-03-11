@@ -6,9 +6,11 @@ import android.location.Location
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -28,7 +30,13 @@ import com.example.excursions.ui.screens.SearchScreen
 import com.example.excursions.ui.screens.SwipeScreen
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import timber.log.Timber
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 const val apiKey = BuildConfig.PLACES_API_KEY
 
@@ -69,8 +77,13 @@ class MainActivity : ComponentActivity() {
             )
         }
 
+        //lifecycleScope.launch { fetchUserLocation() }
+
         // Create ViewModelFactory with the ExcursionsAPI instance
-        val viewModelFactory = ExcursionsViewModelFactory((application as ExcursionsApp).api)
+        val viewModelFactory = ExcursionsViewModelFactory(
+            applicationContext,
+            (application as ExcursionsApp).api
+        )
 
         // Initialize ViewModel using ViewModelProvider with the factory
         viewModel = ViewModelProvider(this, viewModelFactory)[ExcursionsViewModel::class.java]
@@ -141,6 +154,16 @@ class MainActivity : ComponentActivity() {
                 }
         } catch (e: SecurityException) {
             e.printStackTrace()
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    suspend fun fetchLocation(): Location? = suspendCoroutine { continuation ->
+        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            continuation.resume(location)
+            Timber.d("Current location: $location")
+        }.addOnFailureListener { exception ->
+            continuation.resumeWithException(exception)
         }
     }
 
