@@ -20,7 +20,7 @@ class ExcursionsApp : Application() {
             .addInterceptor { chain: Interceptor.Chain ->
                 val request = chain.request().newBuilder()
                     .addHeader("X-Goog-Api-Key", BuildConfig.PLACES_API_KEY)
-                    .addHeader("X-Goog-FieldMask", "places.formattedAddress,places.displayName,places.id,places.location,places.primaryType,places.types")
+                    .addHeader("X-Goog-FieldMask", "places.formattedAddress,places.displayName,places.id,places.location,places.primaryType,places.types,places.photos,places.reviews")
                     .build()
                 chain.proceed(request)
             }
