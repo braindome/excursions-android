@@ -8,12 +8,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -24,11 +28,10 @@ import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.ui.components.DummyExcursionsAPI
 import com.example.excursions.ui.components.ExcursionsBottomBar
 import com.example.excursions.ui.components.ExcursionsTopBar
-import com.example.excursions.ui.components.GridCard
 import com.example.excursions.ui.components.ScreenTitleSubtitle
 import com.example.excursions.data.model.SearchProfile
+import com.example.excursions.ui.components.GridCard
 import com.example.excursions.ui.theme.ExcursionsTheme
-import timber.log.Timber
 
 @Composable
 fun CategoryScreen(
@@ -45,6 +48,7 @@ fun CategoryScreen(
     }
 
     val searchProfilesList by viewModel.searchProfilesList.collectAsState()
+    //val currentLocation by viewModel.location.observeAsState()
 
     Scaffold(
         topBar = {
@@ -79,6 +83,7 @@ fun CategoryScreen(
                 },
                 modifier = Modifier.padding(start = 8.dp, end = 8.dp)
             )
+            //Text(text = currentLocation.toString())
 
         }
     }
@@ -91,6 +96,6 @@ fun CategoryScreen(
 fun CategoryScreenPreview() {
     ExcursionsTheme {
         // For the preview, you can pass null for NavController and create a dummy ExcursionsViewModel
-        CategoryScreen(navController = rememberNavController(), viewModel = ExcursionsViewModel(api = DummyExcursionsAPI()))
+        CategoryScreen(navController = rememberNavController(), viewModel = ExcursionsViewModel(api = DummyExcursionsAPI(), appContext = LocalContext.current))
     }
 }

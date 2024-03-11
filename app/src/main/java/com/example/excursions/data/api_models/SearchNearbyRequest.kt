@@ -25,3 +25,7 @@ data class Center(
     val latitude: Double,
     val longitude: Double
 )
+
+fun Location.toCenter(): Center {
+    return Center(latitude, longitude)
+}

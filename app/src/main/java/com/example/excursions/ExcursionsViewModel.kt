@@ -1,5 +1,8 @@
 package com.example.excursions
 
+import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -10,15 +13,26 @@ import com.example.excursions.data.api_models.LocationRestriction
 import com.example.excursions.data.api_models.Place
 import com.example.excursions.data.api_models.SearchNearbyRequest
 import com.example.excursions.data.model.SearchProfile
+import com.example.excursions.data.repository.LocationRepository
 import com.example.excursions.data.repository.SearchProfileRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import kotlin.RuntimeException
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.math.sqrt
 
-class ExcursionsViewModel(private val api: ExcursionsAPI) : ViewModel() {
+class ExcursionsViewModel(
+    private val appContext: Context,
+    private val api: ExcursionsAPI
+) : ViewModel() {
 
     private val _searchProfilesList = MutableStateFlow<List<SearchProfile>>(emptyList())
     val searchProfilesList: StateFlow<List<SearchProfile>> = _searchProfilesList.asStateFlow()
@@ -29,11 +43,57 @@ class ExcursionsViewModel(private val api: ExcursionsAPI) : ViewModel() {
     private val _searchProfile = MutableStateFlow(SearchProfile())
     val searchProfile: StateFlow<SearchProfile> = _searchProfile.asStateFlow()
 
+    val application = ExcursionsApp()
+
+    private val locationRepository = LocationRepository(appContext)
+
+
+    private val _location = MutableLiveData<Center?>()
+    val location: LiveData<Center?> get() = _location
+
     init {
-        //generateDefaultSearchProfiles()
+        _resultPlaceList.value = mutableListOf()
         _searchProfilesList.value = SearchProfileRepository.defaultSearchProfiles
         //Timber.d("Search profile list (view model): $searchProfilesList")
+        //fetchUserLocation()
+        viewModelScope.launch {
+            delay(3000)
+            fetchUserLocation()
+        }
     }
+
+    fun haversine(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
+        val R = 6371.0 // Radius of the Earth in kilometers
+
+        val dLat = Math.toRadians(lat2 - lat1)
+        val dLon = Math.toRadians(lon2 - lon1)
+
+        val a = sin(dLat / 2) * sin(dLat / 2) + cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) * sin(dLon / 2) * sin(dLon / 2)
+        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+        return R * c
+    }
+
+    fun distanceBetweenCenters(center1: Center, center2: Center): Double {
+        return haversine(center1.latitude, center1.longitude, center2.latitude, center2.longitude)
+    }
+
+    fun fetchUserLocation() {
+        viewModelScope.launch {
+            try {
+                val fetchedLocation = locationRepository.fetchLocation()
+                val locationData = fetchedLocation?.let {
+                    //LocationData(it.latitude, it.longitude)
+                    Center(it.latitude, it.longitude)
+                }
+                _location.value = locationData
+                Timber.d("Current location (vm): $location")
+            } catch (e: Exception) {
+                Timber.e(e, "Error fetching location")
+            }
+        }
+    }
+
 
     fun updateLocationTypes(searchProfileID: Int, locationTypeID: Int, isChecked: Boolean) {
         val updatedProfiles = _searchProfilesList.value.map { searchProfile ->
@@ -104,17 +164,22 @@ class ExcursionsViewModel(private val api: ExcursionsAPI) : ViewModel() {
 
                 if (result.isSuccessful) {
                     val searchNearbyResponse = result.body()
-                    //Timber.d("Successful call: $searchNearbyResponse")
-                    Timber.d("Successful API call:")
-                    searchNearbyResponse?.places?.forEachIndexed { index, place ->
-                        Timber.d("Place #$index: $place")
-                        updatedPlaces.add(place)
+                    if (searchNearbyResponse?.places != null) {
+                        Timber.d("Successful API call:")
+                        searchNearbyResponse.places.forEachIndexed { index, place ->
+                            Timber.d("Place #$index: $place")
+                            updatedPlaces.add(place)
+                        }
+                    } else {
+                        Timber.e("Error: 'places' field missing in the api response")
                     }
+
                 } else {
                     Timber.e("Request failed with code ${result.code()}")
                 }
             } catch (e: Exception) {
                 Timber.e("Exception during API call: ${e.message}")
+                Timber.e("Details: ${e.cause}")
             }
         }
 
@@ -170,11 +235,11 @@ class ExcursionsViewModel(private val api: ExcursionsAPI) : ViewModel() {
  * VM Factory because vm needs a constructor
  */
 
-class ExcursionsViewModelFactory(private val api: ExcursionsAPI) : ViewModelProvider.Factory {
+class ExcursionsViewModelFactory(private val appContext: Context, private val api: ExcursionsAPI) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ExcursionsViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return ExcursionsViewModel(api) as T
+            return ExcursionsViewModel(appContext, api) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.excursions.R
 import com.example.excursions.ui.theme.OrangePolestar
+import com.example.excursions.ui.theme.Typography
 import com.example.excursions.ui.theme.polestarFontFamily
 
 @Composable
@@ -36,17 +37,16 @@ fun SwipeActionBar(
                 modifier = Modifier.size(20.dp)
             )
         }
-        Text(text = "Nay", modifier = Modifier
-            .size(30.dp)
-            .weight(1f),
-            fontSize = 20.sp,
-            fontFamily = polestarFontFamily
+        Text(
+            text = "Nay",
+            style = Typography.bodyLarge,
+            modifier = Modifier.weight(1f)
         )
-        Text(text = "Yay", modifier = Modifier
-            .size(30.dp)
-            .weight(0.15f),
-            fontSize = 20.sp,
-            fontFamily = polestarFontFamily
+        Text(
+            text = "Yay",
+            style = Typography.bodyLarge,
+            //modifier = Modifier.weight(1f)
+
         )
         IconButton(onClick = { onYayClick() }) {
             Icon(
