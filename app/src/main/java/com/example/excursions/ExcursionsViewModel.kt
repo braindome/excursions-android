@@ -50,10 +50,6 @@ class ExcursionsViewModel(
     val location: LiveData<Center?> get() = _location
 
     init {
-        viewModelScope.launch {
-            delay(3000)
-            fetchUserLocation()
-        }
         _resultPlaceList.value = mutableListOf()
         _searchProfilesList.value = SearchProfileRepository.defaultSearchProfiles
     }
