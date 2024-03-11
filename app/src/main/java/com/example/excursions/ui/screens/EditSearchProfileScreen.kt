@@ -57,6 +57,7 @@ fun EditSearchProfileScreen(
 
     val currentLocation by viewModel.location.observeAsState()
     val nullCheckedLocation: Center = currentLocation ?: Center(0.00,0.00)
+    Timber.d("NullCheckedLocation: ${nullCheckedLocation}")
 
     //Timber.d("Collected search profile from vm: $searchProfile")
     //Timber.d("Initial sliderPosition value: $sliderPosition")

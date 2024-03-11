@@ -16,28 +16,33 @@ class ExcursionsApp : Application() {
     private val placesBaseUrl = "https://places.googleapis.com/v1/"
 
     val api:ExcursionsAPI by lazy {
-        val httpClient = OkHttpClient.Builder()
-            .addInterceptor { chain: Interceptor.Chain ->
-                val request = chain.request().newBuilder()
-                    .addHeader("X-Goog-Api-Key", BuildConfig.PLACES_API_KEY)
-                    .addHeader("X-Goog-FieldMask", "places.formattedAddress,places.displayName,places.id,places.location,places.primaryType,places.types")
-                    .build()
-                chain.proceed(request)
-            }
-            .readTimeout(30, TimeUnit.SECONDS)
-            .build()
+        try {
+            val httpClient = OkHttpClient.Builder()
+                .addInterceptor { chain: Interceptor.Chain ->
+                    val request = chain.request().newBuilder()
+                        .addHeader("X-Goog-Api-Key", BuildConfig.PLACES_API_KEY)
+                        .addHeader("X-Goog-FieldMask", "places.formattedAddress,places.displayName,places.id,places.location,places.primaryType,places.types")
+                        .build()
+                    chain.proceed(request)
+                }
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build()
 
-        val moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
+            val moshi = Moshi.Builder()
+                .add(KotlinJsonAdapterFactory())
+                .build()
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl(placesBaseUrl)
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .client(httpClient)
-            .build()
+            val retrofit = Retrofit.Builder()
+                .baseUrl(placesBaseUrl)
+                .addConverterFactory(MoshiConverterFactory.create(moshi))
+                .client(httpClient)
+                .build()
 
-        retrofit.create(ExcursionsAPI::class.java)
+            retrofit.create(ExcursionsAPI::class.java)
+        } catch (e: Exception) {
+            Timber.e(e, "Error during Retrofit and Moshi initialization")
+            throw e
+        }
     }
     override fun onCreate() {
         super.onCreate()

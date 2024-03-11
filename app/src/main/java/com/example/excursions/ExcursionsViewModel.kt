@@ -15,6 +15,7 @@ import com.example.excursions.data.api_models.SearchNearbyRequest
 import com.example.excursions.data.model.SearchProfile
 import com.example.excursions.data.repository.LocationRepository
 import com.example.excursions.data.repository.SearchProfileRepository
+import com.squareup.moshi.JsonDataException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
@@ -43,23 +44,18 @@ class ExcursionsViewModel(
     private val _searchProfile = MutableStateFlow(SearchProfile())
     val searchProfile: StateFlow<SearchProfile> = _searchProfile.asStateFlow()
 
-    val application = ExcursionsApp()
-
     private val locationRepository = LocationRepository(appContext)
-
 
     private val _location = MutableLiveData<Center?>()
     val location: LiveData<Center?> get() = _location
 
     init {
-        _resultPlaceList.value = mutableListOf()
-        _searchProfilesList.value = SearchProfileRepository.defaultSearchProfiles
-        //Timber.d("Search profile list (view model): $searchProfilesList")
-        //fetchUserLocation()
         viewModelScope.launch {
             delay(3000)
             fetchUserLocation()
         }
+        _resultPlaceList.value = mutableListOf()
+        _searchProfilesList.value = SearchProfileRepository.defaultSearchProfiles
     }
 
     fun haversine(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
@@ -158,32 +154,48 @@ class ExcursionsViewModel(
             maxResultCount
         )
 
+        Timber.d("Request: ${request.toString()}")
+
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                Timber.d("Before result")
                 val result = api.searchNearbyPlaces(requestUrl, request).execute()
+                Timber.d("API response: ${result.raw().toString()}")
 
                 if (result.isSuccessful) {
+                    Timber.d("API response in if block: ${result.body()}")
+
                     val searchNearbyResponse = result.body()
-                    if (searchNearbyResponse?.places != null) {
-                        Timber.d("Successful API call:")
+                    if (searchNearbyResponse?.places != null && searchNearbyResponse.places.isNotEmpty()) {
+                        Timber.d("Successful API call - API Response: ${result.body()}")
                         searchNearbyResponse.places.forEachIndexed { index, place ->
                             Timber.d("Place #$index: $place")
                             updatedPlaces.add(place)
                         }
+                        _resultPlaceList.value = updatedPlaces
+
                     } else {
                         Timber.e("Error: 'places' field missing in the api response")
+                        Timber.e("Full API Response: ${result.raw().toString()}")
+                        Timber.e("Result error body: ${result.errorBody()}")
                     }
 
                 } else {
                     Timber.e("Request failed with code ${result.code()}")
+                    Timber.e("Error message: ${result.message()}")
+
                 }
+            } catch (e: JsonDataException) {
+                Timber.e("JsonDataException during API call: ${e.message}")
+                Timber.e("Cause: ${e.cause}")
             } catch (e: Exception) {
                 Timber.e("Exception during API call: ${e.message}")
-                Timber.e("Details: ${e.cause}")
+                Timber.e("Cause: ${e.cause}")
+                e.printStackTrace()
             }
         }
 
-        _resultPlaceList.value = updatedPlaces
+
     }
 
     fun searchPlacesByLocationAndRadius_old(center: Center, searchProfile: SearchProfile) {

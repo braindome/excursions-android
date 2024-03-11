@@ -32,6 +32,7 @@ import com.example.excursions.ui.components.ScreenTitleSubtitle
 import com.example.excursions.data.model.SearchProfile
 import com.example.excursions.ui.components.GridCard
 import com.example.excursions.ui.theme.ExcursionsTheme
+import timber.log.Timber
 
 @Composable
 fun CategoryScreen(
@@ -48,7 +49,8 @@ fun CategoryScreen(
     }
 
     val searchProfilesList by viewModel.searchProfilesList.collectAsState()
-    //val currentLocation by viewModel.location.observeAsState()
+    val currentLocation by viewModel.location.observeAsState()
+    Timber.d("Current coordinates: ${currentLocation?.latitude}, ${currentLocation?.longitude}")
 
     Scaffold(
         topBar = {
