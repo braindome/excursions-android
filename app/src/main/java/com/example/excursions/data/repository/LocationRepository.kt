@@ -51,5 +51,3 @@ class LocationRepository(private val appContext: Context) {
         }
     }
 }
-
-data class LocationData(val latitude: Double, val longitude: Double)

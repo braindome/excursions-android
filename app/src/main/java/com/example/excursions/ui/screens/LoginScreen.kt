@@ -12,11 +12,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.excursions.ExcursionsRoutes
 import com.example.excursions.ui.components.ExcursionsButton
 import com.example.excursions.ui.components.ExcursionsTextField
 import com.example.excursions.ui.components.PlainTextArrowButton
 import com.example.excursions.ui.components.ScreenTitleSubtitle
+import com.example.excursions.ui.navigation.ExcursionsRoutes
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable

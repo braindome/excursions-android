@@ -15,11 +15,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.excursions.ExcursionsRoutes
-import com.example.excursions.ui.components.ExcursionsBottomBar
-import com.example.excursions.ui.components.ExcursionsTopBar
+import com.example.excursions.ui.navigation.ExcursionsBottomBar
+import com.example.excursions.ui.navigation.ExcursionsTopBar
 import com.example.excursions.ui.components.SavedDestinationsFolderCard
 import com.example.excursions.ui.components.ScreenTitleSubtitle
+import com.example.excursions.ui.navigation.ExcursionsRoutes
 
 @Composable
 fun SavedDestinationsScreen(navController: NavHostController) {

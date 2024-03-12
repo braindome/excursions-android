@@ -17,10 +17,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.excursions.ExcursionsRoutes
 import com.example.excursions.ui.components.ExcursionsButton
 import com.example.excursions.ui.components.PlainTextArrowButton
 import com.example.excursions.ui.components.ScreenTitleSubtitle
+import com.example.excursions.ui.navigation.ExcursionsRoutes
 import com.example.excursions.ui.theme.polestarFontFamily
 
 @Composable
