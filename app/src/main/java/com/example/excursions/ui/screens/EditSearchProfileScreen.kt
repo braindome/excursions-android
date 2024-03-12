@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Button
@@ -29,18 +30,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.excursions.ExcursionsRoutes
 import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.data.api_models.Center
 import com.example.excursions.data.model.SearchProfile
-import com.example.excursions.ui.components.DummyExcursionsAPI
-import com.example.excursions.ui.components.ExcursionsBottomBar
+import com.example.excursions.data.repository.DummyExcursionsAPI
 import com.example.excursions.ui.components.ExcursionsFilterChip
 import com.example.excursions.ui.components.ExcursionsSearchField
 import com.example.excursions.ui.components.ExcursionsSlider
 import com.example.excursions.ui.components.ExcursionsTextField
-import com.example.excursions.ui.components.ExcursionsTopBar
+import com.example.excursions.ui.components.ScreenTitleSubtitle
 import com.example.excursions.ui.components.ScreenTitleText
+import com.example.excursions.ui.navigation.ExcursionsBottomBar
+import com.example.excursions.ui.navigation.ExcursionsRoutes
+import com.example.excursions.ui.navigation.ExcursionsTopBar
 import com.example.excursions.ui.theme.Typography
 import timber.log.Timber
 
@@ -84,7 +86,8 @@ fun EditSearchProfileScreen(
 
                 viewModel.updateSearchProfileUiState(updatedState)
                 viewModel.updateSearchProfileSliderPosition(searchProfile, sliderPosition)
-            })},
+            })
+        },
         bottomBar = { ExcursionsBottomBar(navController = navController) }
 
     ) {innerPadding ->
@@ -96,7 +99,8 @@ fun EditSearchProfileScreen(
             verticalArrangement = Arrangement.SpaceBetween
 
         ) {
-            ScreenTitleText(title = "Edit Search Profile")
+            //ScreenTitleText(title = "Edit Search Profile")
+            ScreenTitleSubtitle(title = "Edit", subtitle = searchProfile.name, modifier = Modifier)
             Spacer(modifier = Modifier.size(20.dp))
             ExcursionsTextField(
                 label = "Name",
@@ -128,11 +132,11 @@ fun EditSearchProfileScreen(
                     .height(26.dp),
             )
 
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                contentPadding = PaddingValues(start = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalArrangement = Arrangement.Start
+            LazyHorizontalGrid(
+                rows = GridCells.Adaptive(minSize = 60.dp),
+                contentPadding = PaddingValues(8.dp),
+                verticalArrangement = Arrangement.spacedBy(1.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(searchProfile.types) { locationType ->
                     ExcursionsFilterChip(
@@ -152,6 +156,7 @@ fun EditSearchProfileScreen(
                 }
             }
 
+            /*
             Button(
                 onClick = {
                     //Timber.d("Range value for api request: ${sliderPosition * 1000}")
@@ -170,6 +175,8 @@ fun EditSearchProfileScreen(
                 ) {
                 Text(text = "Log API call")
             }
+
+             */
         }
 
     }

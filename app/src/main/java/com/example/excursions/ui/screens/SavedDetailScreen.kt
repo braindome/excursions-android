@@ -11,12 +11,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.excursions.ExcursionsRoutes
 import com.example.excursions.R
-import com.example.excursions.ui.components.ExcursionsBottomBar
+import com.example.excursions.ui.navigation.ExcursionsBottomBar
 import com.example.excursions.ui.components.ExcursionsButton
-import com.example.excursions.ui.components.ExcursionsTopBar
+import com.example.excursions.ui.navigation.ExcursionsTopBar
 import com.example.excursions.ui.components.ScreenTitleText
+import com.example.excursions.ui.navigation.ExcursionsRoutes
 
 @Composable
 fun SavedDetailScreen(navController: NavHostController) {

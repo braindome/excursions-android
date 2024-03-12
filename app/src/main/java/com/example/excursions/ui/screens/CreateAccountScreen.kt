@@ -10,7 +10,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,16 +19,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.excursions.ExcursionsRoutes
 import com.example.excursions.auth.AuthenticationViewModel
-import com.example.excursions.ui.theme.ExcursionsTheme
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -140,7 +134,7 @@ fun CreateAccountScreen(
                     }
                     */
                     viewModel.createUserWithEmailAndPassword()
-                    navController.navigate(ExcursionsRoutes.MainActivity.route)
+                    //navController.navigate(ExcursionsRoutes.MainActivity.route)
                 },
                 enabled = true,
                 modifier = Modifier

@@ -24,8 +24,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.excursions.ExcursionsRoutes
 import com.example.excursions.auth.AuthenticationViewModel
+import com.example.excursions.ui.navigation.ExcursionsRoutes
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -130,7 +130,7 @@ fun AuthenticationScreen(
             Button(
                 onClick = {
                     viewModel.signInAnonymously()
-                    navController.navigate(ExcursionsRoutes.MainActivity.route)
+                    //navController.navigate(ExcursionsRoutes.MainActivity.route)
                 },
                 modifier = Modifier
                     .weight(1f)

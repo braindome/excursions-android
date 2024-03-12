@@ -1,4 +1,4 @@
-package com.example.excursions.ui.components
+package com.example.excursions.ui.navigation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

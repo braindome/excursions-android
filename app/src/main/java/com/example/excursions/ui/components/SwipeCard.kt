@@ -29,6 +29,7 @@ import com.example.excursions.data.api_models.Location
 import com.example.excursions.data.api_models.Place
 import com.example.excursions.data.api_models.toCenter
 import com.example.excursions.data.model.PlaceState
+import com.example.excursions.data.repository.DummyExcursionsAPI
 import com.example.excursions.ui.theme.polestarFontFamily
 
 @Composable

@@ -8,12 +8,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.DisposableEffectResult
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -25,17 +22,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.excursions.ExcursionsRoutes
 import com.example.excursions.ExcursionsViewModel
-import com.example.excursions.ui.components.DummyExcursionsAPI
-import com.example.excursions.ui.components.ExcursionsBottomBar
-import com.example.excursions.ui.components.ExcursionsTopBar
-import com.example.excursions.ui.components.ScreenTitleSubtitle
 import com.example.excursions.data.model.SearchProfile
+import com.example.excursions.data.repository.DummyExcursionsAPI
 import com.example.excursions.ui.components.GridCard
+import com.example.excursions.ui.components.ScreenTitleSubtitle
+import com.example.excursions.ui.navigation.ExcursionsBottomBar
+import com.example.excursions.ui.navigation.ExcursionsRoutes
+import com.example.excursions.ui.navigation.ExcursionsTopBar
 import com.example.excursions.ui.theme.ExcursionsTheme
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import timber.log.Timber
 
 @Composable
@@ -68,7 +63,8 @@ fun CategoryScreen(
                 backDestination = ExcursionsRoutes.Login.route,
                 rightButtonLabel = "Add",
                 rightButtonDestination = ExcursionsRoutes.EditSearchProfile.route
-            )},
+            )
+        },
         bottomBar = { ExcursionsBottomBar(navController = navController) }
     ) { innerPadding ->
         Column(
