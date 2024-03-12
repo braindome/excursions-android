@@ -39,13 +39,16 @@ import timber.log.Timber
 @Composable
 fun SwipeScreen(
     navController: NavHostController,
-    viewModel: ExcursionsViewModel
+    viewModel: ExcursionsViewModel,
+    placeListId: String
 ) {
 
     val placeList by viewModel.resultPlaceList.collectAsState()
+    //val placeList by rememberSaveable(placeListId) { mutableStateOf(viewModel.getPlaceListById(placeListId)) }
     var currentPlaceIndex by rememberSaveable { mutableIntStateOf(0) }
 
-    Timber.d("Place list: $placeList")
+    Timber.d("Received placeListId: $placeListId")
+    Timber.d("Place list ID: ${placeList.id}, size: ${placeList.list.size}")
 
     Scaffold(
         topBar = { ExcursionsTopBar(navController = navController, backDestination = "categories", rightButtonDestination = "", rightButtonLabel = "") },
@@ -79,8 +82,8 @@ fun SwipeScreen(
             )
             Spacer(modifier = Modifier.weight(1f))
             //SwipeCard(placeList[currentPlaceIndex], viewModel)
-            if (placeList.isNotEmpty()) {
-                SwipeCard(placeList[currentPlaceIndex], viewModel)
+            if (placeList.list.isNotEmpty()) {
+                SwipeCard(placeList.list[currentPlaceIndex], viewModel)
             } else {
                 // Handle the case when placeList is empty (display a message, etc.)
                 Text("No places available", modifier = Modifier.padding(16.dp))
@@ -88,10 +91,10 @@ fun SwipeScreen(
             Spacer(modifier = Modifier.weight(1f))
             SwipeActionBar(
                 onYayClick = {
-                    currentPlaceIndex = (currentPlaceIndex + 1) % placeList.size
+                    currentPlaceIndex = (currentPlaceIndex + 1) % placeList.list.size
                 },
                 onNayClick = {
-                    currentPlaceIndex = (currentPlaceIndex + 1) % placeList.size
+                    currentPlaceIndex = (currentPlaceIndex + 1) % placeList.list.size
                 }
             )
         }
@@ -101,5 +104,5 @@ fun SwipeScreen(
 @Preview(showBackground = true)
 @Composable
 fun SwipeScreenPreview() {
-    SwipeScreen(navController = rememberNavController(), viewModel = ExcursionsViewModel(api = DummyExcursionsAPI(), appContext = LocalContext.current))
+    SwipeScreen(navController = rememberNavController(), viewModel = ExcursionsViewModel(api = DummyExcursionsAPI(), appContext = LocalContext.current), placeListId = "abc")
 }

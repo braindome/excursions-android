@@ -63,7 +63,7 @@ fun EditSearchProfileScreen(
     //Timber.d("Initial sliderPosition value: $sliderPosition")
     //Timber.d("Initial searchProfile.range: ${searchProfile.range}")
 
-    for (type in searchProfile.types) { Timber.d("Initial searchProfile.types: ${type.formattedName}, ${type.isChecked}") }
+    //for (type in searchProfile.types) { Timber.d("Initial searchProfile.types: ${type.formattedName}, ${type.isChecked}") }
 
     Scaffold(
         topBar = { ExcursionsTopBar(
