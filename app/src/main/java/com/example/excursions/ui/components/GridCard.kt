@@ -11,6 +11,15 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -18,15 +27,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.excursions.ExcursionsRoutes
 import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.R
 import com.example.excursions.data.api_models.Center
+import com.example.excursions.data.model.PlaceList
 import com.example.excursions.data.model.SearchProfile
 import com.example.excursions.ui.theme.YellowPolestar
 import com.example.excursions.ui.theme.polestarFontFamily
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import kotlin.coroutines.coroutineContext
 
@@ -35,15 +49,49 @@ fun GridCard(
     navController: NavHostController,
     searchProfile: SearchProfile,
     viewModel: ExcursionsViewModel
-    ) {
+) {
     val searchProfileId = searchProfile.id
+    val currentLocation by viewModel.location.observeAsState()
+    val nullCheckedLocation: Center = currentLocation ?: Center(0.00,0.00)
+
+    //val placeList by viewModel.resultPlaceList.collectAsState()
+    //var placeList by remember { mutableStateOf<PlaceList?>(null) }
+
+    val placeList by rememberUpdatedState(viewModel.resultPlaceList)
+
     Surface(
         modifier = Modifier
             .width(173.dp)
             .height(206.dp)
             .padding(3.dp),
         color = YellowPolestar,
-        onClick = { navController.navigate("swipeScreen") }
+        onClick = {
+
+            val types = searchProfile.types
+                .filter { it.isChecked }
+                .map { it.jsonName }
+            Timber.d("Types into api request: $types")
+
+            viewModel.viewModelScope.launch {
+                viewModel.searchPlacesByLocationAndRadius(
+                    center = nullCheckedLocation,
+                    types = types,
+                    range = searchProfile.range
+                )
+                delay(500)
+                val placeListId = placeList.value.id
+                navController.navigate("swipeScreen/${placeListId}")
+            }
+            /*
+            viewModel.searchPlacesByLocationAndRadius(
+                center = nullCheckedLocation,
+                types = types,
+                range = searchProfile.range
+            )
+             */
+            //val placeListId = placeList?.id
+            //navController.navigate("swipeScreen/${placeListId}")
+        }
     ) {
         Column(
             modifier = Modifier

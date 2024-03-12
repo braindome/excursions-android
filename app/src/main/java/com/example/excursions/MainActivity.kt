@@ -107,7 +107,20 @@ class MainActivity : ComponentActivity() {
                     SavedDestinationsScreen(navController = navController)
                 }
                 composable(ExcursionsRoutes.Profile.route) { ProfileScreen(navController = navController, viewModel = viewModel) }
-                composable(ExcursionsRoutes.SwipeScreen.route) { SwipeScreen(navController = navController, viewModel = viewModel) }
+
+                composable(
+                    route = ExcursionsRoutes.SwipeScreen.route + "/{placeListId}",
+                    arguments = listOf(navArgument("placeListId") { type = NavType.StringType })
+                ) {backStackEntry ->
+                    val placeListId: String = backStackEntry.arguments?.getString("placeListId") ?: "no id"
+                    backStackEntry.arguments?.getString("placeListId")?.let {
+                        SwipeScreen(
+                            navController = navController,
+                            viewModel = viewModel,
+                            placeListId = placeListId)
+                    }
+                }
+
                 composable(
                     route = ExcursionsRoutes.EditSearchProfile.route + "/{searchProfileId}",
                     arguments = listOf(navArgument("searchProfileId") {type = NavType.IntType})

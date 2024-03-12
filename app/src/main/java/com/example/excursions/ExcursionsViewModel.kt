@@ -12,9 +12,12 @@ import com.example.excursions.data.api_models.Circle
 import com.example.excursions.data.api_models.LocationRestriction
 import com.example.excursions.data.api_models.Place
 import com.example.excursions.data.api_models.SearchNearbyRequest
+import com.example.excursions.data.model.PlaceList
+import com.example.excursions.data.model.PlaceState
 import com.example.excursions.data.model.SearchProfile
 import com.example.excursions.data.repository.LocationRepository
 import com.example.excursions.data.repository.SearchProfileRepository
+import com.google.android.libraries.places.ktx.api.model.place
 import com.squareup.moshi.JsonDataException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
@@ -23,7 +26,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.util.UUID
 import kotlin.RuntimeException
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -38,8 +43,11 @@ class ExcursionsViewModel(
     private val _searchProfilesList = MutableStateFlow<List<SearchProfile>>(emptyList())
     val searchProfilesList: StateFlow<List<SearchProfile>> = _searchProfilesList.asStateFlow()
 
-    private val _resultPlaceList = MutableStateFlow<MutableList<Place>>(mutableListOf())
-    val resultPlaceList: StateFlow<MutableList<Place>> = _resultPlaceList.asStateFlow()
+    private val _resultPlaceList = MutableStateFlow(PlaceList())
+    val resultPlaceList: StateFlow<PlaceList> = _resultPlaceList.asStateFlow()
+
+    //private val _resultPlaceList = MutableStateFlow<MutableList<Place>>(mutableListOf())
+    //val resultPlaceList: StateFlow<MutableList<Place>> = _resultPlaceList.asStateFlow()
 
     private val _searchProfile = MutableStateFlow(SearchProfile())
     val searchProfile: StateFlow<SearchProfile> = _searchProfile.asStateFlow()
@@ -50,7 +58,7 @@ class ExcursionsViewModel(
     val location: LiveData<Center?> get() = _location
 
     init {
-        _resultPlaceList.value = mutableListOf()
+        _resultPlaceList.value = PlaceList()
         _searchProfilesList.value = SearchProfileRepository.defaultSearchProfiles
     }
 
@@ -105,6 +113,14 @@ class ExcursionsViewModel(
         _searchProfilesList.value = updatedProfiles
     }
 
+    fun getPlaceListById(placeListId: String): PlaceList {
+        return resultPlaceList.value.takeIf { it.id == placeListId } ?: PlaceList()
+    }
+
+    fun updatePlaceList(updatedPlaceList: PlaceList) {
+        _resultPlaceList.value = updatedPlaceList
+    }
+
     fun getSearchProfileById(searchProfileId: Int): SearchProfile {
         return searchProfilesList.value.find { it.id == searchProfileId } ?: SearchProfile()
     }
@@ -138,10 +154,10 @@ class ExcursionsViewModel(
      */
 
     fun searchPlacesByLocationAndRadius(center: Center, types: List<String>, range: Float) {
-        val updatedPlaces = _resultPlaceList.value
+        val updatedPlaces = _resultPlaceList.value.copy()
         Timber.d("Received range value: $range")
         val locationRestriction = LocationRestriction(Circle(center, range.toDouble()))
-        val maxResultCount = 20
+        val maxResultCount = 3
         val requestUrl = "https://places.googleapis.com/v1/places:searchNearby"
 
         val request = SearchNearbyRequest(
@@ -150,25 +166,93 @@ class ExcursionsViewModel(
             maxResultCount
         )
 
-        Timber.d("Request: ${request.toString()}")
+        //Timber.d("Request: ${request.toString()}")
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                Timber.d("Before result")
+                //Timber.d("Before result")
                 val result = api.searchNearbyPlaces(requestUrl, request).execute()
-                Timber.d("API response: ${result.raw().toString()}")
+                //Timber.d("API response: ${result.raw().toString()}")
 
                 if (result.isSuccessful) {
-                    Timber.d("API response in if block: ${result.body()}")
+                    //Timber.d("API response in if block: ${result.body()}")
 
                     val searchNearbyResponse = result.body()
                     if (searchNearbyResponse?.places != null && searchNearbyResponse.places.isNotEmpty()) {
-                        Timber.d("Successful API call - API Response: ${result.body()}")
-                        searchNearbyResponse.places.forEachIndexed { index, place ->
-                            Timber.d("Place #$index: $place")
-                            updatedPlaces.add(place)
+                        val newPlacesList = searchNearbyResponse.places.map { place ->
+                            PlaceState(
+                                displayName = place.displayName,
+                                formattedAddress = place.formattedAddress,
+                                id = place.id,
+                                location = place.location,
+                                primaryType = place.primaryType,
+                                types = place.types,
+                                isFavorite = false
+                            )
                         }
-                        _resultPlaceList.value = updatedPlaces
+                        val newPlaceList = PlaceList(id = UUID.randomUUID().toString(), list = newPlacesList.toMutableList())
+                        _resultPlaceList.value = newPlaceList
+                    } else {
+                        Timber.e("Error: 'places' field missing in the api response")
+                    }
+
+                } else {
+                    Timber.e("Request failed with code ${result.code()}")
+                }
+            } catch (e: JsonDataException) {
+                Timber.e("JsonDataException during API call: ${e.message}")
+            } catch (e: Exception) {
+                Timber.e("Exception during API call: ${e.message}")
+            }
+        }
+
+
+    }
+
+    fun searchPlacesByLocationAndRadius_old(center: Center, types: List<String>, range: Float) {
+        val updatedPlaces = _resultPlaceList.value.copy()
+        Timber.d("Received range value: $range")
+        val locationRestriction = LocationRestriction(Circle(center, range.toDouble()))
+        val maxResultCount = 3
+        val requestUrl = "https://places.googleapis.com/v1/places:searchNearby"
+
+        val request = SearchNearbyRequest(
+            types,
+            locationRestriction,
+            maxResultCount
+        )
+
+        //Timber.d("Request: ${request.toString()}")
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                //Timber.d("Before result")
+                val result = api.searchNearbyPlaces(requestUrl, request).execute()
+                //Timber.d("API response: ${result.raw().toString()}")
+
+                if (result.isSuccessful) {
+                    //Timber.d("API response in if block: ${result.body()}")
+
+                    val searchNearbyResponse = result.body()
+                    if (searchNearbyResponse?.places != null && searchNearbyResponse.places.isNotEmpty()) {
+                        //Timber.d("Successful API call - API Response: ${result.body()}")
+                        val newPlaceList = _resultPlaceList.value.copy()
+                        searchNearbyResponse.places.forEachIndexed { index, place ->
+                            //Timber.d("Place #$index: $place")
+                            val newPlaceState = PlaceState(
+                                displayName = place.displayName,
+                                formattedAddress = place.formattedAddress,
+                                id = place.id,
+                                location = place.location,
+                                primaryType = place.primaryType,
+                                types = place.types,
+                                isFavorite = false
+                            )
+                            //updatedPlaces.list.add(newPlaceState)
+                            newPlaceList.list.add(newPlaceState)
+                        }
+                        //_resultPlaceList.value = updatedPlaces
+                        _resultPlaceList.value = newPlaceList
 
                     } else {
                         Timber.e("Error: 'places' field missing in the api response")
@@ -194,39 +278,6 @@ class ExcursionsViewModel(
 
     }
 
-    fun searchPlacesByLocationAndRadius_old(center: Center, searchProfile: SearchProfile) {
-        Timber.d("Search by searchprofile")
-        val typeStrings = searchProfile.types.map { it.jsonName }
-        val locationRestriction = LocationRestriction(Circle(center, searchProfile.range.toDouble()))
-        val maxResultCount = 20
-        val requestUrl = "https://places.googleapis.com/v1/places:searchNearby"
-
-
-        val request = SearchNearbyRequest(
-            typeStrings,
-            locationRestriction,
-            maxResultCount
-        )
-
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val result = api.searchNearbyPlaces(requestUrl, request).execute()
-
-                if (result.isSuccessful) {
-                    val searchNearbyResponse = result.body()
-                    //Timber.d("Successful call: $searchNearbyResponse")
-                    Timber.d("Successful API call:")
-                    searchNearbyResponse?.places?.forEachIndexed { index, place ->
-                        Timber.d("Place #$index: $place")
-                    }
-                } else {
-                    Timber.e("Request failed with code ${result.code()}")
-                }
-            } catch (e: Exception) {
-                Timber.e("Exception during API call: ${e.message}")
-            }
-        }
-    }
     fun updateSearchProfileSliderPosition(searchProfile: SearchProfile, sliderPosition: Float) {
         val updatedProfiles = _searchProfilesList.value.map {
             if (it.id == searchProfile.id) {

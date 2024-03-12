@@ -28,11 +28,12 @@ import com.example.excursions.data.api_models.DisplayName
 import com.example.excursions.data.api_models.Location
 import com.example.excursions.data.api_models.Place
 import com.example.excursions.data.api_models.toCenter
+import com.example.excursions.data.model.PlaceState
 import com.example.excursions.ui.theme.polestarFontFamily
 
 @Composable
 fun SwipeCard(
-    place: Place,
+    place: PlaceState,
     viewModel: ExcursionsViewModel
 ) {
 
@@ -112,7 +113,7 @@ fun SwipeCard(
 @Composable
 fun SwipeCardPreview() {
     SwipeCard(
-        place = Place(
+        place = PlaceState(
             displayName = DisplayName(languageCode = "EN", text = "Display Name"),
             formattedAddress = "Test formatted address",
             id = "hehehe",
