@@ -30,6 +30,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.data.api_models.Center
+import com.example.excursions.data.api_models.DisplayName
+import com.example.excursions.data.api_models.Location
+import com.example.excursions.data.model.PlaceState
 import com.example.excursions.data.model.SearchProfile
 import com.example.excursions.data.repository.DummyExcursionsAPI
 import com.example.excursions.ui.navigation.ExcursionsBottomBar
@@ -101,7 +104,14 @@ fun FavoriteScreen(
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                items(searchProfile.savedDestinations) { place ->
+                val dummyList = listOf(
+                    PlaceState(DisplayName("", "Item Name"), location = Location(12.34, 12.34)),
+                    PlaceState(DisplayName("", "Item Name"), location = Location(12.34, 12.34))
+                )
+                items(
+                    //dummyList
+                    searchProfile.savedDestinations
+                ) { place ->
                     SavedDestinationListItem(
                         isEditModeOn = isEditModeOn,
                         onDeleteClicked = { /* TODO */ },

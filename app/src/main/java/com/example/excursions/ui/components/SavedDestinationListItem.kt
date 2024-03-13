@@ -34,6 +34,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -54,20 +55,19 @@ fun SavedDestinationListItem(
     Column(
         modifier = Modifier
             .width(342.dp)
-            .height(88.dp),
-        verticalArrangement = Arrangement.SpaceBetween
+            .height(72.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Row(
             modifier = Modifier
-                .width(342.dp)
-                .height(52.dp)
-                .padding(top = 8.dp),
+                .fillMaxWidth()
+                .height(52.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column(
-                verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
-                horizontalAlignment = Alignment.Start
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
                     text = place.displayName.text,
@@ -79,7 +79,8 @@ fun SavedDestinationListItem(
                         fontWeight = FontWeight(400),
                         color = Color.Black.copy(alpha = 0.6f)
                     ),
-                    modifier = Modifier.height(26.dp)
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = "$distance km",
@@ -90,10 +91,7 @@ fun SavedDestinationListItem(
                         fontFamily = polestarFontFamily,
                         fontWeight = FontWeight(400),
                         color = Color.Black.copy(alpha = 0.45f)
-                    ),
-                    modifier = Modifier
-                        .width(64.dp)
-                        .height(16.dp)
+                    )
                 )
             }
 
