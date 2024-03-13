@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -38,10 +39,12 @@ import timber.log.Timber
 fun SwipeScreen(
     navController: NavHostController,
     viewModel: ExcursionsViewModel,
-    placeListId: String
+    placeListId: String,
+    searchProfileId: Int
 ) {
 
     val placeList by viewModel.resultPlaceList.collectAsState()
+    val searchProfile by rememberSaveable(searchProfileId) { mutableStateOf(viewModel.getSearchProfileById(searchProfileId)) }
     //val placeList by rememberSaveable(placeListId) { mutableStateOf(viewModel.getPlaceListById(placeListId)) }
     var currentPlaceIndex by rememberSaveable { mutableIntStateOf(0) }
 
@@ -90,6 +93,7 @@ fun SwipeScreen(
             SwipeActionBar(
                 onYayClick = {
                     currentPlaceIndex = (currentPlaceIndex + 1) % placeList.list.size
+                    viewModel.saveDestination(placeList.list[currentPlaceIndex], searchProfile)
                 },
                 onNayClick = {
                     currentPlaceIndex = (currentPlaceIndex + 1) % placeList.list.size
@@ -102,5 +106,10 @@ fun SwipeScreen(
 @Preview(showBackground = true)
 @Composable
 fun SwipeScreenPreview() {
-    SwipeScreen(navController = rememberNavController(), viewModel = ExcursionsViewModel(api = DummyExcursionsAPI(), appContext = LocalContext.current), placeListId = "abc")
+    SwipeScreen(
+        navController = rememberNavController(),
+        viewModel = ExcursionsViewModel(api = DummyExcursionsAPI(), appContext = LocalContext.current),
+        placeListId = "abc",
+        searchProfileId = -1
+    )
 }

@@ -16,4 +16,5 @@ data class PlaceState(
     val primaryType: String? = "",
     val types: List<String> = listOf(),
     val isFavorite: Boolean = false,
+    val isDiscarded: Boolean = false
 ) : Parcelable

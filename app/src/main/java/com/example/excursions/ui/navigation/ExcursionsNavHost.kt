@@ -29,19 +29,25 @@ fun ExcursionsNavHost(viewModel: ExcursionsViewModel) {
         composable(ExcursionsRoutes.Login.route) { LoginScreen(navController) }
         composable(ExcursionsRoutes.Categories.route) { CategoryScreen(navController = navController, viewModel = viewModel) }
         composable(ExcursionsRoutes.Search.route) { SearchScreen(navController = navController) }
-        composable(ExcursionsRoutes.Favorites.route) { SavedDestinationsScreen(navController = navController) }
+        composable(ExcursionsRoutes.Favorites.route) { SavedDestinationsScreen(navController = navController, viewModel = viewModel) }
         composable(ExcursionsRoutes.Profile.route) { ProfileScreen(navController = navController, viewModel = viewModel) }
 
         composable(
-            route = ExcursionsRoutes.SwipeScreen.route + "/{placeListId}",
-            arguments = listOf(navArgument("placeListId") { type = NavType.StringType })
+            route = ExcursionsRoutes.SwipeScreen.route + "/{placeListId}/{searchProfileId}",
+            arguments = listOf(
+                navArgument("placeListId") { type = NavType.StringType },
+                navArgument("searchProfileId") { type = NavType.IntType }
+            )
         ) {backStackEntry ->
             val placeListId: String = backStackEntry.arguments?.getString("placeListId") ?: "no id"
+            val searchProfileId: Int = backStackEntry.arguments?.getInt("searchProfileId") ?: -1
             backStackEntry.arguments?.getString("placeListId")?.let {
                 SwipeScreen(
                     navController = navController,
                     viewModel = viewModel,
-                    placeListId = placeListId)
+                    placeListId = placeListId,
+                    searchProfileId = searchProfileId
+                )
             }
         }
 
@@ -59,8 +65,19 @@ fun ExcursionsNavHost(viewModel: ExcursionsViewModel) {
             }
         }
 
-        composable(ExcursionsRoutes.Saved.route) { FavoriteScreen(navController = navController) }
-
+        composable(
+            route = ExcursionsRoutes.Saved.route + "/{searchProfileId}",
+            arguments = listOf(navArgument("searchProfileId") {type = NavType.IntType})
+        ) {backStackEntry ->
+            val searchProfileId: Int = backStackEntry.arguments?.getInt("searchProfileId") ?: -1
+            backStackEntry.arguments?.getInt("searchProfileId")?.let {
+                FavoriteScreen(
+                    navController = navController,
+                    viewModel = viewModel,
+                    searchProfileId = searchProfileId
+                )
+            }
+        }
     }
 }
 enum class ExcursionsRoutes(val route: String) {

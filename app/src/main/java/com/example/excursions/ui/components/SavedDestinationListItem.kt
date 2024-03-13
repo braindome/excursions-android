@@ -20,6 +20,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,16 +38,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.excursions.R
+import com.example.excursions.data.api_models.DisplayName
+import com.example.excursions.data.model.PlaceState
 import com.example.excursions.ui.theme.GrayPolestar
 import com.example.excursions.ui.theme.OrangePolestar
 import com.example.excursions.ui.theme.polestarFontFamily
 
 @Composable
-fun SavedDestinationListItem() {
+fun SavedDestinationListItem(
+    isEditModeOn: Boolean,
+    onDeleteClicked: () -> Unit,
+    place: PlaceState,
+    distance: Int
+) {
     Column(
         modifier = Modifier
             .width(342.dp)
-            .height(72.dp),
+            .height(88.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Row(
@@ -59,7 +70,7 @@ fun SavedDestinationListItem() {
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = "Item Name",
+                    text = place.displayName.text,
                     style = TextStyle(
                         fontSize = 26.sp,
                         lineHeight = 26.sp,
@@ -71,7 +82,7 @@ fun SavedDestinationListItem() {
                     modifier = Modifier.height(26.dp)
                 )
                 Text(
-                    text = "666 km",
+                    text = "$distance km",
                     style = TextStyle(
                         fontSize = 16.sp,
                         lineHeight = 18.sp,
@@ -85,15 +96,29 @@ fun SavedDestinationListItem() {
                         .height(16.dp)
                 )
             }
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(
-                    painter = painterResource(
-                        id = R.drawable.arrow_right
-                    ),
-                    contentDescription = null,
-                    tint = OrangePolestar
-                )
+
+            if (isEditModeOn) {
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(
+                        painter = painterResource(
+                            id = R.drawable.cancel
+                        ),
+                        contentDescription = null,
+                        tint = OrangePolestar
+                    )
+                }
+            } else {
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(
+                        painter = painterResource(
+                            id = R.drawable.arrow_right
+                        ),
+                        contentDescription = null,
+                        tint = OrangePolestar
+                    )
+                }
             }
+
         }
         HorizontalDivider(thickness = 1.dp, color = Color.Black.copy(alpha = 0.3f))
     }
@@ -131,5 +156,5 @@ fun SavedDestinationListItem_() {
 @Preview(showBackground = true)
 @Composable
 fun SavedDestinationListItemPreview() {
-    SavedDestinationListItem()
+    SavedDestinationListItem(true,{}, PlaceState(DisplayName("", "Item Name")), 666)
 }

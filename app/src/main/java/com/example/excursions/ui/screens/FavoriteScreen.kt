@@ -9,32 +9,59 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.excursions.ExcursionsViewModel
+import com.example.excursions.data.api_models.Center
+import com.example.excursions.data.model.SearchProfile
+import com.example.excursions.data.repository.DummyExcursionsAPI
 import com.example.excursions.ui.navigation.ExcursionsBottomBar
 import com.example.excursions.ui.navigation.ExcursionsTopBar
 import com.example.excursions.ui.components.SavedDestinationListItem
 import com.example.excursions.ui.theme.GrayPolestar
 import com.example.excursions.ui.theme.polestarFontFamily
+import timber.log.Timber
 
 @Composable
-fun FavoriteScreen(navController: NavHostController) {
+fun FavoriteScreen(
+    navController: NavHostController,
+    viewModel: ExcursionsViewModel,
+    searchProfileId: Int
+) {
+    val searchProfile by rememberSaveable(searchProfileId) { mutableStateOf(viewModel.getSearchProfileById(searchProfileId)) }
+    val currentLocation by viewModel.location.observeAsState()
+    val nullCheckedLocation: Center = currentLocation ?: Center(0.00,0.00)
+
+    Timber.d("Favorite list: ${searchProfile.savedDestinations}")
+
+
+
+    var isEditModeOn by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
             ExcursionsTopBar(
                 navController = navController,
                 backDestination = "categories",
-                rightButtonLabel = "",
-                rightButtonDestination = ""
+                rightButtonLabel = if (!isEditModeOn) "Edit" else "Save",
+                rightButtonDestination = null,
+                onEndButtonClick = { isEditModeOn = !isEditModeOn }
             )
         },
         bottomBar = { ExcursionsBottomBar(navController = navController) }
@@ -71,11 +98,19 @@ fun FavoriteScreen(navController: NavHostController) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
+                verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                items(10) {
-                    SavedDestinationListItem()
+                items(searchProfile.savedDestinations) { place ->
+                    SavedDestinationListItem(
+                        isEditModeOn = isEditModeOn,
+                        onDeleteClicked = { /* TODO */ },
+                        distance = viewModel.distanceBetweenCenters(
+                            center1 = nullCheckedLocation,
+                            center2 = Center(place.location.latitude, place.location.longitude)
+                        ).toInt(),
+                        place = place
+                    )
                 }
             }
 
@@ -86,5 +121,9 @@ fun FavoriteScreen(navController: NavHostController) {
 @Preview(showBackground = true)
 @Composable
 fun FavoriteScreenPreview() {
-    FavoriteScreen(navController = rememberNavController())
+    FavoriteScreen(
+        navController = rememberNavController(),
+        viewModel = ExcursionsViewModel(LocalContext.current, DummyExcursionsAPI()),
+        searchProfileId = -1
+    )
 }
