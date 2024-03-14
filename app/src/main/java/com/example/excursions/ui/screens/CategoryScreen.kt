@@ -53,8 +53,8 @@ fun CategoryScreen(
     }
 
     val searchProfilesList by viewModel.searchProfilesList.collectAsState()
-    val currentLocation by viewModel.location.observeAsState()
-    Timber.d("Current coordinates: ${currentLocation?.latitude}, ${currentLocation?.longitude}")
+    //val currentLocation by viewModel.location.observeAsState()
+    //Timber.d("Current coordinates: ${currentLocation?.latitude}, ${currentLocation?.longitude}")
 
     Scaffold(
         topBar = {

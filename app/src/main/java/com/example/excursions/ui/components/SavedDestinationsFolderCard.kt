@@ -17,27 +17,35 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.R
+import com.example.excursions.data.model.SearchProfile
+import com.example.excursions.data.repository.DummyExcursionsAPI
 import com.example.excursions.ui.navigation.ExcursionsRoutes
 import com.example.excursions.ui.theme.GrayPolestar
 import com.example.excursions.ui.theme.polestarFontFamily
 
 @Composable
-fun SavedDestinationsFolderCard(title: String, navController: NavHostController) {
-    var categoryNameState by rememberSaveable { mutableStateOf(title) }
+fun SavedDestinationsFolderCard(
+    navController: NavHostController,
+    viewModel: ExcursionsViewModel,
+    searchProfile: SearchProfile
+) {
+    val searchProfileId = searchProfile.id
     Surface(
         modifier = Modifier
             .width(173.dp)
             .height(206.dp)
             .padding(3.dp),
         color = GrayPolestar,
-        onClick = { navController.navigate(ExcursionsRoutes.Saved.route) }
+        onClick = { navController.navigate(ExcursionsRoutes.Saved.route + "/${searchProfileId}") }
     ) {
         Column(
             modifier = Modifier
@@ -46,7 +54,7 @@ fun SavedDestinationsFolderCard(title: String, navController: NavHostController)
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = categoryNameState,
+                text = searchProfile.name,
                 fontSize = 22.sp,
                 fontFamily = polestarFontFamily,
                 modifier = Modifier.padding(2.dp)
@@ -65,5 +73,12 @@ fun SavedDestinationsFolderCard(title: String, navController: NavHostController)
 @Preview(showBackground = true)
 @Composable
 fun SavedDestinationsFolderCardPreview() {
-    SavedDestinationsFolderCard("Category name", rememberNavController())
+    SavedDestinationsFolderCard(
+        navController = rememberNavController(),
+        searchProfile = SearchProfile(id = -1),
+        viewModel = ExcursionsViewModel(
+            api = DummyExcursionsAPI(),
+            appContext = LocalContext.current
+        )
+    )
 }

@@ -72,7 +72,7 @@ fun GridCard(
                 )
                 delay(500)
                 val placeListId = placeList.value.id
-                navController.navigate("swipeScreen/${placeListId}")
+                navController.navigate("swipeScreen/${placeListId}/${searchProfileId}")
             }
             /*
             viewModel.searchPlacesByLocationAndRadius(

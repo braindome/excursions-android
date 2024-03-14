@@ -23,5 +23,6 @@ data class SearchProfile(
     val types: @RawValue MutableList<LocationType> = mutableListOf(),
     val range: Float = 50000f,
     val lat: Double = 0.00,
-    val lng: Double = 0.00
+    val lng: Double = 0.00,
+    val savedDestinations: @RawValue MutableList<PlaceState> = mutableListOf()
 ) : Parcelable

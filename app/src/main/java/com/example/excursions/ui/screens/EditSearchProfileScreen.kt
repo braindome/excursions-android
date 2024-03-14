@@ -2,6 +2,8 @@ package com.example.excursions.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -46,6 +48,7 @@ import com.example.excursions.ui.navigation.ExcursionsTopBar
 import com.example.excursions.ui.theme.Typography
 import timber.log.Timber
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun EditSearchProfileScreen(
     navController: NavHostController,
@@ -132,8 +135,26 @@ fun EditSearchProfileScreen(
                     .height(26.dp),
             )
 
+            FlowRow(
+                modifier = Modifier.padding(10.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                for (type in searchProfile.types) {
+                    ExcursionsFilterChip(
+                        label = type.formattedName,
+                        isSelected = type.isChecked,
+                        onChipClicked = {
+                            Timber.d("Clicked on type: ${type.formattedName}, isChecked: ${!type.isChecked}")
+                            viewModel.updateLocationTypes(searchProfileId, type.id, !type.isChecked)
+                        }
+                    )
+                }
+            }
+
+            /*
             LazyHorizontalGrid(
-                rows = GridCells.Adaptive(minSize = 60.dp),
+                rows = GridCells.Fixed(5),
                 contentPadding = PaddingValues(8.dp),
                 verticalArrangement = Arrangement.spacedBy(1.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -155,6 +176,7 @@ fun EditSearchProfileScreen(
                     )
                 }
             }
+            */
 
             /*
             Button(

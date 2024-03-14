@@ -2,6 +2,7 @@ package com.example.excursions.data.repository
 
 import androidx.compose.ui.text.capitalize
 import com.example.excursions.data.model.LocationType
+import com.example.excursions.data.model.PlaceList
 import com.example.excursions.data.model.SearchProfile
 import java.util.InputMismatchException
 

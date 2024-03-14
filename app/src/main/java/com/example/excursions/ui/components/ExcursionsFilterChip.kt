@@ -91,8 +91,8 @@ fun ExcursionsFilterChip(
             shape = RectangleShape,
             modifier = Modifier
                 .height(48.dp)
-                .wrapContentWidth()
-                .fillMaxSize()
+                //.wrapContentWidth()
+                //.fillMaxSize()
         )
     }
 
