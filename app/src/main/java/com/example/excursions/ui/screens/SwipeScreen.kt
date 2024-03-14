@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -43,13 +42,12 @@ fun SwipeScreen(
     searchProfileId: Int
 ) {
 
-    val placeList by viewModel.resultPlaceList.collectAsState()
-    val searchProfile by rememberSaveable(searchProfileId) { mutableStateOf(viewModel.getSearchProfileById(searchProfileId)) }
-    //val placeList by rememberSaveable(placeListId) { mutableStateOf(viewModel.getPlaceListById(placeListId)) }
+    val swipeList by viewModel.resultPlaceList.collectAsState()
+    val searchProfile by viewModel.searchProfile.collectAsState()
     var currentPlaceIndex by rememberSaveable { mutableIntStateOf(0) }
 
     Timber.d("Received placeListId: $placeListId")
-    Timber.d("Place list ID: ${placeList.id}, size: ${placeList.list.size}")
+    Timber.d("Place list ID: ${swipeList.id}, size: ${swipeList.list.size}")
 
     Scaffold(
         topBar = { ExcursionsTopBar(navController = navController, backDestination = "categories", rightButtonDestination = "", rightButtonLabel = "") },
@@ -83,20 +81,21 @@ fun SwipeScreen(
             )
             Spacer(modifier = Modifier.weight(1f))
             //SwipeCard(placeList[currentPlaceIndex], viewModel)
-            if (placeList.list.isNotEmpty()) {
-                SwipeCard(placeList.list[currentPlaceIndex], viewModel)
+            if (swipeList.list.isNotEmpty()) {
+                SwipeCard(swipeList.list[currentPlaceIndex], viewModel)
             } else {
-                // Handle the case when placeList is empty (display a message, etc.)
                 Text("No places available", modifier = Modifier.padding(16.dp))
             }
             Spacer(modifier = Modifier.weight(1f))
             SwipeActionBar(
                 onYayClick = {
-                    currentPlaceIndex = (currentPlaceIndex + 1) % placeList.list.size
-                    viewModel.saveDestination(placeList.list[currentPlaceIndex], searchProfile)
+                    currentPlaceIndex = (currentPlaceIndex + 1) % swipeList.list.size
+                    //viewModel.saveDestination(swipeList.list[currentPlaceIndex], searchProfile)
+                    viewModel.saveDestination(searchProfileId, swipeList.list[currentPlaceIndex])
+                    Timber.d("Search profile saved destinations: ${searchProfile.savedDestinations}")
                 },
                 onNayClick = {
-                    currentPlaceIndex = (currentPlaceIndex + 1) % placeList.list.size
+                    currentPlaceIndex = (currentPlaceIndex + 1) % swipeList.list.size
                 }
             )
         }

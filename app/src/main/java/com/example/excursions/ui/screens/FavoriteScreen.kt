@@ -13,12 +13,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -33,11 +35,10 @@ import com.example.excursions.data.api_models.Center
 import com.example.excursions.data.api_models.DisplayName
 import com.example.excursions.data.api_models.Location
 import com.example.excursions.data.model.PlaceState
-import com.example.excursions.data.model.SearchProfile
 import com.example.excursions.data.repository.DummyExcursionsAPI
+import com.example.excursions.ui.components.SavedDestinationListItem
 import com.example.excursions.ui.navigation.ExcursionsBottomBar
 import com.example.excursions.ui.navigation.ExcursionsTopBar
-import com.example.excursions.ui.components.SavedDestinationListItem
 import com.example.excursions.ui.theme.GrayPolestar
 import com.example.excursions.ui.theme.polestarFontFamily
 import timber.log.Timber
@@ -48,11 +49,31 @@ fun FavoriteScreen(
     viewModel: ExcursionsViewModel,
     searchProfileId: Int
 ) {
-    val searchProfile by rememberSaveable(searchProfileId) { mutableStateOf(viewModel.getSearchProfileById(searchProfileId)) }
+
+    val searchProfileList by viewModel.searchProfilesList.collectAsState()
+    val filteredSearchProfile = searchProfileList.firstOrNull { it.id == searchProfileId }
+
+    if (filteredSearchProfile == null) {
+        // Show a placeholder layout or message (optional)
+        Text(text = "Search Profile Not Found")
+        return // Exit the composable if no profile found
+    }
+
+    Timber.d("Navarg searchProfileId: $searchProfileId")
+    Timber.d("Search profile id from view model: ${filteredSearchProfile.id}")
+
     val currentLocation by viewModel.location.observeAsState()
     val nullCheckedLocation: Center = currentLocation ?: Center(0.00,0.00)
 
-    Timber.d("Favorite list: ${searchProfile.savedDestinations}")
+
+    Timber.d("Favorite list: ${filteredSearchProfile.savedDestinations}")
+    Timber.d("Favorite places size: ${filteredSearchProfile.savedDestinations.size}")
+
+    val favoritePlaces = remember {
+        mutableStateListOf<PlaceState>().apply {
+            addAll(filteredSearchProfile.savedDestinations)
+        }
+    }
 
 
 
@@ -108,24 +129,35 @@ fun FavoriteScreen(
                     PlaceState(DisplayName("", "Item Name"), location = Location(12.34, 12.34)),
                     PlaceState(DisplayName("", "Item Name"), location = Location(12.34, 12.34))
                 )
+                //val filteredFavorites = searchProfile.savedDestinations.filter { it.isFavorite } // Filter list based on isFavorite
                 items(
                     //dummyList
-                    searchProfile.savedDestinations
+                    //filteredFavorites
+                    favoritePlaces.filter { it.isFavorite }
+                    //displayedPlaces, key = { it.id }
                 ) { place ->
                     SavedDestinationListItem(
                         isEditModeOn = isEditModeOn,
-                        onDeleteClicked = { /* TODO */ },
+                        onDeleteClicked = { removeFromFavoritePlaces(place, favoritePlaces) },
                         distance = viewModel.distanceBetweenCenters(
                             center1 = nullCheckedLocation,
                             center2 = Center(place.location.latitude, place.location.longitude)
                         ).toInt(),
-                        place = place
+                        place = place,
+                        viewModel = viewModel,
+                        searchProfile = filteredSearchProfile
                     )
                 }
             }
 
         }
     }
+
+
+}
+
+fun removeFromFavoritePlaces(place: PlaceState, list: SnapshotStateList<PlaceState>) {
+    list.remove(place)
 }
 
 @Preview(showBackground = true)
