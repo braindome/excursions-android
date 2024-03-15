@@ -147,6 +147,7 @@ fun FavoriteScreen(
                         place = place,
                         viewModel = viewModel,
                         searchProfile = filteredSearchProfile,
+                        navController = navController
                     )
                 }
             }
