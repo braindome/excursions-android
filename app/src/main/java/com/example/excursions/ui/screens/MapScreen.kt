@@ -10,6 +10,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.data.api_models.Center
 import com.example.excursions.data.api_models.DisplayName
@@ -25,17 +27,26 @@ import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
+import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities.Local
 
 @Composable
-fun MapScreen() {
+fun MapScreen(
+    placeId: String,
+    viewModel: ExcursionsViewModel,
+    navController: NavHostController
+) {
     val uiSettings by remember { mutableStateOf(MapUiSettings()) }
     val properties by remember { mutableStateOf(MapProperties(mapType = MapType.NORMAL)) }
 
+    val placeState = viewModel.getPlaceById(placeId)
 
+    /*
     val placeState = PlaceState(
         displayName = DisplayName("", "Copenhagen Test Marker"),
         location = Location(55.6802, 12.5671)
     )
+
+     */
 
     val cameraPositionState = CameraPositionState(
         position = CameraPosition(
@@ -76,5 +87,9 @@ fun MapScreen() {
 @Preview(showBackground = true)
 @Composable
 fun MapScreenPreview() {
-    MapScreen()
+    MapScreen(
+        placeId = "asdas",
+        navController = rememberNavController(),
+        viewModel = ExcursionsViewModel(LocalContext.current, api = DummyExcursionsAPI())
+    )
 }
