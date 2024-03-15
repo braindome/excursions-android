@@ -38,6 +38,7 @@ import com.example.excursions.data.model.PlaceState
 import com.example.excursions.data.repository.DummyExcursionsAPI
 import com.example.excursions.ui.components.SavedDestinationListItem
 import com.example.excursions.ui.navigation.ExcursionsBottomBar
+import com.example.excursions.ui.navigation.ExcursionsRoutes
 import com.example.excursions.ui.navigation.ExcursionsTopBar
 import com.example.excursions.ui.theme.GrayPolestar
 import com.example.excursions.ui.theme.polestarFontFamily
@@ -82,7 +83,7 @@ fun FavoriteScreen(
         topBar = {
             ExcursionsTopBar(
                 navController = navController,
-                backDestination = "categories",
+                backDestination = { navController.navigateUp() },
                 rightButtonLabel = if (!isEditModeOn) "Edit" else "Save",
                 rightButtonDestination = null,
                 onEndButtonClick = { isEditModeOn = !isEditModeOn }
@@ -145,7 +146,8 @@ fun FavoriteScreen(
                         ).toInt(),
                         place = place,
                         viewModel = viewModel,
-                        searchProfile = filteredSearchProfile
+                        searchProfile = filteredSearchProfile,
+                        navController = navController
                     )
                 }
             }

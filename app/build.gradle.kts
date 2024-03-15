@@ -143,5 +143,10 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.6.0")
 
 
+    // Maps
+    implementation("com.google.maps.android:maps-compose:4.3.0")
+    implementation("com.google.maps.android:maps-compose-widgets:4.3.0")
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+
 
 }

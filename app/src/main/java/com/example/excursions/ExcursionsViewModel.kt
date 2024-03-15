@@ -63,6 +63,10 @@ class ExcursionsViewModel(
         )
     }
 
+    fun getPlaceById(placeId: String): PlaceState {
+        return resultPlaceList.value.list.find{ it.id == placeId } ?: PlaceState()
+
+    }
 
 
     fun removeDestinationFromFavorites(place: PlaceState, searchProfile: SearchProfile) {
@@ -233,6 +237,7 @@ class ExcursionsViewModel(
                                 location = place.location,
                                 primaryType = place.primaryType,
                                 types = place.types,
+                                reviews = place.reviews,
                                 isFavorite = false,
                                 isDiscarded = false
                             )
@@ -263,7 +268,7 @@ class ExcursionsViewModel(
                 it
             }
         }
-        _searchProfilesList.value = updatedProfiles as SnapshotStateList<SearchProfile>
+        _searchProfilesList.value = updatedProfiles
     }
 }
 

@@ -73,7 +73,7 @@ fun EditSearchProfileScreen(
     Scaffold(
         topBar = { ExcursionsTopBar(
             navController = navController,
-            backDestination = ExcursionsRoutes.Categories.route,
+            backDestination = { navController.navigateUp() },
             rightButtonDestination = ExcursionsRoutes.Categories.route,
             rightButtonLabel = "Save",
             onEndButtonClick = {
@@ -136,7 +136,7 @@ fun EditSearchProfileScreen(
             )
 
             FlowRow(
-                modifier = Modifier.padding(10.dp),
+                modifier = Modifier.padding(start = 8.dp, end = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -151,54 +151,6 @@ fun EditSearchProfileScreen(
                     )
                 }
             }
-
-            /*
-            LazyHorizontalGrid(
-                rows = GridCells.Fixed(5),
-                contentPadding = PaddingValues(8.dp),
-                verticalArrangement = Arrangement.spacedBy(1.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(searchProfile.types) { locationType ->
-                    ExcursionsFilterChip(
-                        label = locationType.formattedName,
-                        isSelected = locationType.isChecked,
-                        onChipClicked = {
-                            //val updatedTypes = searchProfile.types.toMutableList()
-                            //val index = updatedTypes.indexOf(locationType)
-                            //updatedTypes[index] = locationType.copy(isChecked = !locationType.isChecked)
-                            //val updatedProfile = searchProfile.copy(types = updatedTypes)
-                            //viewModel.updateSearchProfileUiState(updatedProfile)
-                            //Timber.d("Updated types: $updatedTypes")
-                            Timber.d("Clicked on type: ${locationType.formattedName}, isChecked: ${!locationType.isChecked}")
-                            viewModel.updateLocationTypes(searchProfileId, locationType.id, !locationType.isChecked)
-                        }
-                    )
-                }
-            }
-            */
-
-            /*
-            Button(
-                onClick = {
-                    //Timber.d("Range value for api request: ${sliderPosition * 1000}")
-                    val types = searchProfile.types
-                        .filter { it.isChecked }
-                        .map { it.jsonName }
-                    Timber.d("Types into api request: $types")
-                    viewModel.searchPlacesByLocationAndRadius(
-                        center = nullCheckedLocation,
-                        types = types,
-                        range = sliderPosition
-                    )
-
-
-                },
-                ) {
-                Text(text = "Log API call")
-            }
-
-             */
         }
 
     }

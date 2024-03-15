@@ -22,24 +22,29 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.R
 import com.example.excursions.data.api_models.DisplayName
 import com.example.excursions.data.model.PlaceState
 import com.example.excursions.data.model.SearchProfile
 import com.example.excursions.data.repository.DummyExcursionsAPI
+import com.example.excursions.ui.navigation.ExcursionsRoutes
 import com.example.excursions.ui.theme.OrangePolestar
 import com.example.excursions.ui.theme.polestarFontFamily
 
 @Composable
 fun SavedDestinationListItem(
     isEditModeOn: Boolean,
+    navController: NavHostController,
     viewModel: ExcursionsViewModel,
     onDeleteClicked: () -> Unit,
     searchProfile: SearchProfile,
     place: PlaceState,
     distance: Int
 ) {
+    val placeId = place.id
     Column(
         modifier = Modifier
             .width(342.dp)
@@ -99,7 +104,7 @@ fun SavedDestinationListItem(
                     )
                 }
             } else {
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = { navController.navigate("${ExcursionsRoutes.PlaceDetailScreen.route}/${placeId}") }) {
                     Icon(
                         painter = painterResource(
                             id = R.drawable.arrow_right
@@ -127,7 +132,8 @@ fun SavedDestinationListItemPreview() {
         distance = 666,
         onDeleteClicked = {},
         place = PlaceState(DisplayName("", "Place name")),
-        searchProfile = SearchProfile("")
+        searchProfile = SearchProfile(""),
+        navController = rememberNavController()
 
     )
 }

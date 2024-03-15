@@ -54,6 +54,13 @@ val PolestarTypography = Typography(
         lineHeight = 32.sp,
         letterSpacing = 0.5.sp,
         color = GrayPolestar
-    )
+    ),
+    labelSmall = TextStyle(
+        fontFamily = polestarFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        lineHeight = 18.sp,
+        letterSpacing = 0.5.sp
+),
 )
 

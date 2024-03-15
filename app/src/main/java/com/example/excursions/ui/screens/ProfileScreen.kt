@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,9 +17,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.data.repository.DummyExcursionsAPI
+import com.example.excursions.ui.components.ExcursionsDropDown
 import com.example.excursions.ui.components.ScreenTitleSubtitle
 import com.example.excursions.ui.components.UserViewListItem
 import com.example.excursions.ui.navigation.ExcursionsBottomBar
+import com.example.excursions.ui.navigation.ExcursionsRoutes
 import com.example.excursions.ui.navigation.ExcursionsTopBar
 
 @Composable
@@ -26,7 +30,7 @@ fun ProfileScreen(
     viewModel: ExcursionsViewModel
 ) {
     Scaffold(
-        topBar = { ExcursionsTopBar(navController = navController, backDestination = "categories", rightButtonDestination = "", rightButtonLabel = "") },
+        topBar = { ExcursionsTopBar(navController = navController, backDestination = { navController.navigateUp() }, rightButtonDestination = "", rightButtonLabel = "") },
         bottomBar = { ExcursionsBottomBar(navController = navController) }
     ) { innerPadding ->
         Column(
@@ -37,6 +41,12 @@ fun ProfileScreen(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             ScreenTitleSubtitle(title = "Profile", subtitle = "email@user.com", modifier = Modifier)
+            Button(onClick = {
+                navController.navigate(ExcursionsRoutes.Map.route)
+            }) {
+                Text(text = "Navigate")
+            }
+            ExcursionsDropDown(label = "Test")
             Spacer(modifier = Modifier.weight(1f))
             UserViewListItem(label = "Logout", details = "email@user.com" )
             UserViewListItem(label = "Privacy Policy", details = "" )
