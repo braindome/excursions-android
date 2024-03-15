@@ -97,9 +97,17 @@ fun ExcursionsNavHost(viewModel: ExcursionsViewModel) {
         }
 
         composable(
-            route = ExcursionsRoutes.Map.route
-        ) {
-            MapScreen()
+            route = ExcursionsRoutes.Map.route + "/{placeId}",
+            arguments = listOf(navArgument("placeId") { type = NavType.StringType } )
+        ) {backStackEntry ->
+            val placeId: String = backStackEntry.arguments?.getString("placeId") ?: "no id"
+            backStackEntry.arguments?.getInt("placeId")?.let {
+                MapScreen(
+                    placeId = placeId,
+                    viewModel = viewModel,
+                    navController = navController
+                )
+            }
         }
     }
 }

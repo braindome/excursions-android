@@ -39,6 +39,7 @@ import com.example.excursions.ui.navigation.ExcursionsBottomBar
 import com.example.excursions.ui.components.ExcursionsButton
 import com.example.excursions.ui.navigation.ExcursionsTopBar
 import com.example.excursions.ui.components.ScreenTitleText
+import com.example.excursions.ui.navigation.ExcursionsRoutes
 import com.example.excursions.ui.theme.polestarFontFamily
 import timber.log.Timber
 
@@ -120,7 +121,11 @@ fun PlaceDetailScreen(
             }
 
              */
-            ExcursionsButton(label = "Navigate", onClick = { /*TODO*/ }, modifier = Modifier)
+            ExcursionsButton(
+                label = "Navigate",
+                onClick = { navController.navigate("${ExcursionsRoutes.Map.route}/${placeId}") },
+                modifier = Modifier
+            )
 
 
 
