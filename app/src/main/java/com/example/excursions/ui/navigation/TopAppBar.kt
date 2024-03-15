@@ -33,15 +33,17 @@ import com.example.excursions.ui.theme.OrangePolestar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExcursionsTopBar(navController: NavHostController, backDestination: String?, rightButtonDestination: String?, rightButtonLabel: String?, onEndButtonClick: (() -> Unit)? = null ) {
+fun ExcursionsTopBar(
+    navController: NavHostController,
+    backDestination: () -> Unit,
+    rightButtonDestination: String?,
+    rightButtonLabel: String?,
+    onEndButtonClick: (() -> Unit)? = null
+) {
     TopAppBar(
         title = { /*TODO*/ },
         navigationIcon = {
-            IconButton(onClick = {
-                if (backDestination != null) {
-                    navController.navigate(backDestination)
-                }
-            }) {
+            IconButton(onClick = backDestination) {
                 Icon(
                     painter = painterResource(id = R.drawable.arrow_left),
                     contentDescription = null,
@@ -52,40 +54,38 @@ fun ExcursionsTopBar(navController: NavHostController, backDestination: String?,
 
         },
         actions = {
-            Column(
-                modifier = Modifier.padding(top = 8.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Button(
-                    onClick = {
-                        if (rightButtonDestination != null) {
-                            navController.navigate(rightButtonDestination)
-                        }
-                        if (onEndButtonClick != null) {
-                            onEndButtonClick()
-                        }
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.White
-                    ),
-                    modifier = Modifier
-                        .clip(shape = RectangleShape)
-                        .height(22.dp),
-                    shape = CutCornerShape(0.dp),
-                    contentPadding = PaddingValues(0.dp),
+            if (rightButtonDestination != null) {
+                Column(
+                    modifier = Modifier.padding(top = 8.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    if (rightButtonLabel != null) {
-                        Text(
-                            text = rightButtonLabel,
-                            style = TextStyle(
-                                fontSize = 16.sp,
-                                lineHeight = 18.sp,
-                                color = Color.Black
-                            ),
-                        )
-                    }
+                    Button(
+                        onClick = {
+                            navController.navigate(rightButtonDestination)
+                            onEndButtonClick?.invoke()
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.White
+                        ),
+                        modifier = Modifier
+                            .clip(shape = RectangleShape)
+                            .height(22.dp),
+                        shape = CutCornerShape(0.dp),
+                        contentPadding = PaddingValues(0.dp),
+                    ) {
+                        if (rightButtonLabel != null) {
+                            Text(
+                                text = rightButtonLabel,
+                                style = TextStyle(
+                                    fontSize = 16.sp,
+                                    lineHeight = 18.sp,
+                                    color = Color.Black
+                                ),
+                            )
+                        }
 
+                    }
                 }
             }
 
@@ -99,5 +99,5 @@ fun ExcursionsTopBar(navController: NavHostController, backDestination: String?,
 @Preview(showBackground = true)
 @Composable
 fun ExcursionsTopBarPreview() {
-    ExcursionsTopBar(navController = rememberNavController(), backDestination = "", rightButtonDestination = "", rightButtonLabel = "Add")
+    ExcursionsTopBar(navController = rememberNavController(), backDestination = {}, rightButtonDestination = "", rightButtonLabel = "Add")
 }

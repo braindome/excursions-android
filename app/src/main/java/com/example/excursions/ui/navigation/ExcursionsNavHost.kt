@@ -13,6 +13,7 @@ import com.example.excursions.ui.screens.EditSearchProfileScreen
 import com.example.excursions.ui.screens.FavoriteScreen
 import com.example.excursions.ui.screens.IntroScreen
 import com.example.excursions.ui.screens.LoginScreen
+import com.example.excursions.ui.screens.MapScreen
 import com.example.excursions.ui.screens.ProfileScreen
 import com.example.excursions.ui.screens.SavedDestinationsScreen
 import com.example.excursions.ui.screens.SearchScreen
@@ -78,6 +79,12 @@ fun ExcursionsNavHost(viewModel: ExcursionsViewModel) {
                 )
             }
         }
+
+        composable(
+            route = ExcursionsRoutes.Map.route
+        ) {
+            MapScreen()
+        }
     }
 }
 enum class ExcursionsRoutes(val route: String) {
@@ -90,5 +97,6 @@ enum class ExcursionsRoutes(val route: String) {
     Profile("profile"),
     SwipeScreen("swipeScreen"),
     EditSearchProfile("addSearchProfile"),
-    Saved("saved")
+    Saved("saved"),
+    Map("map")
 }

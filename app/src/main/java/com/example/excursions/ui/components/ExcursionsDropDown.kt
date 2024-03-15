@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.excursions.R
 import com.example.excursions.ui.theme.GrayPolestar
+import com.example.excursions.ui.theme.PolestarTypography
 import com.example.excursions.ui.theme.polestarFontFamily
 
 @Composable
@@ -43,32 +45,20 @@ fun ExcursionsDropDown(label: String) {
     var selectedIndex by remember { mutableIntStateOf(0) }
 
     Column(
-        modifier = Modifier
-            .padding(bottom = 1.dp)
-            .height(75.dp)
-            .width(342.dp)
+        modifier = Modifier.padding(bottom = 1.dp).height(75.dp).width(342.dp)
     ) {
         Text(
             text = label,
             fontFamily = polestarFontFamily,
-            style = TextStyle(
-                fontSize = 16.sp,
-                lineHeight = 18.sp
-            )
+            style = PolestarTypography.labelSmall
         )
-        Box(modifier = Modifier
-            .width(342.dp)
-            .height(48.dp)
+        Box(modifier = Modifier.width(342.dp).height(48.dp)
             //.wrapContentSize(Alignment.TopStart)
         ) {
-
             Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clickable(onClick = { expanded = true } )
+                modifier = Modifier.fillMaxSize().clickable(onClick = { expanded = true } )
                     .background(Color.Black.copy(alpha = 0.08f))
                     .padding(10.dp)
-                    //.width(342.dp)
             ) {
                 Text(
                     text = mockList[selectedIndex],
@@ -78,27 +68,15 @@ fun ExcursionsDropDown(label: String) {
                         lineHeight = 18.sp
                     ),
                     modifier = Modifier.weight(1f).align(Alignment.CenterVertically)
-                        //.fillMaxSize()
-                        //.clickable(onClick = { expanded = true })
-                        //.background(GrayPolestar)
-                        //.padding(10.dp)
                 )
                 Icon(
                     painter = painterResource(id = if (expanded) R.drawable.hook_up_16 else R.drawable.hook_down_16),
-                    //painter = painterResource(id = R.drawable.hook_down_16),
                     contentDescription = null,
                     modifier = Modifier.align(Alignment.CenterVertically)
                 )
             }
-
             DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-                modifier = Modifier
-                    //.fillMaxWidth()
-                    .background(
-                        Color.White
-                    )
+                expanded = expanded, onDismissRequest = { expanded = false }, modifier = Modifier.background(Color.White)
             ) {
                 mockList.forEachIndexed { index, s ->
                     DropdownMenuItem(
@@ -118,12 +96,10 @@ fun ExcursionsDropDown(label: String) {
                 }
             }
         }
-        Divider(
-            color = Color.Black,
+        HorizontalDivider(
+            modifier = Modifier,
             thickness = 1.dp,
-            modifier = Modifier
-                //.fillMaxWidth()
-                //.padding(vertical = 8.dp) // Adjust padding as needed
+            color = Color.Black
         )
     }
 

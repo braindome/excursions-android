@@ -126,7 +126,7 @@ fun ExcursionsBottomBar(navController: NavHostController) {
     var selectedItem by rememberSaveable { mutableIntStateOf(getSelectedIndex(navController.currentDestination?.route)) }
     val navBarIcons = listOf(
         R.drawable.bottom_bar_icon_grid,
-        R.drawable.bottom_bar_icon_search,
+        //R.drawable.bottom_bar_icon_search,
         R.drawable.bottom_bar_icon_favorite,
         R.drawable.bottom_bar_icon_profile)
     val activeColor = OrangePolestar
@@ -146,9 +146,8 @@ fun ExcursionsBottomBar(navController: NavHostController) {
                     selectedItem = index
                     val destination = when (index){
                         0 -> ExcursionsRoutes.Categories.route
-                        1 -> ExcursionsRoutes.Search.route
-                        2 -> ExcursionsRoutes.Favorites.route
-                        3 -> ExcursionsRoutes.Profile.route
+                        1 -> ExcursionsRoutes.Favorites.route
+                        2 -> ExcursionsRoutes.Profile.route
                         else -> {
                             "categories"
                         }
@@ -167,15 +166,17 @@ fun ExcursionsBottomBar(navController: NavHostController) {
     }
 }
 
+
 fun getSelectedIndex(route: String?): Int {
     return when (route) {
         "categories" -> 0
-        "search" -> 1
-        "favorites" -> 2
-        "profile" -> 3
+        "favorites" -> 1
+        "profile" -> 2
         else -> 0
     }
 }
+
+
 
 
 

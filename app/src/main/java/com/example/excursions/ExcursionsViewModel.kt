@@ -233,6 +233,7 @@ class ExcursionsViewModel(
                                 location = place.location,
                                 primaryType = place.primaryType,
                                 types = place.types,
+                                reviews = place.reviews,
                                 isFavorite = false,
                                 isDiscarded = false
                             )
@@ -263,7 +264,7 @@ class ExcursionsViewModel(
                 it
             }
         }
-        _searchProfilesList.value = updatedProfiles as SnapshotStateList<SearchProfile>
+        _searchProfilesList.value = updatedProfiles
     }
 }
 

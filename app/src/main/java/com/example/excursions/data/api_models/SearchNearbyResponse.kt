@@ -15,6 +15,7 @@ data class Place(
     @Json(name = "id") val id: String,
     @Json(name = "location") val location: Location,
     @Json(name = "primaryType") val primaryType: String?,
+    @Json(name = "reviews") val reviews: List<Review>?,
     @Json(name = "types") val types: List<String>
 )
 
