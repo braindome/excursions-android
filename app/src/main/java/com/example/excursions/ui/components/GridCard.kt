@@ -65,24 +65,12 @@ fun GridCard(
             Timber.d("Types into api request: $types")
 
             viewModel.viewModelScope.launch {
-                viewModel.searchPlacesByLocationAndRadius(
-                    center = nullCheckedLocation,
-                    types = types,
-                    range = searchProfile.range
-                )
-                delay(500)
+                // API call disabled for testing
+                viewModel.searchPlacesByLocationAndRadius(center = nullCheckedLocation, types = types, range = searchProfile.range)
+                delay(300)
                 val placeListId = placeList.value.id
                 navController.navigate("swipeScreen/${placeListId}/${searchProfileId}")
             }
-            /*
-            viewModel.searchPlacesByLocationAndRadius(
-                center = nullCheckedLocation,
-                types = types,
-                range = searchProfile.range
-            )
-             */
-            //val placeListId = placeList?.id
-            //navController.navigate("swipeScreen/${placeListId}")
         }
     ) {
         Column(
@@ -99,7 +87,7 @@ fun GridCard(
             )
             IconButton(
                 onClick = {
-                    navController.navigate("${ExcursionsRoutes.EditSearchProfile.route}/${searchProfileId}")
+                    navController.navigate("${ExcursionsRoutes.PlaceDetailScreen.route}/${searchProfileId}")
                           },
                 modifier = Modifier.align(Alignment.End)
             ) {

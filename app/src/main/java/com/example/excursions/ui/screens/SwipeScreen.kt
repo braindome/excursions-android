@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -28,6 +29,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.data.repository.DummyExcursionsAPI
+import com.example.excursions.data.repository.SearchProfileRepository
+import com.example.excursions.ui.components.DetailInfoBox
 import com.example.excursions.ui.components.ExcursionsButton
 import com.example.excursions.ui.components.SwipeActionBar
 import com.example.excursions.ui.components.SwipeCard
@@ -47,6 +50,10 @@ fun SwipeScreen(
 ) {
 
     val swipeList by viewModel.resultPlaceList.collectAsState()
+
+    // Dummy list for testing
+    //val swipeList by rememberSaveable { mutableStateOf(SearchProfileRepository.dummyPlaceList) }
+
     val searchProfile by viewModel.searchProfile.collectAsState()
     var currentPlaceIndex by rememberSaveable { mutableIntStateOf(0) }
     var isDetailScreen by rememberSaveable { mutableStateOf(false) }
@@ -61,15 +68,7 @@ fun SwipeScreen(
         topBar = {
             ExcursionsTopBar(
                 navController = navController,
-
-                backDestination = {
-                    if (isDetailScreen) {
-                        isDetailScreen = false
-                    } else {
-                        navController.navigateUp()
-                    }
-                },
-
+                backDestination = { navController.navigateUp() },
                 rightButtonDestination = "",
                 rightButtonLabel = ""
             )},
@@ -95,32 +94,25 @@ fun SwipeScreen(
             Spacer(modifier = Modifier.weight(1f))
             //SwipeCard(placeList[currentPlaceIndex], viewModel)
             if (swipeList.list.isNotEmpty()) {
-                SwipeCard(swipeList.list[currentPlaceIndex], viewModel, isDetailScreen) {
-                    isDetailScreen = true
-                }
+                SwipeCard(
+                    place = swipeList.list[currentPlaceIndex],
+                    viewModel =  viewModel,
+                    navController =  navController)
             } else {
                 Text("No places available", modifier = Modifier.padding(16.dp))
             }
             Spacer(modifier = Modifier.weight(1f))
-            if (!isDetailScreen) {
-                SwipeActionBar(
-                    onYayClick = {
-                        currentPlaceIndex = (currentPlaceIndex + 1) % swipeList.list.size
-                        //viewModel.saveDestination(swipeList.list[currentPlaceIndex], searchProfile)
-                        viewModel.saveDestination(searchProfileId, swipeList.list[currentPlaceIndex])
-                        Timber.d("Search profile saved destinations: ${searchProfile.savedDestinations}")
-                    },
-                    onNayClick = {
-                        currentPlaceIndex = (currentPlaceIndex + 1) % swipeList.list.size
-                    }
-                )
-            } else {
-                ExcursionsButton(
-                    label = "Navigate",
-                    onClick = { /*TODO*/ },
-                    modifier = Modifier
-                )
-            }
+            SwipeActionBar(
+                onYayClick = {
+                    currentPlaceIndex = (currentPlaceIndex + 1) % swipeList.list.size
+                    //viewModel.saveDestination(swipeList.list[currentPlaceIndex], searchProfile)
+                    viewModel.saveDestination(searchProfileId, swipeList.list[currentPlaceIndex])
+                    Timber.d("Search profile saved destinations: ${searchProfile.savedDestinations}")
+                },
+                onNayClick = {
+                    currentPlaceIndex = (currentPlaceIndex + 1) % swipeList.list.size
+                }
+            )
 
         }
     }

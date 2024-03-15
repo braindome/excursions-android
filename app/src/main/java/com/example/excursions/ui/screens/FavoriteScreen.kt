@@ -146,7 +146,7 @@ fun FavoriteScreen(
                         ).toInt(),
                         place = place,
                         viewModel = viewModel,
-                        searchProfile = filteredSearchProfile
+                        searchProfile = filteredSearchProfile,
                     )
                 }
             }

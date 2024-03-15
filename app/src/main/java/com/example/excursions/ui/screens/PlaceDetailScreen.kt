@@ -1,18 +1,17 @@
-package com.example.excursions.ui.components
+package com.example.excursions.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,63 +19,76 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.R
 import com.example.excursions.data.api_models.Center
 import com.example.excursions.data.api_models.toCenter
-import com.example.excursions.data.model.PlaceState
-import com.example.excursions.data.model.calculateRatingAverage
-import com.example.excursions.data.model.formatTypesToTags
 import com.example.excursions.data.repository.DummyExcursionsAPI
-import com.example.excursions.data.repository.SearchProfileRepository
-import com.example.excursions.ui.theme.GrayPolestar
-import com.example.excursions.ui.theme.PolestarTypography
-import com.example.excursions.ui.theme.Typography
+import com.example.excursions.ui.components.DetailInfoBox
+import com.example.excursions.ui.navigation.ExcursionsBottomBar
+import com.example.excursions.ui.components.ExcursionsButton
+import com.example.excursions.ui.navigation.ExcursionsTopBar
+import com.example.excursions.ui.components.ScreenTitleText
 import com.example.excursions.ui.theme.polestarFontFamily
 import timber.log.Timber
 
 @Composable
-fun DetailInfoBox(
-    place: PlaceState,
-    viewModel: ExcursionsViewModel
+fun PlaceDetailScreen(
+    navController: NavHostController,
+    viewModel: ExcursionsViewModel,
+    placeId: String
 ) {
+    Timber.d("placeId recevied via backstack: $placeId")
+    val place = viewModel.getPlaceById(placeId)
+    Timber.d("place via getPlaceById: $place")
+
     val currentLocation by viewModel.location.observeAsState()
     val nullCheckedLocation: Center = currentLocation ?: Center(0.00,0.00)
     val placeCoordinates = place.location.toCenter()
     val distanceToLocation = viewModel.distanceBetweenCenters(nullCheckedLocation, placeCoordinates)
-
-    val ratingsAverage = place.calculateRatingAverage()
-    Timber.d("Ratings: $ratingsAverage")
-
-    Surface(
-        modifier = Modifier
-            //.height(454.dp)
-            .fillMaxHeight(0.8f)
-            .width(342.dp)
-    ) {
-        Column {
-            Image(
-                painter = painterResource(id = R.drawable.location_placeholder),
-                contentDescription = null,
-                modifier = Modifier.size(width = 343.dp, height = 216.dp),
-                contentScale = ContentScale.Crop
+    Scaffold(
+        topBar = {
+            ExcursionsTopBar(
+                navController = navController,
+                backDestination = { navController.navigateUp() },
+                rightButtonDestination = null,
+                rightButtonLabel = null
             )
-
-            Spacer(modifier = Modifier.size(10.dp))
+        },
+        bottomBar = { ExcursionsBottomBar(navController = navController) }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Text(
-                text = "${distanceToLocation.toInt()} km",
-                style = PolestarTypography.labelSmall
+                text = place.displayName.text,
+                fontFamily = polestarFontFamily,
+                style = TextStyle(color = Color.Black),
+                fontSize = 32.sp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .width(343.dp)
+                    .padding(start = 24.dp),
             )
-            Text(text = "Rating: ${place.reviews?.calculateRatingAverage()}/5", style = PolestarTypography.labelSmall)
-            Text(text = "Top Review", style = PolestarTypography.labelSmall)
-            Text(text = place.reviews?.get(0)?.text?.text ?: "No reviews available")
-            Text(text = place.types.formatTypesToTags())
+            Spacer(modifier = Modifier.weight(1f))
+            //DetailInfoBox(place = place, viewModel = viewModel)
+            DetailInfoBox(place = place, viewModel = viewModel)
+            Spacer(modifier = Modifier.weight(1f))
+
             /*
             place.reviews?.let { reviews ->
                 if (reviews.isNotEmpty()) {
@@ -108,20 +120,27 @@ fun DetailInfoBox(
             }
 
              */
+            ExcursionsButton(label = "Navigate", onClick = { /*TODO*/ }, modifier = Modifier)
+
+
 
 
         }
+
+
+
     }
-
-
-
 }
 
 @Preview(showBackground = true)
 @Composable
-fun DetailInfoBoxPreview() {
-    DetailInfoBox(
-        place = SearchProfileRepository.dummyPlaceA,
-        viewModel = ExcursionsViewModel(LocalContext.current, api = DummyExcursionsAPI())
+fun SavedDetailScreenPreview() {
+    PlaceDetailScreen(
+        navController = rememberNavController(),
+        viewModel = ExcursionsViewModel(
+            appContext = LocalContext.current,
+            api = DummyExcursionsAPI()
+        ),
+        placeId = ""
     )
 }

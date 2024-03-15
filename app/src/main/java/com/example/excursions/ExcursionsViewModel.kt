@@ -63,6 +63,10 @@ class ExcursionsViewModel(
         )
     }
 
+    fun getPlaceById(placeId: String): PlaceState {
+        return resultPlaceList.value.list.find{ it.id == placeId } ?: PlaceState()
+
+    }
 
 
     fun removeDestinationFromFavorites(place: PlaceState, searchProfile: SearchProfile) {

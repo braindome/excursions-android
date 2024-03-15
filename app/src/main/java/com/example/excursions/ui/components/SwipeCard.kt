@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.R
@@ -32,22 +33,22 @@ import com.example.excursions.data.api_models.DisplayName
 import com.example.excursions.data.api_models.Location
 import com.example.excursions.data.api_models.toCenter
 import com.example.excursions.data.model.PlaceState
+import com.example.excursions.data.model.calculateRatingAverage
 import com.example.excursions.data.repository.DummyExcursionsAPI
 import com.example.excursions.ui.navigation.ExcursionsRoutes
 import com.example.excursions.ui.theme.polestarFontFamily
 
 @Composable
 fun SwipeCard(
+    navController: NavHostController,
     place: PlaceState,
     viewModel: ExcursionsViewModel,
-    isDetailScreen: Boolean,
-    onReadMoreClick: () -> Unit
 ) {
     val currentLocation by viewModel.location.observeAsState()
     val nullCheckedLocation: Center = currentLocation ?: Center(0.00,0.00)
     val placeCoordinates = place.location.toCenter()
     val distanceToLocation = viewModel.distanceBetweenCenters(nullCheckedLocation, placeCoordinates)
-    var isReadMoreClicked by rememberSaveable { mutableStateOf(isDetailScreen) }
+    val placeId = place.id
 
     Surface(
         modifier = Modifier
@@ -74,28 +75,20 @@ fun SwipeCard(
                 fontFamily = polestarFontFamily,
                 fontSize = 30.sp
             )
-            if (isReadMoreClicked) {
-                DetailInfoBox(place = place)
-            } else {
-                Text(text = stringResource(id = R.string.lorem_ipsum))
+            //MainInfoBox(place = place)
+            Column {
+                Text(text = "${place.calculateRatingAverage()}/5 Stars!")
+                //Text(text = stringResource(id = R.string.lorem_ipsum))
                 Spacer(modifier = Modifier.size(10.dp))
-                Text(
-                    text = "Primary type: ${place.primaryType}",
-                )
-
-                Text(
-                    text = "Tags: ${place.types}",
-                )
-
+                //Text(text = "Primary type: ${place.primaryType}",)
+                //Text(text = "Tags: ${place.types.formatTypesToTags()}",)
                 PlainTextArrowButton(
                     label = "Read more",
-                    onClick = {
-                        isReadMoreClicked = true
-                        onReadMoreClick()
-                              },
+                    onClick = { navController.navigate("${ExcursionsRoutes.PlaceDetailScreen.route}/${placeId}") },
                     modifier = Modifier
                 )
             }
+
         }
     }
 }
@@ -117,8 +110,8 @@ fun SwipeCardPreview() {
             appContext = LocalContext.current,
             api = DummyExcursionsAPI()
         ),
-        isDetailScreen = false,
-        onReadMoreClick = {}
+        navController = rememberNavController()
+
     )
 }
 

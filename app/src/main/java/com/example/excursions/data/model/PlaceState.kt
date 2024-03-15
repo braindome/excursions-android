@@ -21,6 +21,11 @@ data class PlaceState(
     val isDiscarded: Boolean = false
 ) : Parcelable
 
+fun List<String>.formatTypesToTags(): String {
+    return this.joinToString(separator = ", ") { "#${it}" }
+}
+
+
 fun List<Review>.calculateRatingAverage(): Double {
     if (isEmpty()) {
         return 0.0
