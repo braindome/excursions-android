@@ -95,7 +95,10 @@ fun SwipeScreen(
             //SwipeCard(placeList[currentPlaceIndex], viewModel)
             if (swipeList.list.isNotEmpty()) {
                 SwipeCard(
-                    place = swipeList.list[currentPlaceIndex],
+                    place = swipeList.list.filter {
+                        !it.isFavorite
+                        !it.isDiscarded
+                    }[currentPlaceIndex],
                     viewModel =  viewModel,
                     navController =  navController)
             } else {
@@ -104,12 +107,15 @@ fun SwipeScreen(
             Spacer(modifier = Modifier.weight(1f))
             SwipeActionBar(
                 onYayClick = {
+                    viewModel.saveDestination(searchProfileId, swipeList.list[currentPlaceIndex])
+
                     currentPlaceIndex = (currentPlaceIndex + 1) % swipeList.list.size
                     //viewModel.saveDestination(swipeList.list[currentPlaceIndex], searchProfile)
-                    viewModel.saveDestination(searchProfileId, swipeList.list[currentPlaceIndex])
                     Timber.d("Search profile saved destinations: ${searchProfile.savedDestinations}")
                 },
                 onNayClick = {
+                    viewModel.discardDestination(searchProfileId, swipeList.list[currentPlaceIndex])
+
                     currentPlaceIndex = (currentPlaceIndex + 1) % swipeList.list.size
                 }
             )

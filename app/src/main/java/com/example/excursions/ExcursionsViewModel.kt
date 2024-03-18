@@ -89,6 +89,18 @@ class ExcursionsViewModel(
         }
     }
 
+
+    fun discardDestination(searchProfileId: Int, placeState: PlaceState) {
+        val updatedProfiles = _searchProfilesList.value.toMutableList()
+        val index = updatedProfiles.indexOfFirst { it.id == searchProfileId }
+        if (index != -1) {
+            updatedProfiles[index].savedDestinations.add(placeState.copy(isDiscarded = true))
+            _searchProfilesList.value = updatedProfiles
+        } else {
+            Timber.d("Profile not found")
+        }
+    }
+
     fun saveDestination(searchProfileId: Int, placeState: PlaceState) {
         val updatedProfiles = _searchProfilesList.value.toMutableList()
         val index = updatedProfiles.indexOfFirst { it.id == searchProfileId }
@@ -211,7 +223,7 @@ class ExcursionsViewModel(
         val updatedPlaces = _resultPlaceList.value.copy()
         Timber.d("Received range value: $range")
         val locationRestriction = LocationRestriction(Circle(center, range.toDouble()))
-        val maxResultCount = 5
+        val maxResultCount = 3
         val requestUrl = "https://places.googleapis.com/v1/places:searchNearby"
 
         val request = SearchNearbyRequest(
