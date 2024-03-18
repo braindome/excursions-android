@@ -73,7 +73,7 @@ fun EditSearchProfileScreen(
     Scaffold(
         topBar = { ExcursionsTopBar(
             navController = navController,
-            backDestination = { navController.navigateUp() },
+            //backDestination = { navController.navigateUp() },
             rightButtonDestination = ExcursionsRoutes.Categories.route,
             rightButtonLabel = "Save",
             onEndButtonClick = {

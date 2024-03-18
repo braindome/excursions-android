@@ -60,7 +60,7 @@ fun CategoryScreen(
         topBar = {
             ExcursionsTopBar(
                 navController = navController,
-                backDestination = { navController.navigateUp() },
+                //backDestination = { navController.navigateUp() },
                 rightButtonLabel = "Add",
                 rightButtonDestination = ExcursionsRoutes.EditSearchProfile.route
             )

@@ -87,7 +87,7 @@ fun GridCard(
             )
             IconButton(
                 onClick = {
-                    navController.navigate("${ExcursionsRoutes.PlaceDetailScreen.route}/${searchProfileId}")
+                    navController.navigate("${ExcursionsRoutes.EditSearchProfile.route}/${searchProfileId}")
                           },
                 modifier = Modifier.align(Alignment.End)
             ) {

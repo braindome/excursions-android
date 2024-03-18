@@ -35,7 +35,7 @@ import com.example.excursions.ui.theme.OrangePolestar
 @Composable
 fun ExcursionsTopBar(
     navController: NavHostController,
-    backDestination: () -> Unit,
+    //backDestination: () -> Unit,
     rightButtonDestination: String?,
     rightButtonLabel: String?,
     onEndButtonClick: (() -> Unit)? = null
@@ -43,7 +43,7 @@ fun ExcursionsTopBar(
     TopAppBar(
         title = { /*TODO*/ },
         navigationIcon = {
-            IconButton(onClick = backDestination) {
+            IconButton(onClick = { navController.navigateUp() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.arrow_left),
                     contentDescription = null,
@@ -54,40 +54,49 @@ fun ExcursionsTopBar(
 
         },
         actions = {
-            if (rightButtonDestination != null) {
-                Column(
-                    modifier = Modifier.padding(top = 8.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Button(
-                        onClick = {
+            Column(
+                modifier = Modifier.padding(top = 8.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Button(
+                    onClick = {
+                        if (rightButtonDestination != null) {
                             navController.navigate(rightButtonDestination)
-                            onEndButtonClick?.invoke()
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.White
-                        ),
-                        modifier = Modifier
-                            .clip(shape = RectangleShape)
-                            .height(22.dp),
-                        shape = CutCornerShape(0.dp),
-                        contentPadding = PaddingValues(0.dp),
-                    ) {
-                        if (rightButtonLabel != null) {
-                            Text(
-                                text = rightButtonLabel,
-                                style = TextStyle(
-                                    fontSize = 16.sp,
-                                    lineHeight = 18.sp,
-                                    color = Color.Black
-                                ),
-                            )
                         }
-
+                        onEndButtonClick?.invoke()
+                        /*
+                        rightButtonDestination?.let { destination ->
+                            navController?.navigate(destination)
+                            onEndButtonClick?.invoke()
+                        }
+                        */
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.White
+                    ),
+                    modifier = Modifier
+                        .clip(shape = RectangleShape)
+                        .height(22.dp),
+                    shape = CutCornerShape(0.dp),
+                    contentPadding = PaddingValues(0.dp),
+                ) {
+                    if (rightButtonLabel != null) {
+                        Text(
+                            text = rightButtonLabel,
+                            style = TextStyle(
+                                fontSize = 16.sp,
+                                lineHeight = 18.sp,
+                                color = Color.Black
+                            ),
+                        )
                     }
+
                 }
+
+
             }
+
 
         },
         modifier = Modifier
@@ -99,5 +108,5 @@ fun ExcursionsTopBar(
 @Preview(showBackground = true)
 @Composable
 fun ExcursionsTopBarPreview() {
-    ExcursionsTopBar(navController = rememberNavController(), backDestination = {}, rightButtonDestination = "", rightButtonLabel = "Add")
+    ExcursionsTopBar(navController = rememberNavController(), rightButtonDestination = "", rightButtonLabel = "Add")
 }

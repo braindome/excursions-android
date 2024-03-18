@@ -29,7 +29,7 @@ fun SwipeDetailScreen(navController: NavHostController) {
         topBar = {
             ExcursionsTopBar(
                 navController = navController,
-                backDestination = { ExcursionsRoutes.SwipeScreen.route },
+                //backDestination = { ExcursionsRoutes.SwipeScreen.route },
                 rightButtonDestination = null,
                 rightButtonLabel = null
             )

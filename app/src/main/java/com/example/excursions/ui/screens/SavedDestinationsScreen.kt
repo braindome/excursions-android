@@ -47,7 +47,12 @@ fun SavedDestinationsScreen(
     val mockCats = listOf("Beaches", "Monuments", "Hiking", "Explorations", "Swimming Spots")
 
     Scaffold(
-        topBar = { ExcursionsTopBar(navController = navController, backDestination = {navController.navigateUp()}, rightButtonLabel = "", rightButtonDestination = ExcursionsRoutes.EditSearchProfile.route) },
+        topBar = { ExcursionsTopBar(
+            navController = navController,
+            //backDestination = {navController.navigateUp()},
+            rightButtonLabel = "",
+            rightButtonDestination = ExcursionsRoutes.EditSearchProfile.route
+        ) },
         bottomBar = { ExcursionsBottomBar(navController = navController) }
     ) { innerPadding ->
         Column(

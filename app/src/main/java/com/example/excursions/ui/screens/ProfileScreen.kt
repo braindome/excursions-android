@@ -30,7 +30,11 @@ fun ProfileScreen(
     viewModel: ExcursionsViewModel
 ) {
     Scaffold(
-        topBar = { ExcursionsTopBar(navController = navController, backDestination = { navController.navigateUp() }, rightButtonDestination = "", rightButtonLabel = "") },
+        topBar = { ExcursionsTopBar(
+            navController = navController,
+            //backDestination = { navController.navigateUp() },
+            rightButtonDestination = "",
+            rightButtonLabel = "") },
         bottomBar = { ExcursionsBottomBar(navController = navController) }
     ) { innerPadding ->
         Column(

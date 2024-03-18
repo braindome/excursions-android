@@ -68,7 +68,7 @@ fun SwipeScreen(
         topBar = {
             ExcursionsTopBar(
                 navController = navController,
-                backDestination = { navController.navigateUp() },
+                //backDestination = { navController.navigateUp() },
                 rightButtonDestination = "",
                 rightButtonLabel = ""
             )},

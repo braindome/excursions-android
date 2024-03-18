@@ -61,7 +61,7 @@ fun PlaceDetailScreen(
         topBar = {
             ExcursionsTopBar(
                 navController = navController,
-                backDestination = { navController.navigateUp() },
+                //backDestination = { navController.navigateUp() },
                 rightButtonDestination = null,
                 rightButtonLabel = null
             )

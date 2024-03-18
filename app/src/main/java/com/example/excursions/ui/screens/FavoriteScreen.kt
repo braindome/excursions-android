@@ -83,7 +83,7 @@ fun FavoriteScreen(
         topBar = {
             ExcursionsTopBar(
                 navController = navController,
-                backDestination = { navController.navigateUp() },
+                //backDestination = { navController.navigateUp() },
                 rightButtonLabel = if (!isEditModeOn) "Edit" else "Save",
                 rightButtonDestination = null,
                 onEndButtonClick = { isEditModeOn = !isEditModeOn }
@@ -168,6 +168,6 @@ fun FavoriteScreenPreview() {
     FavoriteScreen(
         navController = rememberNavController(),
         viewModel = ExcursionsViewModel(LocalContext.current, DummyExcursionsAPI()),
-        searchProfileId = -1
+        searchProfileId = 1
     )
 }
