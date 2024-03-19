@@ -12,6 +12,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.internal.illegalDecoyCallException
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
@@ -66,7 +67,7 @@ fun GridCard(
 
             viewModel.viewModelScope.launch {
                 // API call disabled for testing
-                viewModel.searchPlacesByLocationAndRadius(center = nullCheckedLocation, types = types, range = searchProfile.range)
+                viewModel.searchPlacesByLocationAndRadius(center = nullCheckedLocation, types = types, range = searchProfile.range, placeListId = searchProfileId)
                 delay(300)
                 val placeListId = placeList.value.id
                 navController.navigate("swipeScreen/${placeListId}/${searchProfileId}")

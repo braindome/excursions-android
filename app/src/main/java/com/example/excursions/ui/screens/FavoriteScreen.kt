@@ -134,7 +134,10 @@ fun FavoriteScreen(
                 items(
                     //dummyList
                     //filteredFavorites
-                    favoritePlaces.filter { it.isFavorite }
+                    favoritePlaces.filter {
+                        it.isFavorite
+                        !it.isDiscarded
+                    }.distinctBy { it.id }
                     //displayedPlaces, key = { it.id }
                 ) { place ->
                     SavedDestinationListItem(
