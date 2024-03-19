@@ -20,6 +20,7 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var viewModel: ExcursionsViewModel
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    //
 
     //@SuppressLint("StateFlowValueCalledInComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
