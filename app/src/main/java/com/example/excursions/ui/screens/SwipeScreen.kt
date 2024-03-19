@@ -94,6 +94,16 @@ fun SwipeScreen(
             Spacer(modifier = Modifier.weight(1f))
             //SwipeCard(placeList[currentPlaceIndex], viewModel)
             if (swipeList.list.isNotEmpty()) {
+                if (currentPlaceIndex < swipeList.list.size) {
+                    SwipeCard(
+                        place = swipeList.list.filterNot { it.isFavorite || it.isDiscarded }[currentPlaceIndex],
+                        viewModel = viewModel,
+                        navController = navController
+                    )
+                } else {
+                    Text("No more places available. Try refreshing the list or exploring another profile.", modifier = Modifier.padding(16.dp))
+                }
+                /*
                 SwipeCard(
                     place = swipeList.list.filter {
                         !it.isFavorite
@@ -101,6 +111,8 @@ fun SwipeScreen(
                     }[currentPlaceIndex],
                     viewModel =  viewModel,
                     navController =  navController)
+
+                 */
             } else {
                 Text("No places available", modifier = Modifier.padding(16.dp))
             }
@@ -108,15 +120,19 @@ fun SwipeScreen(
             SwipeActionBar(
                 onYayClick = {
                     viewModel.saveDestination(searchProfileId, swipeList.list[currentPlaceIndex])
-
+                    currentPlaceIndex++
+                    /*
                     currentPlaceIndex = (currentPlaceIndex + 1) % swipeList.list.size
                     //viewModel.saveDestination(swipeList.list[currentPlaceIndex], searchProfile)
                     Timber.d("Search profile saved destinations: ${searchProfile.savedDestinations}")
+
+                     */
                 },
                 onNayClick = {
                     viewModel.discardDestination(searchProfileId, swipeList.list[currentPlaceIndex])
+                    currentPlaceIndex++
 
-                    currentPlaceIndex = (currentPlaceIndex + 1) % swipeList.list.size
+                    //currentPlaceIndex = (currentPlaceIndex + 1) % swipeList.list.size
                 }
             )
 

@@ -68,6 +68,22 @@ class ExcursionsViewModel(
 
     }
 
+    fun removeDuplicates(places: MutableList<PlaceState>) {
+        val seenIds = mutableSetOf<String>()
+        val listWithNoDoubles = mutableListOf<PlaceState>()
+        for (place in places) {
+            if (place.id !in seenIds) {
+                seenIds.add(place.id)
+                listWithNoDoubles.add(place)
+            } else {
+                listWithNoDoubles.removeLast()
+            }
+        }
+
+        places.clear()
+        places.addAll(listWithNoDoubles)
+    }
+
 
     fun removeDestinationFromFavorites(place: PlaceState, searchProfile: SearchProfile) {
         Timber.d("Inside remove dest")
@@ -219,7 +235,7 @@ class ExcursionsViewModel(
      * Retrofit can't deal with colons in endpoint string.
      */
 
-    fun searchPlacesByLocationAndRadius(center: Center, types: List<String>, range: Float) {
+    fun searchPlacesByLocationAndRadius(center: Center, types: List<String>, range: Float, placeListId: Int) {
         val updatedPlaces = _resultPlaceList.value.copy()
         Timber.d("Received range value: $range")
         val locationRestriction = LocationRestriction(Circle(center, range.toDouble()))
@@ -254,8 +270,9 @@ class ExcursionsViewModel(
                                 isDiscarded = false
                             )
                         }
-                        val newPlaceList = PlaceList(id = UUID.randomUUID().toString(), list = newPlacesList.toMutableList())
+                        val newPlaceList = PlaceList(id = placeListId.toString(), list = newPlacesList.toMutableList())
                         _resultPlaceList.value = newPlaceList
+                        Timber.d("Updated resultPlaceList id: ${newPlaceList.id}")
                     } else {
                         Timber.e("Error: 'places' field missing in the api response")
                     }
