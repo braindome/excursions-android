@@ -12,7 +12,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.internal.illegalDecoyCallException
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
@@ -81,7 +80,7 @@ fun GridCard(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = searchProfile.name,
+                text = searchProfile.title,
                 fontSize = 22.sp,
                 fontFamily = polestarFontFamily,
                 modifier = Modifier.padding(2.dp)

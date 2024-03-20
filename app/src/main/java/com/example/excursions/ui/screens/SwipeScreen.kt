@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -29,15 +28,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.data.repository.DummyExcursionsAPI
-import com.example.excursions.data.repository.SearchProfileRepository
-import com.example.excursions.ui.components.DetailInfoBox
-import com.example.excursions.ui.components.ExcursionsButton
 import com.example.excursions.ui.components.SwipeActionBar
 import com.example.excursions.ui.components.SwipeCard
 import com.example.excursions.ui.navigation.ExcursionsBottomBar
-import com.example.excursions.ui.navigation.ExcursionsRoutes
 import com.example.excursions.ui.navigation.ExcursionsTopBar
-import com.example.excursions.ui.theme.GrayPolestar
 import com.example.excursions.ui.theme.polestarFontFamily
 import timber.log.Timber
 
@@ -57,7 +51,7 @@ fun SwipeScreen(
     val searchProfile by viewModel.searchProfile.collectAsState()
     var currentPlaceIndex by rememberSaveable { mutableIntStateOf(0) }
     var isDetailScreen by rememberSaveable { mutableStateOf(false) }
-    val title by rememberSaveable { mutableStateOf(viewModel.getSearchProfileById(searchProfileId).name) }
+    val title by rememberSaveable { mutableStateOf(viewModel.getSearchProfileById(searchProfileId).title) }
 
 
 
@@ -93,48 +87,31 @@ fun SwipeScreen(
             )
             Spacer(modifier = Modifier.weight(1f))
             //SwipeCard(placeList[currentPlaceIndex], viewModel)
-            if (swipeList.list.isNotEmpty()) {
-                if (currentPlaceIndex < swipeList.list.size) {
-                    SwipeCard(
-                        place = swipeList.list.filterNot { it.isFavorite || it.isDiscarded }[currentPlaceIndex],
-                        viewModel = viewModel,
-                        navController = navController
-                    )
-                } else {
-                    Text("No more places available. Try refreshing the list or exploring another profile.", modifier = Modifier.padding(16.dp))
-                }
-                /*
-                SwipeCard(
-                    place = swipeList.list.filter {
-                        !it.isFavorite
-                        !it.isDiscarded
-                    }[currentPlaceIndex],
-                    viewModel =  viewModel,
-                    navController =  navController)
+            if (swipeList.list.isNotEmpty() && currentPlaceIndex < swipeList.list.size) {
+                SwipeCard(navController = navController, place = swipeList.list[currentPlaceIndex], viewModel = viewModel)
+                Spacer(modifier = Modifier.weight(1f))
+                SwipeActionBar(
+                    onYayClick = {
+                        viewModel.saveDestination(searchProfileId, swipeList.list[currentPlaceIndex])
+                        currentPlaceIndex++
+                        /*
+                        currentPlaceIndex = (currentPlaceIndex + 1) % swipeList.list.size
+                        //viewModel.saveDestination(swipeList.list[currentPlaceIndex], searchProfile)
+                        Timber.d("Search profile saved destinations: ${searchProfile.savedDestinations}")
 
-                 */
+                         */
+                    },
+                    onNayClick = {
+                        viewModel.discardDestination(searchProfileId, swipeList.list[currentPlaceIndex])
+                        currentPlaceIndex++
+
+                        //currentPlaceIndex = (currentPlaceIndex + 1) % swipeList.list.size
+                    }
+                )
             } else {
-                Text("No places available", modifier = Modifier.padding(16.dp))
+                Text("No places available", modifier = Modifier.padding(16.dp).weight(1f))
             }
-            Spacer(modifier = Modifier.weight(1f))
-            SwipeActionBar(
-                onYayClick = {
-                    viewModel.saveDestination(searchProfileId, swipeList.list[currentPlaceIndex])
-                    currentPlaceIndex++
-                    /*
-                    currentPlaceIndex = (currentPlaceIndex + 1) % swipeList.list.size
-                    //viewModel.saveDestination(swipeList.list[currentPlaceIndex], searchProfile)
-                    Timber.d("Search profile saved destinations: ${searchProfile.savedDestinations}")
 
-                     */
-                },
-                onNayClick = {
-                    viewModel.discardDestination(searchProfileId, swipeList.list[currentPlaceIndex])
-                    currentPlaceIndex++
-
-                    //currentPlaceIndex = (currentPlaceIndex + 1) % swipeList.list.size
-                }
-            )
 
         }
     }

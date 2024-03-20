@@ -1,6 +1,5 @@
 package com.example.excursions.data.repository
 
-import androidx.compose.ui.text.capitalize
 import com.example.excursions.data.api_models.AuthorAttribution
 import com.example.excursions.data.api_models.DisplayName
 import com.example.excursions.data.api_models.Location
@@ -11,7 +10,6 @@ import com.example.excursions.data.model.LocationType
 import com.example.excursions.data.model.PlaceList
 import com.example.excursions.data.model.PlaceState
 import com.example.excursions.data.model.SearchProfile
-import java.util.InputMismatchException
 
 class SearchProfileRepository {
 
@@ -82,12 +80,12 @@ class SearchProfileRepository {
         )
 
         val defaultSearchProfiles : List<SearchProfile> = listOf(
-            SearchProfile(id = 1, name = "Outdoor Adventure", types = outdoorAdventure),
-            SearchProfile(id = 2, name = "Cultural Exploration", types = culturalExploration),
-            SearchProfile(id = 3, name = "Landmark Discovery", types = landmarkDiscovery),
-            SearchProfile(id = 4, name = "Relaxation and Wellness", types = relaxationAndWellness),
-            SearchProfile(id = 5, name = "Entertainment hub", types = entertainmentHub),
-            SearchProfile(id = 6, name = "Car Services", types = carServices)
+            SearchProfile(id = 1, title = "Outdoor Adventure", types = outdoorAdventure),
+            SearchProfile(id = 2, title = "Cultural Exploration", types = culturalExploration),
+            SearchProfile(id = 3, title = "Landmark Discovery", types = landmarkDiscovery),
+            SearchProfile(id = 4, title = "Relaxation and Wellness", types = relaxationAndWellness),
+            SearchProfile(id = 5, title = "Entertainment hub", types = entertainmentHub),
+            SearchProfile(id = 6, title = "Car Services", types = carServices)
         )
 
         val dummyPlaceA = PlaceState(

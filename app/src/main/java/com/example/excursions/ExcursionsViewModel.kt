@@ -1,7 +1,6 @@
 package com.example.excursions
 
 import android.content.Context
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,7 +23,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.util.UUID
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
@@ -54,12 +52,12 @@ class ExcursionsViewModel(
     init {
         _resultPlaceList.value = PlaceList()
         _searchProfilesList.value = listOf(
-            SearchProfile(id = 1, name = "Outdoor Adventure", types = SearchProfileRepository.outdoorAdventure),
-            SearchProfile(id = 2, name = "Cultural Exploration", types = SearchProfileRepository.culturalExploration),
-            SearchProfile(id = 3, name = "Landmark Discovery", types = SearchProfileRepository.landmarkDiscovery),
-            SearchProfile(id = 4, name = "Relaxation and Wellness", types = SearchProfileRepository.relaxationAndWellness),
-            SearchProfile(id = 5, name = "Entertainment hub", types = SearchProfileRepository.entertainmentHub),
-            SearchProfile(id = 6, name = "Car Services", types = SearchProfileRepository.carServices)
+            SearchProfile(id = 1, title = "Outdoor Adventure", types = SearchProfileRepository.outdoorAdventure),
+            SearchProfile(id = 2, title = "Cultural Exploration", types = SearchProfileRepository.culturalExploration),
+            SearchProfile(id = 3, title = "Landmark Discovery", types = SearchProfileRepository.landmarkDiscovery),
+            SearchProfile(id = 4, title = "Relaxation and Wellness", types = SearchProfileRepository.relaxationAndWellness),
+            SearchProfile(id = 5, title = "Entertainment hub", types = SearchProfileRepository.entertainmentHub),
+            SearchProfile(id = 6, title = "Car Services", types = SearchProfileRepository.carServices)
         )
     }
 
@@ -215,7 +213,7 @@ class ExcursionsViewModel(
     fun updateSearchProfileName(searchProfileId: Int, newName: String) {
         val updatedProfiles = _searchProfilesList.value.map {
             if (it.id == searchProfileId) {
-                it.copy(name = newName)
+                it.copy(title = newName)
             } else {
                 it
             }
