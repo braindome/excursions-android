@@ -135,14 +135,16 @@ fun FavoriteScreen(
                     //dummyList
                     //filteredFavorites
                     favoritePlaces.filter {
-                        it.isFavorite
-                        !it.isDiscarded
+                        it.isFavorite && !it.isDiscarded
                     }.distinctBy { it.id }
                     //displayedPlaces, key = { it.id }
                 ) { place ->
                     SavedDestinationListItem(
                         isEditModeOn = isEditModeOn,
-                        onDeleteClicked = { removeFromFavoritePlaces(place, favoritePlaces) },
+                        onDeleteClicked = {
+                            viewModel.removeDestinationFromFavorites(place, filteredSearchProfile)
+                            removeFromFavoritePlaces(place, favoritePlaces)
+                                          },
                         distance = viewModel.distanceBetweenCenters(
                             center1 = nullCheckedLocation,
                             center2 = Center(place.location.latitude, place.location.longitude)
