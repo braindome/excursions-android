@@ -13,7 +13,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -40,7 +43,8 @@ import timber.log.Timber
 fun GridCard(
     navController: NavHostController,
     searchProfile: SearchProfile,
-    viewModel: ExcursionsViewModel
+    viewModel: ExcursionsViewModel,
+    isEditModeOn: Boolean
 ) {
     val searchProfileId = searchProfile.id
     val currentLocation by viewModel.location.observeAsState()
@@ -58,19 +62,25 @@ fun GridCard(
             .padding(3.dp),
         color = YellowPolestar,
         onClick = {
+            if (!isEditModeOn) {
+                val types = searchProfile.types
+                    .filter { it.isChecked }
+                    .map { it.jsonName }
+                Timber.d("Types into api request: $types")
 
-            val types = searchProfile.types
-                .filter { it.isChecked }
-                .map { it.jsonName }
-            Timber.d("Types into api request: $types")
+                viewModel.viewModelScope.launch {
+                    // API call disabled for testing
+                    viewModel.searchPlacesByLocationAndRadius(center = nullCheckedLocation, types = types, range = searchProfile.range, placeListId = searchProfileId)
+                    delay(300)
+                    val placeListId = placeList.value.id
+                    navController.navigate("swipeScreen/${placeListId}/${searchProfileId}")
+                }
+            } else {
+                navController.navigate("${ExcursionsRoutes.EditSearchProfile.route}/${searchProfileId}")
 
-            viewModel.viewModelScope.launch {
-                // API call disabled for testing
-                viewModel.searchPlacesByLocationAndRadius(center = nullCheckedLocation, types = types, range = searchProfile.range, placeListId = searchProfileId)
-                delay(300)
-                val placeListId = placeList.value.id
-                navController.navigate("swipeScreen/${placeListId}/${searchProfileId}")
             }
+
+
         }
     ) {
         Column(
@@ -85,14 +95,22 @@ fun GridCard(
                 fontFamily = polestarFontFamily,
                 modifier = Modifier.padding(2.dp)
             )
+            Icon(
+                painter = painterResource(id = if (isEditModeOn) R.drawable.plus_large else R.drawable.arrow_top_right),
+                contentDescription = null,
+                modifier = Modifier.align(Alignment.End)
+            )
+
+
+            /*
             IconButton(
                 onClick = {
-                    navController.navigate("${ExcursionsRoutes.EditSearchProfile.route}/${searchProfileId}")
                           },
                 modifier = Modifier.align(Alignment.End)
             ) {
-                Icon(painter = painterResource(id = R.drawable.arrow_top_right), contentDescription = null )
             }
+
+             */
         }
 
     }
@@ -105,7 +123,8 @@ fun GridCardPreview() {
     GridCard(
         navController = rememberNavController(),
         searchProfile = SearchProfile(id = -1),
-        viewModel = ExcursionsViewModel(api = DummyExcursionsAPI(), appContext = LocalContext.current)
+        viewModel = ExcursionsViewModel(api = DummyExcursionsAPI(), appContext = LocalContext.current),
+        isEditModeOn = false
     )
 }
 
