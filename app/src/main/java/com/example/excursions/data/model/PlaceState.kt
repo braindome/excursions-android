@@ -17,8 +17,8 @@ data class PlaceState(
     val primaryType: String? = "",
     val types: List<String> = listOf(),
     val reviews: @RawValue List<Review>? = listOf(),
-    val isFavorite: Boolean = false,
-    val isDiscarded: Boolean = false
+    @field:JvmField val isFavorite: Boolean = false,
+    @field:JvmField val isDiscarded: Boolean = false
 ) : Parcelable
 
 fun List<String>.formatTypesToTags(): String {

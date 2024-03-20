@@ -8,5 +8,5 @@ data class LocationType(
     val id : Int = 0,
     val jsonName: String = "",
     val formattedName: String = "",
-    val isChecked: Boolean = true
+    @field:JvmField val isChecked: Boolean = true
 ) : Parcelable

@@ -11,17 +11,24 @@ import com.example.excursions.data.api_models.Center
 import com.example.excursions.data.api_models.Circle
 import com.example.excursions.data.api_models.LocationRestriction
 import com.example.excursions.data.api_models.SearchNearbyRequest
+import com.example.excursions.data.model.LocationType
 import com.example.excursions.data.model.PlaceList
 import com.example.excursions.data.model.PlaceState
 import com.example.excursions.data.model.SearchProfile
 import com.example.excursions.data.repository.LocationRepository
 import com.example.excursions.data.repository.SearchProfileRepository
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 import com.squareup.moshi.JsonDataException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -48,9 +55,12 @@ class ExcursionsViewModel(
 
     private val _location = MutableLiveData<Center?>()
     val location: LiveData<Center?> get() = _location
+    val db = Firebase.firestore
 
     init {
         _resultPlaceList.value = PlaceList()
+        loadProfilesFromFirestore()
+        /*
         _searchProfilesList.value = listOf(
             SearchProfile(id = 1, title = "Outdoor Adventure", types = SearchProfileRepository.outdoorAdventure),
             SearchProfile(id = 2, title = "Cultural Exploration", types = SearchProfileRepository.culturalExploration),
@@ -59,6 +69,57 @@ class ExcursionsViewModel(
             SearchProfile(id = 5, title = "Entertainment hub", types = SearchProfileRepository.entertainmentHub),
             SearchProfile(id = 6, title = "Car Services", types = SearchProfileRepository.carServices)
         )
+
+
+
+        for (profile in _searchProfilesList.value) {
+            db.collection("antonio").document(profile.id.toString()).set(profile)
+        }
+
+         */
+
+    }
+
+    private fun loadProfilesFromFirestore() {
+        viewModelScope.launch {
+            val profileIds = listOf(1,2,3,4,5,6)
+            val profiles = fetchSearchProfiles(profileIds)
+            _searchProfilesList.value = profiles
+        }
+    }
+
+    private suspend fun fetchSearchProfiles(profileIds: List<Int>): List<SearchProfile> {
+        return coroutineScope {
+            profileIds.map { id ->
+                async(Dispatchers.IO) {
+                    val document = db.collection("antonio").document(id.toString()).get().await()
+                    if (document.exists()) {
+                        val dataMap = document.data
+                        //val types = document["types"] as MutableList<LocationType> // Assuming types is a List<String>
+                        val types = mutableListOf<LocationType>()
+                        val typesDataList = dataMap?.get("types") as? List<Map<String, Any>>
+                        typesDataList?.forEach { typeData ->
+                            Timber.d("$typeData")
+                            val typeId = (typeData["id"] as Long).toInt()
+                            val typeName = typeData["jsonName"] as String
+                            val typeFormattedName = typeData["formattedName"] as String
+                            val typeIsChecked = typeData["isChecked"] as Boolean
+                            val locationType = LocationType(typeId, typeName, typeFormattedName, typeIsChecked)
+                            types.add(locationType)
+                        }
+                        SearchProfile(
+                            id = id,
+                            title = document["title"] as String,
+                            types = types,
+                            savedDestinations = document["savedDestinations"] as MutableList<PlaceState>
+                        )
+
+                    } else {
+                        null // Handle case where document doesn't exist
+                    }
+                }
+            }.awaitAll().filterNotNull()
+        }
     }
 
     fun getPlaceById(placeId: String): PlaceState {
