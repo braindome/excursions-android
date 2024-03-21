@@ -92,7 +92,8 @@ fun SwipeScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 SwipeActionBar(
                     onYayClick = {
-                        viewModel.saveDestination(searchProfileId, swipeList.list[currentPlaceIndex])
+                        //viewModel.saveDestination(searchProfileId, swipeList.list[currentPlaceIndex])
+                        viewModel.savePlaceToFirestore(searchProfileId, swipeList.list[currentPlaceIndex])
                         currentPlaceIndex++
                         /*
                         currentPlaceIndex = (currentPlaceIndex + 1) % swipeList.list.size

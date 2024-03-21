@@ -59,8 +59,11 @@ class ExcursionsViewModel(
 
     init {
         _resultPlaceList.value = PlaceList()
+        //addDefaultProfilesToFirestore()
         loadProfilesFromFirestore()
-        /*
+    }
+
+    private fun addDefaultProfilesToFirestore() {
         _searchProfilesList.value = listOf(
             SearchProfile(id = 1, title = "Outdoor Adventure", types = SearchProfileRepository.outdoorAdventure),
             SearchProfile(id = 2, title = "Cultural Exploration", types = SearchProfileRepository.culturalExploration),
@@ -70,14 +73,30 @@ class ExcursionsViewModel(
             SearchProfile(id = 6, title = "Car Services", types = SearchProfileRepository.carServices)
         )
 
-
-
         for (profile in _searchProfilesList.value) {
-            db.collection("antonio").document(profile.id.toString()).set(profile)
+            val profileToFirestore = hashMapOf(
+                "id" to profile.id,
+                "title" to profile.title,
+                "types" to profile.types
+            )
+            db.collection("antonio").document(profile.id.toString()).set(profileToFirestore)
         }
+    }
 
-         */
+    fun savePlaceToFirestore(searchProfileId: Int, placeState: PlaceState) {
+        val savedDestinationRef = db.collection("antonio")
+            .document(searchProfileId.toString())
+            .collection("savedDestinations")
+            .document(placeState.id)
 
+        savedDestinationRef
+            .set(placeState)
+            .addOnSuccessListener {
+                Timber.d("Document successfully added to Firestore! ${placeState.displayName.text} to document with id ${placeState.id}")
+            }
+            .addOnFailureListener {
+                e -> Timber.d("Error adding document: $e")
+            }
     }
 
     private fun loadProfilesFromFirestore() {
@@ -111,7 +130,7 @@ class ExcursionsViewModel(
                             id = id,
                             title = document["title"] as String,
                             types = types,
-                            savedDestinations = document["savedDestinations"] as MutableList<PlaceState>
+                            //savedDestinations = document["savedDestinations"] as MutableList<PlaceState>
                         )
 
                     } else {
@@ -245,6 +264,7 @@ class ExcursionsViewModel(
 
 
     fun updateLocationTypes(searchProfileID: Int, locationTypeID: Int, isChecked: Boolean) {
+        val docRef = db.collection("antonio").document(searchProfileID.toString())
         val updatedProfiles = _searchProfilesList.value.map { searchProfile ->
             if (searchProfile.id == searchProfileID) {
                 val updatedTypes = searchProfile.types.map { locationType ->
@@ -259,6 +279,11 @@ class ExcursionsViewModel(
                 searchProfile
             }
         }
+
+        docRef.update("types", updatedProfiles.find { it.id == searchProfileID }?.types)
+            .addOnSuccessListener { Timber.d("Document updated") }
+            .addOnFailureListener { e -> Timber.d("Error updating document: $e") }
+
         _searchProfilesList.value = updatedProfiles
     }
 
