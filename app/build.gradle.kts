@@ -141,8 +141,11 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
 
+    // Coil (image loading)
     implementation("io.coil-kt:coil-compose:2.6.0")
 
+    // Car App Lib
+    implementation("androidx.car.app:app:1.4.0-rc02")
 
     // Maps
     implementation("com.google.maps.android:maps-compose:4.3.0")
