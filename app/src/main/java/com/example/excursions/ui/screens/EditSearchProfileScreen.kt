@@ -4,18 +4,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,7 +35,6 @@ import com.example.excursions.ui.components.ExcursionsSearchField
 import com.example.excursions.ui.components.ExcursionsSlider
 import com.example.excursions.ui.components.ExcursionsTextField
 import com.example.excursions.ui.components.ScreenTitleSubtitle
-import com.example.excursions.ui.components.ScreenTitleText
 import com.example.excursions.ui.navigation.ExcursionsBottomBar
 import com.example.excursions.ui.navigation.ExcursionsRoutes
 import com.example.excursions.ui.navigation.ExcursionsTopBar
@@ -78,10 +71,10 @@ fun EditSearchProfileScreen(
             rightButtonLabel = "Save",
             onEndButtonClick = {
                 val updatedRange = searchProfile.range
-                val updatedName = searchProfile.name
+                val updatedName = searchProfile.title
                 val updatedTypes = searchProfile.types
                 val updatedState = SearchProfile(
-                    name = updatedName,
+                    title = updatedName,
                     range = updatedRange,
                     types = updatedTypes
 
@@ -103,14 +96,14 @@ fun EditSearchProfileScreen(
 
         ) {
             //ScreenTitleText(title = "Edit Search Profile")
-            ScreenTitleSubtitle(title = "Edit", subtitle = searchProfile.name, modifier = Modifier)
+            ScreenTitleSubtitle(title = "Edit", subtitle = searchProfile.title, modifier = Modifier)
             Spacer(modifier = Modifier.size(20.dp))
             ExcursionsTextField(
                 label = "Name",
-                input = searchProfile.name,
+                input = searchProfile.title,
                 onInputChanged = { updatedText ->
                     searchProfile.let { currentState ->
-                        val updatedState = currentState.copy(name = updatedText)
+                        val updatedState = currentState.copy(title = updatedText)
                         viewModel.updateSearchProfileUiState(updatedState)
                         viewModel.updateSearchProfileName(searchProfileId, updatedText)
                     }

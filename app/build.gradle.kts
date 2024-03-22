@@ -73,6 +73,7 @@ secrets {
 
 dependencies {
 
+    implementation("com.google.firebase:firebase-firestore-ktx:24.10.3")
     val room_version = "2.6.1"
 
     implementation("androidx.room:room-runtime:$room_version")

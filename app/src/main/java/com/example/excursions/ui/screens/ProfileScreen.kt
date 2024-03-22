@@ -32,7 +32,6 @@ fun ProfileScreen(
     Scaffold(
         topBar = { ExcursionsTopBar(
             navController = navController,
-            //backDestination = { navController.navigateUp() },
             rightButtonDestination = "",
             rightButtonLabel = "") },
         bottomBar = { ExcursionsBottomBar(navController = navController) }
@@ -45,12 +44,6 @@ fun ProfileScreen(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             ScreenTitleSubtitle(title = "Profile", subtitle = "email@user.com", modifier = Modifier)
-            Button(onClick = {
-                navController.navigate(ExcursionsRoutes.Map.route)
-            }) {
-                Text(text = "Navigate")
-            }
-            ExcursionsDropDown(label = "Test")
             Spacer(modifier = Modifier.weight(1f))
             UserViewListItem(label = "Logout", details = "email@user.com" )
             UserViewListItem(label = "Privacy Policy", details = "" )

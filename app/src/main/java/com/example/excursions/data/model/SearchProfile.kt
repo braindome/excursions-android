@@ -18,11 +18,11 @@ data class SearchProfile(
 
 @Parcelize
 data class SearchProfile(
-    val name : String = "",
-    val id: Int = 0,
-    val types: @RawValue MutableList<LocationType> = mutableListOf(),
+    val title : String = "",        // To Firestore
+    val id: Int = 0,                // To Firestore
+    val types: @RawValue MutableList<LocationType> = mutableListOf(), // To Firestore
     val range: Float = 50000f,
-    val lat: Double = 0.00,
-    val lng: Double = 0.00,
-    val savedDestinations: @RawValue MutableList<PlaceState> = mutableListOf()
+    val lat: Double? = null,
+    val lng: Double? = null,
+    val savedDestinations: @RawValue MutableList<PlaceState> = mutableListOf()  // To Firestore
 ) : Parcelable

@@ -1,7 +1,6 @@
 package com.example.excursions
 
 import android.content.Context
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,19 +11,26 @@ import com.example.excursions.data.api_models.Center
 import com.example.excursions.data.api_models.Circle
 import com.example.excursions.data.api_models.LocationRestriction
 import com.example.excursions.data.api_models.SearchNearbyRequest
+import com.example.excursions.data.model.LocationType
 import com.example.excursions.data.model.PlaceList
 import com.example.excursions.data.model.PlaceState
 import com.example.excursions.data.model.SearchProfile
 import com.example.excursions.data.repository.LocationRepository
 import com.example.excursions.data.repository.SearchProfileRepository
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.toObject
 import com.squareup.moshi.JsonDataException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import timber.log.Timber
-import java.util.UUID
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
@@ -46,21 +52,159 @@ class ExcursionsViewModel(
     private val _searchProfile = MutableStateFlow(SearchProfile())
     val searchProfile: StateFlow<SearchProfile> = _searchProfile.asStateFlow()
 
+    private val _favoritePlace = MutableStateFlow<PlaceState?>(null)
+    val favoritePlace: StateFlow<PlaceState?> = _favoritePlace.asStateFlow()
+
     private val locationRepository = LocationRepository(appContext)
 
     private val _location = MutableLiveData<Center?>()
     val location: LiveData<Center?> get() = _location
+    val db = Firebase.firestore
+    private val mainCollection = "antonio"
+    val savedDestinationsPath = "savedDestinations"
 
     init {
         _resultPlaceList.value = PlaceList()
+        //addDefaultProfilesToFirestore()
+        loadProfilesFromFirestore()
+    }
+
+    private fun addDefaultProfilesToFirestore() {
         _searchProfilesList.value = listOf(
-            SearchProfile(id = 1, name = "Outdoor Adventure", types = SearchProfileRepository.outdoorAdventure),
-            SearchProfile(id = 2, name = "Cultural Exploration", types = SearchProfileRepository.culturalExploration),
-            SearchProfile(id = 3, name = "Landmark Discovery", types = SearchProfileRepository.landmarkDiscovery),
-            SearchProfile(id = 4, name = "Relaxation and Wellness", types = SearchProfileRepository.relaxationAndWellness),
-            SearchProfile(id = 5, name = "Entertainment hub", types = SearchProfileRepository.entertainmentHub),
-            SearchProfile(id = 6, name = "Car Services", types = SearchProfileRepository.carServices)
+            SearchProfile(id = 1, title = "Outdoor Adventure", types = SearchProfileRepository.outdoorAdventure),
+            SearchProfile(id = 2, title = "Cultural Exploration", types = SearchProfileRepository.culturalExploration),
+            SearchProfile(id = 3, title = "Landmark Discovery", types = SearchProfileRepository.landmarkDiscovery),
+            SearchProfile(id = 4, title = "Relaxation and Wellness", types = SearchProfileRepository.relaxationAndWellness),
+            SearchProfile(id = 5, title = "Entertainment hub", types = SearchProfileRepository.entertainmentHub),
+            SearchProfile(id = 6, title = "Car Services", types = SearchProfileRepository.carServices)
         )
+
+        for (profile in _searchProfilesList.value) {
+            val profileToFirestore = hashMapOf(
+                "id" to profile.id,
+                "title" to profile.title,
+                "types" to profile.types
+            )
+            db.collection("antonio").document(profile.id.toString()).set(profileToFirestore)
+        }
+    }
+
+    fun getFavoriteFromFirestore(placeId: String, searchProfileId: Int) {
+        val docRef = db.collection(mainCollection)
+            .document(searchProfileId.toString())
+            .collection(savedDestinationsPath)
+            .document(placeId)
+
+        docRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    Timber.d("Document snapshot data: ${document.data}")
+                    val placeState = document.toObject<PlaceState>()
+                    _favoritePlace.value = placeState
+                } else {
+                    Timber.w("No such document")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Timber.e("get failed with ", exception)
+                _favoritePlace.value = null
+            }
+    }
+
+    fun listenForFavoriteChanges(searchProfileId: Int, onFavoritePlacesUpdate: (List<PlaceState>) -> Unit) {
+        val docRef = db.collection(mainCollection)
+            .document(searchProfileId.toString())
+            .collection(savedDestinationsPath)
+
+        docRef.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Timber.e("Listen failed: $e")
+                return@addSnapshotListener
+            }
+
+            val updatedFavoritePlaces = snapshot?.documents?.mapNotNull { document ->
+                val placeState = document.toObject<PlaceState>()
+                placeState?.copy(id = document.id)
+            } ?: emptyList()
+            //Timber.d("Updated favorite places from firestore: $updatedFavoritePlaces")
+            onFavoritePlacesUpdate(updatedFavoritePlaces)
+        }
+    }
+
+    fun removeDestinationFromFavorites(searchProfileId: Int, placeState: PlaceState) {
+        val placeToSave = placeState.copy(isFavorite = false)
+        val savedDestinationRef = db.collection("antonio")
+            .document(searchProfileId.toString())
+            .collection("savedDestinations")
+            .document(placeState.id)
+
+        savedDestinationRef
+            .set(placeToSave)
+            .addOnSuccessListener {
+                Timber.d("Document successfully added to Firestore! ${placeToSave.displayName.text} to document with id ${placeToSave.id}")
+            }
+            .addOnFailureListener {
+                    e -> Timber.d("Error adding document: $e")
+            }
+    }
+
+    fun savePlaceToFirestore(searchProfileId: Int, placeState: PlaceState) {
+        val placeToSave = placeState.copy(isFavorite = true)
+        val savedDestinationRef = db.collection("antonio")
+            .document(searchProfileId.toString())
+            .collection("savedDestinations")
+            .document(placeState.id)
+
+        savedDestinationRef
+            .set(placeToSave)
+            .addOnSuccessListener {
+                Timber.d("Document successfully added to Firestore! ${placeToSave.displayName.text} to document with id ${placeToSave.id}")
+            }
+            .addOnFailureListener {
+                e -> Timber.d("Error adding document: $e")
+            }
+    }
+
+    private fun loadProfilesFromFirestore() {
+        viewModelScope.launch {
+            val profileIds = listOf(1,2,3,4,5,6)
+            val profiles = fetchSearchProfiles(profileIds)
+            _searchProfilesList.value = profiles
+        }
+    }
+
+    private suspend fun fetchSearchProfiles(profileIds: List<Int>): List<SearchProfile> {
+        return coroutineScope {
+            profileIds.map { id ->
+                async(Dispatchers.IO) {
+                    val document = db.collection("antonio").document(id.toString()).get().await()
+                    if (document.exists()) {
+                        val dataMap = document.data
+                        //val types = document["types"] as MutableList<LocationType> // Assuming types is a List<String>
+                        val types = mutableListOf<LocationType>()
+                        val typesDataList = dataMap?.get("types") as? List<Map<String, Any>>
+                        typesDataList?.forEach { typeData ->
+                            Timber.d("$typeData")
+                            val typeId = (typeData["id"] as Long).toInt()
+                            val typeName = typeData["jsonName"] as String
+                            val typeFormattedName = typeData["formattedName"] as String
+                            val typeIsChecked = typeData["isChecked"] as Boolean
+                            val locationType = LocationType(typeId, typeName, typeFormattedName, typeIsChecked)
+                            types.add(locationType)
+                        }
+                        SearchProfile(
+                            id = id,
+                            title = document["title"] as String,
+                            types = types,
+                            //savedDestinations = document["savedDestinations"] as MutableList<PlaceState>
+                        )
+
+                    } else {
+                        null // Handle case where document doesn't exist
+                    }
+                }
+            }.awaitAll().filterNotNull()
+        }
     }
 
     fun getPlaceById(placeId: String): PlaceState {
@@ -68,24 +212,41 @@ class ExcursionsViewModel(
 
     }
 
-    fun removeDuplicates(places: MutableList<PlaceState>) {
-        val seenIds = mutableSetOf<String>()
-        val listWithNoDoubles = mutableListOf<PlaceState>()
-        for (place in places) {
-            if (place.id !in seenIds) {
-                seenIds.add(place.id)
-                listWithNoDoubles.add(place)
-            } else {
-                listWithNoDoubles.removeLast()
-            }
-        }
+    fun removeDestinationFromFavorites__(place: PlaceState, searchProfile: SearchProfile) {
+        val docRef = db.collection(mainCollection)
+            .document(searchProfile.id.toString())
+            .collection(savedDestinationsPath)
+            .document(place.id)
 
-        places.clear()
-        places.addAll(listWithNoDoubles)
+        // Remove the destination from Firestore
+        docRef.delete()
+            .addOnSuccessListener {
+                Timber.d("DocumentSnapshot successfully deleted!")
+                // Now update the local state list
+                val updatedProfiles = _searchProfilesList.value.toMutableList()
+                val index = updatedProfiles.indexOfFirst { it.id == searchProfile.id }
+                if (index != -1) {
+                    val placeToUpdate = updatedProfiles[index].savedDestinations.find { it.id == place.id }
+                    if (placeToUpdate != null) {
+                        val updatedPlace = placeToUpdate.copy(isFavorite = false) // Create a copy with modified isFavorite
+                        updatedProfiles[index].savedDestinations[updatedProfiles[index].savedDestinations.indexOf(placeToUpdate)] = updatedPlace
+                        _searchProfilesList.value = updatedProfiles
+                        Timber.d("Marked place as not favorite: ${updatedPlace.displayName.text}")  // Log update
+                    } else {
+                        Timber.d("Place not found in profile")
+                    }
+                } else {
+                    Timber.d("Profile not found")
+                }
+            }
+            .addOnFailureListener { e ->
+                Timber.w("Error deleting document: $e")
+            }
     }
 
 
-    fun removeDestinationFromFavorites(place: PlaceState, searchProfile: SearchProfile) {
+
+    fun removeDestinationFromFavorites_(place: PlaceState, searchProfile: SearchProfile) {
         Timber.d("Inside remove dest")
         val updatedProfiles = _searchProfilesList.value.toMutableList()
         val index = updatedProfiles.indexOfFirst { it.id == searchProfile.id }
@@ -186,6 +347,7 @@ class ExcursionsViewModel(
 
 
     fun updateLocationTypes(searchProfileID: Int, locationTypeID: Int, isChecked: Boolean) {
+        val docRef = db.collection("antonio").document(searchProfileID.toString())
         val updatedProfiles = _searchProfilesList.value.map { searchProfile ->
             if (searchProfile.id == searchProfileID) {
                 val updatedTypes = searchProfile.types.map { locationType ->
@@ -200,6 +362,11 @@ class ExcursionsViewModel(
                 searchProfile
             }
         }
+
+        docRef.update("types", updatedProfiles.find { it.id == searchProfileID }?.types)
+            .addOnSuccessListener { Timber.d("Document updated") }
+            .addOnFailureListener { e -> Timber.d("Error updating document: $e") }
+
         _searchProfilesList.value = updatedProfiles
     }
 
@@ -215,7 +382,7 @@ class ExcursionsViewModel(
     fun updateSearchProfileName(searchProfileId: Int, newName: String) {
         val updatedProfiles = _searchProfilesList.value.map {
             if (it.id == searchProfileId) {
-                it.copy(name = newName)
+                it.copy(title = newName)
             } else {
                 it
             }

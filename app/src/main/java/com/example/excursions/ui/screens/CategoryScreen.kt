@@ -14,6 +14,9 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -43,6 +46,8 @@ fun CategoryScreen(
         viewModel.fetchUserLocation()
         onDispose {  }
     }
+    
+    var isEditModeOn by remember { mutableStateOf(false) }
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     //val updatedSearchProfile = navBackStackEntry?.savedStateHandle?.get<SearchProfile>("updatedSearchProfile")
@@ -61,8 +66,10 @@ fun CategoryScreen(
             ExcursionsTopBar(
                 navController = navController,
                 //backDestination = { navController.navigateUp() },
-                rightButtonLabel = "Add",
-                rightButtonDestination = ExcursionsRoutes.EditSearchProfile.route
+                rightButtonLabel = if (!isEditModeOn) "Edit" else "Cancel",
+                rightButtonDestination = null,
+                onEndButtonClick = { isEditModeOn = !isEditModeOn }
+
             )
         },
         bottomBar = { ExcursionsBottomBar(navController = navController) }
@@ -84,7 +91,8 @@ fun CategoryScreen(
                         GridCard(
                             navController = navController,
                             searchProfile = searchProfile,
-                            viewModel = viewModel
+                            viewModel = viewModel,
+                            isEditModeOn = isEditModeOn
                         )
                     }
                 },

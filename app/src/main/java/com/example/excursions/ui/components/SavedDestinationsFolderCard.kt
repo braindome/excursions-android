@@ -11,10 +11,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -54,7 +50,7 @@ fun SavedDestinationsFolderCard(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = searchProfile.name,
+                text = searchProfile.title,
                 fontSize = 22.sp,
                 fontFamily = polestarFontFamily,
                 modifier = Modifier.padding(2.dp)

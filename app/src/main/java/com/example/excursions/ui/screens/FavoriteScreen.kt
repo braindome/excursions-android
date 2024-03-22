@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -60,19 +61,33 @@ fun FavoriteScreen(
         return // Exit the composable if no profile found
     }
 
-    Timber.d("Navarg searchProfileId: $searchProfileId")
-    Timber.d("Search profile id from view model: ${filteredSearchProfile.id}")
+    //Timber.d("Navarg searchProfileId: $searchProfileId")
+    //Timber.d("Search profile id from view model: ${filteredSearchProfile.id}")
 
     val currentLocation by viewModel.location.observeAsState()
     val nullCheckedLocation: Center = currentLocation ?: Center(0.00,0.00)
 
 
-    Timber.d("Favorite list: ${filteredSearchProfile.savedDestinations}")
-    Timber.d("Favorite places size: ${filteredSearchProfile.savedDestinations.size}")
+    //Timber.d("Favorite list: ${filteredSearchProfile.savedDestinations}")
+    //Timber.d("Favorite places size: ${filteredSearchProfile.savedDestinations.size}")
 
+    /*
     val favoritePlaces = remember {
         mutableStateListOf<PlaceState>().apply {
             addAll(filteredSearchProfile.savedDestinations)
+        }
+    }
+    */
+
+    var favoritePlaces by remember { mutableStateOf<List<PlaceState>>(emptyList()) }
+
+
+    LaunchedEffect(searchProfileId) {
+        viewModel.listenForFavoriteChanges(searchProfileId) { updatedPlaces ->
+            Timber.d("Updated places: ${updatedPlaces.size}")
+            val filteredFavorites = updatedPlaces.filter { it.isFavorite && !it.isDiscarded }.distinctBy { it.id }
+            favoritePlaces = filteredFavorites
+            Timber.d("Favorite places in launched effect: $favoritePlaces")
         }
     }
 
@@ -135,14 +150,16 @@ fun FavoriteScreen(
                     //dummyList
                     //filteredFavorites
                     favoritePlaces.filter {
-                        it.isFavorite
-                        !it.isDiscarded
+                        it.isFavorite && !it.isDiscarded
                     }.distinctBy { it.id }
                     //displayedPlaces, key = { it.id }
                 ) { place ->
                     SavedDestinationListItem(
                         isEditModeOn = isEditModeOn,
-                        onDeleteClicked = { removeFromFavoritePlaces(place, favoritePlaces) },
+                        onDeleteClicked = {
+                            viewModel.removeDestinationFromFavorites(filteredSearchProfile.id, place)
+                            //removeFromFavoritePlaces(place, favoritePlaces)
+                                          },
                         distance = viewModel.distanceBetweenCenters(
                             center1 = nullCheckedLocation,
                             center2 = Center(place.location.latitude, place.location.longitude)

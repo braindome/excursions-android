@@ -33,6 +33,7 @@ import com.example.excursions.data.repository.DummyExcursionsAPI
 import com.example.excursions.ui.navigation.ExcursionsRoutes
 import com.example.excursions.ui.theme.OrangePolestar
 import com.example.excursions.ui.theme.polestarFontFamily
+import timber.log.Timber
 
 @Composable
 fun SavedDestinationListItem(
@@ -45,6 +46,7 @@ fun SavedDestinationListItem(
     distance: Int
 ) {
     val placeId = place.id
+    val searchProfileId = searchProfile.id
     Column(
         modifier = Modifier
             .width(342.dp)
@@ -91,7 +93,8 @@ fun SavedDestinationListItem(
             if (isEditModeOn) {
                 IconButton(
                     onClick = {
-                        viewModel.removeDestinationFromFavorites(place, searchProfile)
+                        //viewModel.removeDestinationFromFavorites(place, searchProfile)
+                        viewModel.removeDestinationFromFavorites(searchProfile.id, place)
                         onDeleteClicked()
                     }
                 ) {
@@ -104,7 +107,12 @@ fun SavedDestinationListItem(
                     )
                 }
             } else {
-                IconButton(onClick = { navController.navigate("${ExcursionsRoutes.PlaceDetailScreen.route}/${placeId}") }) {
+                IconButton(
+                    onClick = {
+                        //navController.navigate("${ExcursionsRoutes.PlaceDetailScreen.route}/${placeId}")
+                        Timber.d("Navigating to route ${ExcursionsRoutes.SavedDestinationDetailScreen.route}/${searchProfileId}/${placeId}")
+                        navController.navigate("${ExcursionsRoutes.SavedDestinationDetailScreen.route}/${searchProfileId}/${placeId}")
+                    }) {
                     Icon(
                         painter = painterResource(
                             id = R.drawable.arrow_right
