@@ -19,6 +19,7 @@ import com.example.excursions.data.repository.LocationRepository
 import com.example.excursions.data.repository.SearchProfileRepository
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.toObject
 import com.squareup.moshi.JsonDataException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -51,11 +52,16 @@ class ExcursionsViewModel(
     private val _searchProfile = MutableStateFlow(SearchProfile())
     val searchProfile: StateFlow<SearchProfile> = _searchProfile.asStateFlow()
 
+    private val _favoritePlace = MutableStateFlow<PlaceState?>(null)
+    val favoritePlace: StateFlow<PlaceState?> = _favoritePlace.asStateFlow()
+
     private val locationRepository = LocationRepository(appContext)
 
     private val _location = MutableLiveData<Center?>()
     val location: LiveData<Center?> get() = _location
     val db = Firebase.firestore
+    private val mainCollection = "antonio"
+    val savedDestinationsPath = "savedDestinations"
 
     init {
         _resultPlaceList.value = PlaceList()
@@ -83,16 +89,76 @@ class ExcursionsViewModel(
         }
     }
 
-    fun savePlaceToFirestore(searchProfileId: Int, placeState: PlaceState) {
+    fun getFavoriteFromFirestore(placeId: String, searchProfileId: Int) {
+        val docRef = db.collection(mainCollection)
+            .document(searchProfileId.toString())
+            .collection(savedDestinationsPath)
+            .document(placeId)
+
+        docRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    Timber.d("Document snapshot data: ${document.data}")
+                    val placeState = document.toObject<PlaceState>()
+                    _favoritePlace.value = placeState
+                } else {
+                    Timber.w("No such document")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Timber.e("get failed with ", exception)
+                _favoritePlace.value = null
+            }
+    }
+
+    fun listenForFavoriteChanges(searchProfileId: Int, onFavoritePlacesUpdate: (List<PlaceState>) -> Unit) {
+        val docRef = db.collection(mainCollection)
+            .document(searchProfileId.toString())
+            .collection(savedDestinationsPath)
+
+        docRef.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Timber.e("Listen failed: $e")
+                return@addSnapshotListener
+            }
+
+            val updatedFavoritePlaces = snapshot?.documents?.mapNotNull { document ->
+                val placeState = document.toObject<PlaceState>()
+                placeState?.copy(id = document.id)
+            } ?: emptyList()
+            //Timber.d("Updated favorite places from firestore: $updatedFavoritePlaces")
+            onFavoritePlacesUpdate(updatedFavoritePlaces)
+        }
+    }
+
+    fun removeDestinationFromFavorites(searchProfileId: Int, placeState: PlaceState) {
+        val placeToSave = placeState.copy(isFavorite = false)
         val savedDestinationRef = db.collection("antonio")
             .document(searchProfileId.toString())
             .collection("savedDestinations")
             .document(placeState.id)
 
         savedDestinationRef
-            .set(placeState)
+            .set(placeToSave)
             .addOnSuccessListener {
-                Timber.d("Document successfully added to Firestore! ${placeState.displayName.text} to document with id ${placeState.id}")
+                Timber.d("Document successfully added to Firestore! ${placeToSave.displayName.text} to document with id ${placeToSave.id}")
+            }
+            .addOnFailureListener {
+                    e -> Timber.d("Error adding document: $e")
+            }
+    }
+
+    fun savePlaceToFirestore(searchProfileId: Int, placeState: PlaceState) {
+        val placeToSave = placeState.copy(isFavorite = true)
+        val savedDestinationRef = db.collection("antonio")
+            .document(searchProfileId.toString())
+            .collection("savedDestinations")
+            .document(placeState.id)
+
+        savedDestinationRef
+            .set(placeToSave)
+            .addOnSuccessListener {
+                Timber.d("Document successfully added to Firestore! ${placeToSave.displayName.text} to document with id ${placeToSave.id}")
             }
             .addOnFailureListener {
                 e -> Timber.d("Error adding document: $e")
@@ -146,24 +212,41 @@ class ExcursionsViewModel(
 
     }
 
-    fun removeDuplicates(places: MutableList<PlaceState>) {
-        val seenIds = mutableSetOf<String>()
-        val listWithNoDoubles = mutableListOf<PlaceState>()
-        for (place in places) {
-            if (place.id !in seenIds) {
-                seenIds.add(place.id)
-                listWithNoDoubles.add(place)
-            } else {
-                listWithNoDoubles.removeLast()
-            }
-        }
+    fun removeDestinationFromFavorites__(place: PlaceState, searchProfile: SearchProfile) {
+        val docRef = db.collection(mainCollection)
+            .document(searchProfile.id.toString())
+            .collection(savedDestinationsPath)
+            .document(place.id)
 
-        places.clear()
-        places.addAll(listWithNoDoubles)
+        // Remove the destination from Firestore
+        docRef.delete()
+            .addOnSuccessListener {
+                Timber.d("DocumentSnapshot successfully deleted!")
+                // Now update the local state list
+                val updatedProfiles = _searchProfilesList.value.toMutableList()
+                val index = updatedProfiles.indexOfFirst { it.id == searchProfile.id }
+                if (index != -1) {
+                    val placeToUpdate = updatedProfiles[index].savedDestinations.find { it.id == place.id }
+                    if (placeToUpdate != null) {
+                        val updatedPlace = placeToUpdate.copy(isFavorite = false) // Create a copy with modified isFavorite
+                        updatedProfiles[index].savedDestinations[updatedProfiles[index].savedDestinations.indexOf(placeToUpdate)] = updatedPlace
+                        _searchProfilesList.value = updatedProfiles
+                        Timber.d("Marked place as not favorite: ${updatedPlace.displayName.text}")  // Log update
+                    } else {
+                        Timber.d("Place not found in profile")
+                    }
+                } else {
+                    Timber.d("Profile not found")
+                }
+            }
+            .addOnFailureListener { e ->
+                Timber.w("Error deleting document: $e")
+            }
     }
 
 
-    fun removeDestinationFromFavorites(place: PlaceState, searchProfile: SearchProfile) {
+
+    fun removeDestinationFromFavorites_(place: PlaceState, searchProfile: SearchProfile) {
         Timber.d("Inside remove dest")
         val updatedProfiles = _searchProfilesList.value.toMutableList()
         val index = updatedProfiles.indexOfFirst { it.id == searchProfile.id }

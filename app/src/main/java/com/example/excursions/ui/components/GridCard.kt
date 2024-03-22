@@ -50,15 +50,13 @@ fun GridCard(
     val currentLocation by viewModel.location.observeAsState()
     val nullCheckedLocation: Center = currentLocation ?: Center(0.00,0.00)
 
-    //val placeList by viewModel.resultPlaceList.collectAsState()
-    //var placeList by remember { mutableStateOf<PlaceList?>(null) }
 
     val placeList by rememberUpdatedState(viewModel.resultPlaceList)
 
     Surface(
         modifier = Modifier
             .width(173.dp)
-            .height(206.dp)
+            .height(200.dp)
             .padding(3.dp),
         color = YellowPolestar,
         onClick = {
@@ -100,17 +98,6 @@ fun GridCard(
                 contentDescription = null,
                 modifier = Modifier.align(Alignment.End)
             )
-
-
-            /*
-            IconButton(
-                onClick = {
-                          },
-                modifier = Modifier.align(Alignment.End)
-            ) {
-            }
-
-             */
         }
 
     }

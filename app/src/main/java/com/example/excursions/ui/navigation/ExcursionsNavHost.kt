@@ -16,6 +16,7 @@ import com.example.excursions.ui.screens.LoginScreen
 import com.example.excursions.ui.screens.MapScreen
 import com.example.excursions.ui.screens.PlaceDetailScreen
 import com.example.excursions.ui.screens.ProfileScreen
+import com.example.excursions.ui.screens.SavedDestinationDetailScreen
 import com.example.excursions.ui.screens.SavedDestinationsScreen
 import com.example.excursions.ui.screens.SearchScreen
 import com.example.excursions.ui.screens.SwipeScreen
@@ -109,6 +110,23 @@ fun ExcursionsNavHost(viewModel: ExcursionsViewModel) {
                 )
             }
         }
+
+        composable(
+            route = ExcursionsRoutes.SavedDestinationDetailScreen.route + "/{searchProfileId}/{placeId}",
+            arguments = listOf(
+                navArgument("searchProfileId") { type = NavType.IntType },
+                navArgument("placeId") { type = NavType.StringType }
+            )
+        ) {backStackEntry ->
+            val searchProfileId: Int = backStackEntry.arguments?.getInt("searchProfileId") ?: -1
+            val placeId: String = backStackEntry.arguments?.getString("placeId") ?: "no id"
+            SavedDestinationDetailScreen(
+                navController = navController,
+                viewModel = viewModel,
+                placeId = placeId,
+                searchProfileId = searchProfileId
+            )
+        }
     }
 }
 enum class ExcursionsRoutes(val route: String) {
@@ -122,6 +140,7 @@ enum class ExcursionsRoutes(val route: String) {
     SwipeScreen("swipeScreen"),
     EditSearchProfile("addSearchProfile"),
     PlaceDetailScreen("placeDetailScreen"),
+    SavedDestinationDetailScreen("savedDestinationDetailScreen"),
     Saved("saved"),
     Map("map")
 }
