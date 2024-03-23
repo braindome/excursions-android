@@ -14,12 +14,18 @@ import androidx.car.app.model.Template
 import androidx.core.graphics.drawable.IconCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.excursions.R
+import com.example.excursions.data.model.PlaceState
 import com.example.excursions.data.model.SearchProfile
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.toObject
 import com.google.firebase.firestore.toObjects
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class MainScreen(carContext: CarContext) : Screen(carContext) {
@@ -28,23 +34,7 @@ class MainScreen(carContext: CarContext) : Screen(carContext) {
     val db = Firebase.firestore
     var profiles = mutableListOf<SearchProfile>()
     init {
-        Timber.d("init main screen")
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val searchProfileIds = listOf(1,2,3,4,5,6)
-                db.collection("antonio")
-                    .get()
-                    .addOnSuccessListener { documents ->
-                        profiles = documents.toObjects<SearchProfile>().toMutableList()
-                        Timber.d("List of profiles: $profiles")
-                    }
-                    .addOnFailureListener {
-                        Timber.d("get failed")
-                    }
-            } catch (e: Exception) {
-                Timber.e("Exception: ${e.cause}")
-            }
-        }
+        fetchProfiles()
     }
 
     override fun onGetTemplate(): Template {
@@ -52,9 +42,18 @@ class MainScreen(carContext: CarContext) : Screen(carContext) {
         val gridItemListBuilder = ItemList.Builder()
 
         profiles.forEach { data ->
+            Timber.d("Saved Destinations for each profile: ${data.savedDestinations}")
+            Timber.d("Profiles: $data")
             val gridItemBuilder = GridItem.Builder()
                 .setTitle(data.title)
-                .setOnClickListener { /* TODO */ }
+                .setOnClickListener {
+                    screenManager.push(
+                        FavoriteListScreen(
+                            carContext,
+                            data.id
+                        )
+                    )
+                }
                 .setImage(
                     CarIcon.Builder(
                         IconCompat.createWithResource(
@@ -74,5 +73,30 @@ class MainScreen(carContext: CarContext) : Screen(carContext) {
             .build()
 
 
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun fetchProfiles() {
+        GlobalScope.launch(Dispatchers.Main) {
+            try {
+                val querySapshot = withContext(Dispatchers.IO) {
+                    db.collection("antonio")
+                        .get().await()
+                }
+                val retrievedProfiles = mutableListOf<SearchProfile>()
+                for (document in querySapshot.documents) {
+                    val searchProfile = document.toObject<SearchProfile>()
+                    if (searchProfile != null) {
+                        Timber.d("Place retrieved: ${searchProfile.title}")
+                    }
+                    searchProfile?.let { retrievedProfiles.add(it) }
+                }
+
+                profiles = retrievedProfiles
+                invalidate()
+            } catch (e: Exception) {
+                Timber.e("Error fetching places from Firestore: ${e.cause}")
+            }
+        }
     }
 }
