@@ -3,6 +3,7 @@ package com.example.excursions.data.model
 import android.os.Parcelable
 import com.example.excursions.data.api_models.DisplayName
 import com.example.excursions.data.api_models.Location
+import com.example.excursions.data.api_models.Photo
 import com.example.excursions.data.api_models.Review
 import com.squareup.moshi.Json
 import kotlinx.parcelize.Parcelize
@@ -17,6 +18,7 @@ data class PlaceState(
     val primaryType: String? = "",
     val types: List<String> = listOf(),
     val reviews: @RawValue List<Review>? = listOf(),
+    val photos: @RawValue List<Photo>? = listOf(),
     @field:JvmField val isFavorite: Boolean = false,
     @field:JvmField val isDiscarded: Boolean = false
 ) : Parcelable

@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.R
 import com.example.excursions.data.api_models.Center
@@ -37,6 +38,7 @@ import com.example.excursions.data.model.calculateRatingAverage
 import com.example.excursions.data.repository.DummyExcursionsAPI
 import com.example.excursions.ui.navigation.ExcursionsRoutes
 import com.example.excursions.ui.theme.polestarFontFamily
+import timber.log.Timber
 
 @Composable
 fun SwipeCard(
@@ -58,7 +60,7 @@ fun SwipeCard(
     ) {
         Column {
             Image(
-                painter = painterResource(id = R.drawable.location_placeholder),
+                painter = rememberAsyncImagePainter("https:${place.photos?.get(0)?.authorAttributions?.get(0)?.photoUri}"),
                 contentDescription = null,
                 modifier = Modifier.size(width = 343.dp, height = 216.dp),
                 contentScale = ContentScale.Crop

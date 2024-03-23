@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -30,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.R
 import com.example.excursions.data.api_models.Center
@@ -91,10 +93,10 @@ fun SavedDestinationDetailScreen(
             place?.displayName?.let { ScreenTitleText(title = it.text) }
             Spacer(modifier = Modifier.size(20.dp))
             Image(
-                painter = painterResource(id = R.drawable.location_placeholder),
+                painter = rememberAsyncImagePainter("https:${place?.photos?.get(0)?.authorAttributions?.get(0)?.photoUri}"),
                 contentDescription = null,
                 modifier = Modifier
-                    //.size(width = 343.dp, height = 216.dp)
+                    .height(300.dp)
                     .fillMaxWidth()
                 ,
                 contentScale = ContentScale.Crop

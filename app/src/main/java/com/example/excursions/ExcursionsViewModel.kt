@@ -69,6 +69,7 @@ class ExcursionsViewModel(
         loadProfilesFromFirestore()
     }
 
+    // Run only if Firestore is empty
     private fun addDefaultProfilesToFirestore() {
         _searchProfilesList.value = listOf(
             SearchProfile(id = 1, title = "Outdoor Adventure", types = SearchProfileRepository.outdoorAdventure),
@@ -196,7 +197,6 @@ class ExcursionsViewModel(
                             id = id,
                             title = document["title"] as String,
                             types = types,
-                            //savedDestinations = document["savedDestinations"] as MutableList<PlaceState>
                         )
 
                     } else {
@@ -433,6 +433,7 @@ class ExcursionsViewModel(
                                 primaryType = place.primaryType,
                                 types = place.types,
                                 reviews = place.reviews,
+                                photos = place.photos,
                                 isFavorite = false,
                                 isDiscarded = false
                             )
