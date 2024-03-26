@@ -244,29 +244,6 @@ class ExcursionsViewModel(
             }
     }
 
-
-
-    fun removeDestinationFromFavorites_(place: PlaceState, searchProfile: SearchProfile) {
-        Timber.d("Inside remove dest")
-        val updatedProfiles = _searchProfilesList.value.toMutableList()
-        val index = updatedProfiles.indexOfFirst { it.id == searchProfile.id }
-        Timber.d("(Remove dest from favs) Profile id: $index")
-        if (index != -1) {
-            val placeToUpdate = updatedProfiles[index].savedDestinations.find { it.id == place.id }
-            if (placeToUpdate != null) {
-                val updatedPlace = placeToUpdate.copy(isFavorite = false) // Create a copy with modified isFavorite
-                updatedProfiles[index].savedDestinations[updatedProfiles[index].savedDestinations.indexOf(placeToUpdate)] = updatedPlace
-                _searchProfilesList.value = updatedProfiles
-                Timber.d("Marked place as not favorite: ${updatedPlace.displayName.text}")  // Log update
-            } else {
-                Timber.d("Place not found in profile")
-            }
-        } else {
-            Timber.d("Profile not found")
-        }
-    }
-
-
     fun discardDestination(searchProfileId: Int, placeState: PlaceState) {
         val updatedProfiles = _searchProfilesList.value.toMutableList()
         val index = updatedProfiles.indexOfFirst { it.id == searchProfileId }
@@ -277,41 +254,6 @@ class ExcursionsViewModel(
             Timber.d("Profile not found")
         }
     }
-
-    fun saveDestination(searchProfileId: Int, placeState: PlaceState) {
-        val updatedProfiles = _searchProfilesList.value.toMutableList()
-        val index = updatedProfiles.indexOfFirst { it.id == searchProfileId }
-        if (index != -1) {
-            // Update savedDestinations list
-            updatedProfiles[index].savedDestinations.add(placeState.copy(isFavorite = true)) // Add or remove based on your logic
-            _searchProfilesList.value = updatedProfiles  // Update StateFlow
-        } else {
-            Timber.d("Profile not found")
-        }
-    }
-
-
-
-    fun saveDestination_(place: PlaceState, searchProfile: SearchProfile) {
-        val updatedPlace = place.copy(isFavorite = true) // Mark place as favorite
-        val updatedSearchProfile = searchProfile.copy(
-            savedDestinations = searchProfile.savedDestinations.toMutableList().apply {
-                add(updatedPlace) // Add the updated place with isFavorite set to true
-            }
-        )
-
-        viewModelScope.launch { // Launch a coroutine for asynchronous operations
-            updateSearchProfile(updatedSearchProfile) // Update the search profile (implementation details)
-        }
-
-        _searchProfile.value = updatedSearchProfile
-        Timber.d("Updated saved list: ${_searchProfile.value.savedDestinations}")
-    }
-
-    private fun updateSearchProfile(updatedSearchProfile: SearchProfile) {
-        _searchProfile.value = updatedSearchProfile
-    }
-
 
     fun haversine(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
         val R = 6371.0 // Radius of the Earth in kilometers
@@ -406,7 +348,7 @@ class ExcursionsViewModel(
         val updatedPlaces = _resultPlaceList.value.copy()
         Timber.d("Received range value: $range")
         val locationRestriction = LocationRestriction(Circle(center, range.toDouble()))
-        val maxResultCount = 3
+        val maxResultCount = 20
         val requestUrl = "https://places.googleapis.com/v1/places:searchNearby"
 
         val request = SearchNearbyRequest(

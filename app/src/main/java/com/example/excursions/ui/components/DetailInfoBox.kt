@@ -26,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.R
 import com.example.excursions.data.api_models.Center
@@ -62,7 +63,8 @@ fun DetailInfoBox(
     ) {
         Column {
             Image(
-                painter = painterResource(id = R.drawable.location_placeholder),
+                //painter = painterResource(id = R.drawable.location_placeholder),
+                painter = rememberAsyncImagePainter("https:${place.photos?.get(0)?.authorAttributions?.get(0)?.photoUri}"),
                 contentDescription = null,
                 modifier = Modifier.size(width = 343.dp, height = 216.dp),
                 contentScale = ContentScale.Crop
