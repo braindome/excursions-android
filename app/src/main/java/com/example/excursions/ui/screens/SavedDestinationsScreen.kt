@@ -37,7 +37,7 @@ fun SavedDestinationsScreen(
 ) {
     DisposableEffect(Unit) {
         viewModel.fetchUserLocation()
-        onDispose {  }
+        onDispose { Timber.d("Disposed") }
     }
 
     val searchProfilesList by viewModel.searchProfilesList.collectAsState()

@@ -16,7 +16,8 @@ data class Place(
     @Json(name = "location") val location: Location = Location(),
     @Json(name = "primaryType") val primaryType: String = "",
     @Json(name = "reviews") val reviews: List<Review>?,
-    @Json(name = "types") val types: List<String>
+    @Json(name = "types") val types: List<String>,
+    @Json(name = "photos") val photos: List<Photo>? = null
 )
 
 @JsonClass(generateAdapter = true)
@@ -33,10 +34,10 @@ data class Location(
 
 @JsonClass(generateAdapter = true)
 data class Photo(
-    @Json(name = "authorAttributions") val authorAttributions: List<AuthorAttribution>,
-    @Json(name = "heightPx") val heightPx: Int,
-    @Json(name = "name") val name: String,
-    @Json(name = "widthPx") val widthPx: Int
+    @Json(name = "authorAttributions") val authorAttributions: List<AuthorAttribution>? = null,
+    @Json(name = "heightPx") val heightPx: Int = 0,
+    @Json(name = "name") val name: String = "",
+    @Json(name = "widthPx") val widthPx: Int = 0
 )
 
 @JsonClass(generateAdapter = true)
