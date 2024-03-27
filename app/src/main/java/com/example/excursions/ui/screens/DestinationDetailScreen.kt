@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
+import com.example.excursions.BuildConfig
 import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.R
 import com.example.excursions.data.api_models.Center
@@ -93,7 +94,7 @@ fun SavedDestinationDetailScreen(
             place?.displayName?.let { ScreenTitleText(title = it.text) }
             Spacer(modifier = Modifier.size(20.dp))
             Image(
-                painter = rememberAsyncImagePainter("https:${place?.photos?.get(0)?.authorAttributions?.get(0)?.photoUri}"),
+                painter = rememberAsyncImagePainter(model = "https://places.googleapis.com/v1/${place?.photos?.get(0)?.name}/media?maxHeightPx=400&maxWidthPx=400&key=${BuildConfig.PLACES_API_KEY}"),
                 contentDescription = null,
                 modifier = Modifier
                     .height(300.dp)
