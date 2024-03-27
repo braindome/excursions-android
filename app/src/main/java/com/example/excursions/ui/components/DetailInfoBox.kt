@@ -63,7 +63,6 @@ fun DetailInfoBox(
     ) {
         Column {
             Image(
-                //painter = painterResource(id = R.drawable.location_placeholder),
                 painter = rememberAsyncImagePainter("https:${place.photos?.get(0)?.authorAttributions?.get(0)?.photoUri}"),
                 contentDescription = null,
                 modifier = Modifier.size(width = 343.dp, height = 216.dp),
