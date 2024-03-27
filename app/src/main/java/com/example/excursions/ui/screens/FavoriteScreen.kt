@@ -67,17 +67,8 @@ fun FavoriteScreen(
     val currentLocation by viewModel.location.observeAsState()
     val nullCheckedLocation: Center = currentLocation ?: Center(0.00,0.00)
 
-
     //Timber.d("Favorite list: ${filteredSearchProfile.savedDestinations}")
     //Timber.d("Favorite places size: ${filteredSearchProfile.savedDestinations.size}")
-
-    /*
-    val favoritePlaces = remember {
-        mutableStateListOf<PlaceState>().apply {
-            addAll(filteredSearchProfile.savedDestinations)
-        }
-    }
-    */
 
     var favoritePlaces by remember { mutableStateOf<List<PlaceState>>(emptyList()) }
 

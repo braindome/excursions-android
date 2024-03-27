@@ -37,16 +37,7 @@ fun MapScreen(
 ) {
     val uiSettings by remember { mutableStateOf(MapUiSettings()) }
     val properties by remember { mutableStateOf(MapProperties(mapType = MapType.NORMAL)) }
-
     val placeState = viewModel.getPlaceById(placeId)
-
-    /*
-    val placeState = PlaceState(
-        displayName = DisplayName("", "Copenhagen Test Marker"),
-        location = Location(55.6802, 12.5671)
-    )
-
-     */
 
     val cameraPositionState = CameraPositionState(
         position = CameraPosition(

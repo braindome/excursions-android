@@ -1,6 +1,5 @@
 package com.example.excursions
 
-import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
@@ -13,16 +12,11 @@ import com.example.excursions.ui.navigation.ExcursionsNavHost
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
-const val apiKey = BuildConfig.PLACES_API_KEY
-
-
 class MainActivity : ComponentActivity() {
 
     private lateinit var viewModel: ExcursionsViewModel
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    //
 
-    //@SuppressLint("StateFlowValueCalledInComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

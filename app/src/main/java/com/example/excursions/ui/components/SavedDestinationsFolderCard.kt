@@ -38,7 +38,7 @@ fun SavedDestinationsFolderCard(
     Surface(
         modifier = Modifier
             .width(173.dp)
-            .height(206.dp)
+            .height(200.dp)
             .padding(3.dp),
         color = GrayPolestar,
         onClick = { navController.navigate(ExcursionsRoutes.Saved.route + "/${searchProfileId}") }

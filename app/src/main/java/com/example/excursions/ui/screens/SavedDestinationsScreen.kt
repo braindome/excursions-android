@@ -44,8 +44,6 @@ fun SavedDestinationsScreen(
     val currentLocation by viewModel.location.observeAsState()
     Timber.d("Current coordinates: ${currentLocation?.latitude}, ${currentLocation?.longitude}")
 
-    val mockCats = listOf("Beaches", "Monuments", "Hiking", "Explorations", "Swimming Spots")
-
     Scaffold(
         topBar = { ExcursionsTopBar(
             navController = navController,
@@ -62,8 +60,6 @@ fun SavedDestinationsScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            //Text(text = "Excursions", fontFamily = polestarFontFamily, fontSize = 32.sp, modifier = Modifier.padding(start = 10.dp))
-            //Text(text = "Categories", fontFamily = polestarFontFamily, fontSize = 32.sp, modifier = Modifier.padding(start = 10.dp))
             ScreenTitleSubtitle(title = "Excursions", subtitle = "Saved Destinations", modifier = Modifier)
             Spacer(modifier = Modifier.padding(10.dp))
             LazyVerticalGrid(
@@ -77,7 +73,7 @@ fun SavedDestinationsScreen(
                         )
                     }
                 },
-                modifier = Modifier.padding(8.dp))
+                modifier = Modifier.padding(start = 8.dp, end = 8.dp))
 
         }
     }

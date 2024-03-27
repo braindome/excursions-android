@@ -60,21 +60,9 @@ fun SwipeScreen(
 ) {
 
     val swipeList by viewModel.resultPlaceList.collectAsState()
-
-    // Dummy list for testing
-    //val swipeList by rememberSaveable { mutableStateOf(SearchProfileRepository.dummyPlaceList) }
-
     val searchProfile by viewModel.searchProfile.collectAsState()
     var currentPlaceIndex by rememberSaveable { mutableIntStateOf(0) }
-    var isDetailScreen by rememberSaveable { mutableStateOf(false) }
     val title by rememberSaveable { mutableStateOf(viewModel.getSearchProfileById(searchProfileId).title) }
-    var showAlert by rememberSaveable { mutableStateOf(true) }
-
-    if (showAlert) {
-        DisplayAlert(
-            onDismissRequest = { showAlert = false }
-        )
-    }
 
 
 
@@ -85,7 +73,6 @@ fun SwipeScreen(
         topBar = {
             ExcursionsTopBar(
                 navController = navController,
-                //backDestination = { navController.navigateUp() },
                 rightButtonDestination = "",
                 rightButtonLabel = ""
             )},
@@ -109,7 +96,6 @@ fun SwipeScreen(
                     .padding(start = 24.dp),
             )
             Spacer(modifier = Modifier.weight(1f))
-            //SwipeCard(placeList[currentPlaceIndex], viewModel)
             if (swipeList.list.isNotEmpty() && currentPlaceIndex < swipeList.list.size) {
                 SwipeCard(navController = navController, place = swipeList.list[currentPlaceIndex], viewModel = viewModel)
                 Spacer(modifier = Modifier.weight(1f))
@@ -118,18 +104,10 @@ fun SwipeScreen(
                         //viewModel.saveDestination(searchProfileId, swipeList.list[currentPlaceIndex])
                         viewModel.savePlaceToFirestore(searchProfileId, swipeList.list[currentPlaceIndex])
                         currentPlaceIndex++
-                        /*
-                        currentPlaceIndex = (currentPlaceIndex + 1) % swipeList.list.size
-                        //viewModel.saveDestination(swipeList.list[currentPlaceIndex], searchProfile)
-                        Timber.d("Search profile saved destinations: ${searchProfile.savedDestinations}")
-
-                         */
                     },
                     onNayClick = {
                         viewModel.discardDestination(searchProfileId, swipeList.list[currentPlaceIndex])
                         currentPlaceIndex++
-
-                        //currentPlaceIndex = (currentPlaceIndex + 1) % swipeList.list.size
                     }
                 )
             } else {
@@ -139,30 +117,6 @@ fun SwipeScreen(
             }
 
 
-        }
-    }
-}
-
-@Composable
-fun DisplayAlert(onDismissRequest: () -> Unit) {
-    Dialog(
-        onDismissRequest = onDismissRequest
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(120.dp)
-                .background(color = Color(0xFFC8C9C7))
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
-            verticalAlignment = Alignment.Top,
-        ) {
-            Text(text = "Click Yay to save destination, Nay to move on")
-            Icon(
-                painter = painterResource(id = R.drawable.cancel),
-                contentDescription = null,
-                modifier = Modifier.clickable { onDismissRequest() }
-            )
         }
     }
 }

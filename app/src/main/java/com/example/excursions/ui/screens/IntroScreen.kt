@@ -30,13 +30,11 @@ fun IntroScreen(navController: NavHostController) {
         modifier = Modifier.padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        //Spacer(modifier = Modifier.padding(top = 178.dp))
         ScreenTitleSubtitle(
             title = "Welcome to Excursions",
             subtitle = "Log in",
             modifier = Modifier.weight(0.5f).padding(top = 200.dp)
         )
-        //Spacer(modifier = Modifier.padding(top = 256.dp))
         Text(
             text = "Continue below or create account to access the excursions app.",
             fontFamily = polestarFontFamily,
@@ -48,14 +46,11 @@ fun IntroScreen(navController: NavHostController) {
                 .width(342.dp)
                 .weight(0.05f)
         )
-        //Spacer(modifier = Modifier.padding(top = 8.dp))
-        //ExcursionsButton(label = "Log in") { navController.navigate("login") })
         ExcursionsButton(
             label = "Log in",
             onClick = { navController.navigate(ExcursionsRoutes.Login.route) },
             modifier = Modifier//.weight(0.05f)
         )
-        //Spacer(modifier = Modifier.padding(top = 16.dp))
         PlainTextArrowButton(
             label = "Create Account",
             onClick = { navController.navigate("login") /* TODO */ },

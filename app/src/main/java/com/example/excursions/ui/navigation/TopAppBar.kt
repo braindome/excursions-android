@@ -35,7 +35,6 @@ import com.example.excursions.ui.theme.OrangePolestar
 @Composable
 fun ExcursionsTopBar(
     navController: NavHostController,
-    //backDestination: () -> Unit,
     rightButtonDestination: String?,
     rightButtonLabel: String?,
     onEndButtonClick: (() -> Unit)? = null
@@ -65,12 +64,6 @@ fun ExcursionsTopBar(
                             navController.navigate(rightButtonDestination)
                         }
                         onEndButtonClick?.invoke()
-                        /*
-                        rightButtonDestination?.let { destination ->
-                            navController?.navigate(destination)
-                            onEndButtonClick?.invoke()
-                        }
-                        */
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.White
@@ -91,13 +84,8 @@ fun ExcursionsTopBar(
                             ),
                         )
                     }
-
                 }
-
-
             }
-
-
         },
         modifier = Modifier
             .fillMaxWidth()

@@ -48,18 +48,13 @@ fun CategoryScreen(
     }
     
     var isEditModeOn by remember { mutableStateOf(false) }
-
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    //val updatedSearchProfile = navBackStackEntry?.savedStateHandle?.get<SearchProfile>("updatedSearchProfile")
     val updatedSearchProfile = navBackStackEntry?.arguments?.getParcelable<SearchProfile>("updatedSearchProfile")
     if (updatedSearchProfile != null) {
         viewModel.updateSearchProfilesList(listOf(updatedSearchProfile))
-        //navBackStackEntry?.savedStateHandle?.remove<SearchProfile>("updatedSearchProfile")
     }
 
     val searchProfilesList by viewModel.searchProfilesList.collectAsState()
-    //val currentLocation by viewModel.location.observeAsState()
-    //Timber.d("Current coordinates: ${currentLocation?.latitude}, ${currentLocation?.longitude}")
 
     Scaffold(
         topBar = {
@@ -99,7 +94,6 @@ fun CategoryScreen(
                 modifier = Modifier.padding(start = 8.dp, end = 8.dp)
             )
             //Text(text = currentLocation.toString())
-
         }
     }
 
