@@ -65,7 +65,7 @@ fun DetailInfoBox(
     ) {
         Column {
             Image(
-                painter = rememberAsyncImagePainter(model = "https://places.googleapis.com/v1/${place.photos?.get(0)?.name}/media?maxHeightPx=400&maxWidthPx=400&key=${BuildConfig.PLACES_API_KEY}"),
+                painter = rememberAsyncImagePainter(model = "https://places.googleapis.com/v1/${place.photos?.get(0)?.name}/media?maxHeightPx=400&maxWidthPx=400&key=${BuildConfig.API_KEY}"),
                 contentDescription = null,
                 modifier = Modifier.size(width = 343.dp, height = 216.dp),
                 contentScale = ContentScale.Crop

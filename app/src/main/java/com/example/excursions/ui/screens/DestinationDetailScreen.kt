@@ -94,7 +94,7 @@ fun SavedDestinationDetailScreen(
             place?.displayName?.let { ScreenTitleText(title = it.text) }
             Spacer(modifier = Modifier.size(20.dp))
             Image(
-                painter = rememberAsyncImagePainter(model = "https://places.googleapis.com/v1/${place?.photos?.get(0)?.name}/media?maxHeightPx=400&maxWidthPx=400&key=${BuildConfig.PLACES_API_KEY}"),
+                painter = rememberAsyncImagePainter(model = "https://places.googleapis.com/v1/${place?.photos?.get(0)?.name}/media?maxHeightPx=400&maxWidthPx=400&key=${BuildConfig.API_KEY}"),
                 contentDescription = null,
                 modifier = Modifier
                     .height(300.dp)

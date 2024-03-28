@@ -46,10 +46,9 @@ I will build a native Android app in Kotlin using Jetpack Compose as the framewo
 - Jetpack Compose
 
 ## Getting Started
-In the project root, create the 'secrets.properties' file. Edit it to contain the following variables:
+In the project root, create the 'secrets.properties' file. Edit it and add the following variable:
 ```
-PLACES_API_KEY=<Your Google Places API Key>
-GOOGLE_MAPS_API_KEY=<Your Google Maps API Key>
+API_KEY=<Your API Key>
 ```
 Run the app in the Android Studio emulator or on your phone.
 
