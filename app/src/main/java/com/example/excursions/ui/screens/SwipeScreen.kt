@@ -43,6 +43,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.R
 import com.example.excursions.data.repository.DummyExcursionsAPI
+import com.example.excursions.ui.components.ScreenTitleText
 import com.example.excursions.ui.components.SwipeActionBar
 import com.example.excursions.ui.components.SwipeCard
 import com.example.excursions.ui.navigation.ExcursionsBottomBar
@@ -85,16 +86,7 @@ fun SwipeScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = title,
-                fontFamily = polestarFontFamily,
-                style = TextStyle(color = Color.Black),
-                fontSize = 32.sp,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .width(343.dp)
-                    .padding(start = 24.dp),
-            )
+            ScreenTitleText(title = title)
             Spacer(modifier = Modifier.weight(1f))
             if (swipeList.list.isNotEmpty() && currentPlaceIndex < swipeList.list.size) {
                 SwipeCard(navController = navController, place = swipeList.list[currentPlaceIndex], viewModel = viewModel)

@@ -45,14 +45,14 @@ val PolestarTypography = Typography(
         fontWeight = FontWeight.Normal,
         fontSize = 30.sp,
         lineHeight = 32.sp,
-        letterSpacing = 0.5.sp
+        letterSpacing = (-1).sp
     ),
     headlineLarge = TextStyle(
         fontFamily = polestarFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 30.sp,
         lineHeight = 32.sp,
-        letterSpacing = 0.5.sp,
+        letterSpacing = (-1).sp,
         color = GrayPolestar
     ),
     labelSmall = TextStyle(
@@ -60,7 +60,7 @@ val PolestarTypography = Typography(
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 18.sp,
-        letterSpacing = 0.5.sp
-),
+        letterSpacing = (-1).sp
+    ),
 )
 

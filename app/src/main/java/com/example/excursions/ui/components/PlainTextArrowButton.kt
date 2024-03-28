@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.excursions.R
 import com.example.excursions.ui.theme.OrangePolestar
+import com.example.excursions.ui.theme.PolestarTypography
 import com.example.excursions.ui.theme.polestarFontFamily
 
 @Composable
@@ -51,10 +52,8 @@ fun PlainTextArrowButton(label: String, onClick: () -> Unit, modifier: Modifier)
         ) {
             Text(
                 text = label,
-                fontFamily = polestarFontFamily,
-                fontSize = 16.sp,
-                color = Color.Black,
-                //modifier = Modifier.padding(.dp)
+                style = PolestarTypography.labelSmall,
+                color = Color.Black
             )
             Spacer(modifier = Modifier.padding(5.dp))
             Icon(painter = painterResource(id = R.drawable.arrow_right), contentDescription = null, tint = OrangePolestar)

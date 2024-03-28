@@ -9,6 +9,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.excursions.ui.theme.PolestarTypography
+import com.example.excursions.ui.theme.Typography
 import com.example.excursions.ui.theme.polestarFontFamily
 
 @Composable
@@ -16,11 +18,7 @@ fun ScreenTitleText(title: String) {
     Text(
         text = title,
         fontFamily = polestarFontFamily,
-        style = TextStyle(
-            fontSize = 30.sp,
-            lineHeight = 32.sp,
-            color = Color.Black
-        ),
+        style = PolestarTypography.titleLarge,
         modifier = Modifier.width(342.dp),
     )
 }

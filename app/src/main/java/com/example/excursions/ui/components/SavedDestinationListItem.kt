@@ -69,7 +69,7 @@ fun SavedDestinationListItem(
                     style = TextStyle(
                         fontSize = 26.sp,
                         lineHeight = 26.sp,
-                        letterSpacing = 0.1.sp,
+                        letterSpacing = (-1).sp,
                         fontFamily = polestarFontFamily,
                         fontWeight = FontWeight(400),
                         color = Color.Black.copy(alpha = 0.6f)
@@ -82,7 +82,7 @@ fun SavedDestinationListItem(
                     style = TextStyle(
                         fontSize = 16.sp,
                         lineHeight = 18.sp,
-                        letterSpacing = 0.1.sp,
+                        letterSpacing = (-1).sp,
                         fontFamily = polestarFontFamily,
                         fontWeight = FontWeight(400),
                         color = Color.Black.copy(alpha = 0.45f)

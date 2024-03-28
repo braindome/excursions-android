@@ -46,7 +46,7 @@ fun SavedDestinationsFolderCard(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(3.dp),
+                .padding(4.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
@@ -55,12 +55,11 @@ fun SavedDestinationsFolderCard(
                 fontFamily = polestarFontFamily,
                 modifier = Modifier.padding(2.dp)
             )
-            IconButton(
-                onClick = { /*TODO*/ },
-                modifier = Modifier.align(Alignment.End)
-            ) {
-                Icon(painter = painterResource(id = R.drawable.arrow_top_right), contentDescription = null )
-            }
+            Icon(
+                painter = painterResource(id = R.drawable.arrow_top_right),
+                contentDescription = null,
+                modifier = Modifier.align(Alignment.End).padding(8.dp)
+            )
         }
 
     }

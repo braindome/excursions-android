@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.example.excursions.R
 import com.example.excursions.ui.theme.GrayPolestar
 import com.example.excursions.ui.theme.OrangePolestar
+import com.example.excursions.ui.theme.PolestarTypography
 import com.example.excursions.ui.theme.Typography
 
 @Composable
@@ -37,8 +38,8 @@ fun UserViewListItem(label: String, details: String) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = label, style = Typography.labelSmall, modifier = Modifier.weight(1f))
-            Text(text = details, style = Typography.labelSmall, modifier = Modifier.weight(1f))
+            Text(text = label, style = PolestarTypography.labelSmall, modifier = Modifier.weight(1f))
+            Text(text = details, style = PolestarTypography.labelSmall, modifier = Modifier.weight(1f))
             Icon(
                 painter = painterResource(id = R.drawable.arrow_right),
                 contentDescription = null,

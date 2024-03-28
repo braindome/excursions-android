@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.excursions.R
 import com.example.excursions.ui.theme.OrangePolestar
+import com.example.excursions.ui.theme.PolestarTypography
 import com.example.excursions.ui.theme.polestarFontFamily
 
 @Composable
@@ -47,7 +48,7 @@ fun ExcursionsButton(label: String, onClick: () -> Unit, modifier: Modifier) {
                 .padding(start = 10.dp)
 
         ) {
-            Text(text = label, fontFamily = polestarFontFamily)
+            Text(text = label, style = PolestarTypography.labelSmall)
             Spacer(modifier = Modifier.padding(5.dp))
             Icon(painter = painterResource(id = R.drawable.arrow_right), contentDescription = null, tint = OrangePolestar)
 

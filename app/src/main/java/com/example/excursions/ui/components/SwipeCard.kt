@@ -74,11 +74,7 @@ fun SwipeCard(
                 fontFamily = polestarFontFamily,
                 fontSize = 16.sp
             )
-            Text(
-                text = place.displayName.text,
-                fontFamily = polestarFontFamily,
-                fontSize = 30.sp
-            )
+            ScreenTitleText(title = place.displayName.text)
             //MainInfoBox(place = place)
             Column {
                 Text(text = "${place.calculateRatingAverage()}/5 Stars!")

@@ -57,7 +57,7 @@ fun GridCard(
         modifier = Modifier
             .width(173.dp)
             .height(200.dp)
-            .padding(3.dp),
+            .padding(4.dp),
         color = YellowPolestar,
         onClick = {
             if (!isEditModeOn) {
@@ -96,7 +96,7 @@ fun GridCard(
             Icon(
                 painter = painterResource(id = if (isEditModeOn) R.drawable.plus_large else R.drawable.arrow_top_right),
                 contentDescription = null,
-                modifier = Modifier.align(Alignment.End)
+                modifier = Modifier.align(Alignment.End).padding(8.dp)
             )
         }
 

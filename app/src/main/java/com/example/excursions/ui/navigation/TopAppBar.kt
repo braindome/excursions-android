@@ -30,6 +30,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.excursions.R
 import com.example.excursions.ui.theme.OrangePolestar
+import com.example.excursions.ui.theme.PolestarTypography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -77,11 +78,8 @@ fun ExcursionsTopBar(
                     if (rightButtonLabel != null) {
                         Text(
                             text = rightButtonLabel,
-                            style = TextStyle(
-                                fontSize = 16.sp,
-                                lineHeight = 18.sp,
-                                color = Color.Black
-                            ),
+                            style = PolestarTypography.labelSmall,
+                            color = Color.Black
                         )
                     }
                 }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -23,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.excursions.ui.theme.GrayPolestar
+import com.example.excursions.ui.theme.PolestarTypography
 import com.example.excursions.ui.theme.polestarFontFamily
 
 
@@ -44,9 +46,7 @@ fun ExcursionsTextField(
     ) {
         Text(
             text = label,
-            fontFamily = polestarFontFamily,
-            lineHeight = 18.sp,
-            fontSize = 16.sp
+            style = PolestarTypography.labelSmall
         )
         TextField(
             value = inputState,
@@ -54,11 +54,7 @@ fun ExcursionsTextField(
                 inputState = it
                 onInputChanged(it)
                             },
-            textStyle = TextStyle(
-                fontSize = 16.sp,
-                lineHeight = 18.sp,
-                fontFamily = polestarFontFamily,
-            ),
+            textStyle = PolestarTypography.labelSmall,
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = GrayPolestar,
                 unfocusedContainerColor = Color.Black.copy(alpha = 0.08f),
@@ -67,14 +63,12 @@ fun ExcursionsTextField(
 
             ),
             shape = RoundedCornerShape(0.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                //.padding(0.dp)
+            modifier = Modifier.fillMaxWidth()
         )
-        Divider(
-            color = Color.Black,
+        HorizontalDivider(
+            modifier = Modifier,
             thickness = 1.dp,
-            modifier = Modifier
+            color = Color.Black
         )
 
     }

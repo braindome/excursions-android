@@ -74,9 +74,8 @@ fun ExcursionsFilterChip(
                     Spacer(modifier = Modifier.padding(8.dp))
 
                     Icon(
-                        painter = painterResource(id = if (selected) R.drawable.cancel else R.drawable.plus),
+                        painter = painterResource(id = if (selected) R.drawable.cancel else R.drawable.plus_large),
                         contentDescription = null,
-                        //tint = if (selected) Color.White else Color.Black
                         tint = OrangePolestar,
                         modifier = Modifier.size(16.dp)
                     )
@@ -84,19 +83,13 @@ fun ExcursionsFilterChip(
             },
             colors = FilterChipDefaults.filterChipColors(
                 containerColor = Color.White,
-                //labelColor = Color.Black,
                 selectedContainerColor = Color.Black,
                 selectedLabelColor = Color.White
             ),
             shape = RectangleShape,
-            modifier = Modifier
-                .height(48.dp)
-                //.wrapContentWidth()
-                //.fillMaxSize()
+            modifier = Modifier.height(48.dp)
         )
     }
-
-
 }
 
 @Preview(showBackground = true)

@@ -38,6 +38,7 @@ import com.example.excursions.data.api_models.Location
 import com.example.excursions.data.model.PlaceState
 import com.example.excursions.data.repository.DummyExcursionsAPI
 import com.example.excursions.ui.components.SavedDestinationListItem
+import com.example.excursions.ui.components.ScreenTitleSubtitle
 import com.example.excursions.ui.navigation.ExcursionsBottomBar
 import com.example.excursions.ui.navigation.ExcursionsRoutes
 import com.example.excursions.ui.navigation.ExcursionsTopBar
@@ -104,27 +105,7 @@ fun FavoriteScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "Favorites",
-                fontFamily = polestarFontFamily,
-                fontSize = 32.sp,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .width(343.dp)
-                    .padding(start = 24.dp)
-                    //.weight(0.5f),
-            )
-            Text(
-                text = "Saved Destinations",
-                fontFamily = polestarFontFamily,
-                style = TextStyle(color = GrayPolestar),
-                fontSize = 32.sp,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .width(343.dp)
-                    .padding(start = 24.dp)
-                    //.weight(0.5f),
-            )
+            ScreenTitleSubtitle(title = "Favorites" , subtitle = "Saved Destinations", modifier = Modifier)
             Spacer(modifier = Modifier.size(20.dp))
             LazyColumn(
                 modifier = Modifier
