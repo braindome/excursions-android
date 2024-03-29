@@ -12,7 +12,6 @@ The target audience is the customers of the car manufacturer, who may want a spo
 Project Management
 
 I will be working solo on my GitHub repository, taking full responsibility for merging and branching. Small changes will be made directly on the main branch, while minor adjustments will be done in various feature branches. Testing of new features will occur on separate branches. Project management will involve both Confluence and Jira within a Kanban board framework. While there won't be sprints, regular check-ins with a mentor and classmates are planned. Planning, proposals, wireframing, and brainstorming will take place on Miro, while styling, flow, and specifications (fonts, colors, layouts) will be handled using Figma.
-Tech Stack
 
 I will build a native Android app in Kotlin using Jetpack Compose as the framework, following the MVVM (Model-View-ViewModel) architecture. Location data will be retrieved through the Google Places API, leveraging its SDK for simplified handling of asynchronous operations. Firebase Auth and Firestore will be utilized for storing user profiles, settings, and data. Later in the project, a local database will be implemented to store saved destinations and places. The choice between Room and Realm will be considered. Support for Android Auto is also planned for later phases of the project.
 
@@ -46,7 +45,7 @@ I will build a native Android app in Kotlin using Jetpack Compose as the framewo
 - Jetpack Compose
 
 ## Getting Started
-In the project root, create the 'secrets.properties' file. Edit it and add the following variable:
+In the project root, create the `secrets.properties` file. Edit it and add the following variable:
 ```
 API_KEY=<Your API Key>
 ```
