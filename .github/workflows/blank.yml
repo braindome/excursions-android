@@ -32,6 +32,8 @@ jobs:
           distribution: 'adopt'
 
       - name: Grant execute permissions for gradlew
+        env:
+          API_KEY: ${{ secret.sAPI_KEY }}
         run: chmod +x gradlew
 
       - name: Build with gradle
