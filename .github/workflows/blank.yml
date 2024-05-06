@@ -33,7 +33,7 @@ jobs:
 
       - name: Grant execute permissions for gradlew
         env:
-          API_KEY: ${{ secret.sAPI_KEY }}
+          API_KEY: ${{ secrets.API_KEY }}
         run: chmod +x gradlew
 
       - name: Build with gradle
