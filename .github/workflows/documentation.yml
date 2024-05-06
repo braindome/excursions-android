@@ -21,4 +21,4 @@ jobs:
         run: chmod +x gradlew
 
       - name: Generate Documentation
-        run: ./gradlew dokkaHtml
+        run: ./gradlew dokkaHtmlMain
