@@ -33,7 +33,7 @@ jobs:
 
       - name: Create secrets.properties
         run: |
-          echo "API_KEY=${{ secrets.API_KEY }}" > ./app/secrets.properties
+          echo "API_KEY=${{ secrets.API_KEY }}" > secrets.properties
 
       - name: Grant execute permissions for gradlew
         run: chmod +x gradlew
