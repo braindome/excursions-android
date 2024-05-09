@@ -21,11 +21,26 @@ import com.example.excursions.ui.screens.SavedDestinationsScreen
 import com.example.excursions.ui.screens.SearchScreen
 import com.example.excursions.ui.screens.SwipeScreen
 
+/**
+ * This file contains the navigation setup for the Excursions app.
+ * It defines the navigation routes and their corresponding screens.
+ * Each route is associated with a composable function that represents a screen in the app.
+ */
+
+/**
+ * A composable function that sets up the navigation for the app.
+ *
+ * @param viewModel The ViewModel that will be passed to the screens that need it.
+ */
+
 @Composable
 fun ExcursionsNavHost(viewModel: ExcursionsViewModel) {
+    // Create a NavController to navigate between screens
     val navController = rememberNavController()
 
+    // Set up the navigation host with the start destination
     NavHost(navController = navController, startDestination = ExcursionsRoutes.Intro.route) {
+        // Define the composable for each route
         composable(ExcursionsRoutes.Intro.route) { IntroScreen(navController = navController) }
         composable(ExcursionsRoutes.Authentication.route) { AuthenticationScreen(navController = navController) }
         //composable("createAccount") { CreateAccountScreen(navController, viewModel) }
@@ -34,6 +49,11 @@ fun ExcursionsNavHost(viewModel: ExcursionsViewModel) {
         composable(ExcursionsRoutes.Search.route) { SearchScreen(navController = navController) }
         composable(ExcursionsRoutes.Favorites.route) { SavedDestinationsScreen(navController = navController, viewModel = viewModel) }
         composable(ExcursionsRoutes.Profile.route) { ProfileScreen(navController = navController, viewModel = viewModel) }
+
+        /**
+         * Define the composable for each route with arguments. The arguments are passed to the composable
+         * function as a parameter. The arguments are defined using the navArgument function.
+         */
 
         composable(
             route = ExcursionsRoutes.SwipeScreen.route + "/{placeListId}/{searchProfileId}",
@@ -129,6 +149,11 @@ fun ExcursionsNavHost(viewModel: ExcursionsViewModel) {
         }
     }
 }
+
+/**
+ * Enum class that defines the routes for the app's navigation.
+ * Each route is associated with a string that is used in the navigation graph.
+ */
 enum class ExcursionsRoutes(val route: String) {
     Intro("intro"),
     Authentication("auth"),

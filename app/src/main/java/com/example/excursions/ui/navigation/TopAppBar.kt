@@ -32,6 +32,19 @@ import com.example.excursions.R
 import com.example.excursions.ui.theme.OrangePolestar
 import com.example.excursions.ui.theme.PolestarTypography
 
+/**
+ * This file contains the Top App Bar setup for the Excursions app.
+ * It defines the top app bar and its items.
+ */
+
+/**
+ * A composable function that sets up the top app bar for the app.
+ *
+ * @param navController The NavController that will be used to navigate between screens.
+ * @param rightButtonDestination The destination route for the right button in the top app bar.
+ * @param rightButtonLabel The label for the right button in the top app bar.
+ * @param onEndButtonClick The action to perform when the right button in the top app bar is clicked.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExcursionsTopBar(
@@ -43,6 +56,7 @@ fun ExcursionsTopBar(
     TopAppBar(
         title = { /*TODO*/ },
         navigationIcon = {
+            // The navigation icon button that navigates up in the navigation stack when clicked
             IconButton(onClick = { navController.navigateUp() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.arrow_left),
@@ -54,6 +68,7 @@ fun ExcursionsTopBar(
 
         },
         actions = {
+            // The actions section of the top app bar
             Column(
                 modifier = Modifier.padding(top = 8.dp),
                 verticalArrangement = Arrangement.Center,

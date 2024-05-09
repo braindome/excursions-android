@@ -25,16 +25,32 @@ import com.example.excursions.R
 import com.example.excursions.ui.theme.GrayPolestar
 import com.example.excursions.ui.theme.OrangePolestar
 
+/**
+ * This file contains the Bottom Navigation Bar setup for the Excursions app.
+ * It defines the navigation bar and its items.
+ */
+
+/**
+ * A composable function that sets up the bottom navigation bar for the app.
+ *
+ * @param navController The NavController that will be used to navigate between screens.
+ */
 @Composable
 fun ExcursionsBottomBar(navController: NavHostController) {
 
+    // Remember the selected item in the navigation bar across configuration changes
     var selectedItem by rememberSaveable { mutableIntStateOf(getSelectedIndex(navController.currentDestination?.route)) }
+
+    // List of icons for the navigation bar items
     val navBarIcons = listOf(
         R.drawable.bottom_bar_icon_grid,
         R.drawable.bottom_bar_icon_favorite,
         R.drawable.bottom_bar_icon_profile)
+
+    // Color for the selected item in the navigation bar
     val activeColor = OrangePolestar
 
+    // Set up the navigation bar
     NavigationBar(
         modifier = Modifier
             .padding(5.dp)
@@ -43,10 +59,13 @@ fun ExcursionsBottomBar(navController: NavHostController) {
             .background(Color.White),
         containerColor = Color.White
     ) {
+        // For each item in the navigation bar
         navBarIcons.forEachIndexed { index, item ->
+            // Set up the navigation bar item
             NavigationBarItem(
                 selected = selectedItem == index,
                 onClick = {
+                    // When the item is clicked, update the selected item and navigate to the corresponding screen
                     selectedItem = index
                     val destination = when (index){
                         0 -> ExcursionsRoutes.Categories.route
