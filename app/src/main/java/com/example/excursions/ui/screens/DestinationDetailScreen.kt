@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -111,7 +113,12 @@ fun SavedDestinationDetailScreen(
             }
             Text(text = "Rating: ${place?.reviews?.calculateRatingAverage()}/5", style = PolestarTypography.labelSmall)
             Text(text = "Top Review", style = PolestarTypography.labelSmall)
-            Text(text = place?.reviews?.get(0)?.text?.text ?: "No reviews available")
+            Text(
+                text = place?.reviews?.get(0)?.text?.text ?: "No reviews available",
+                modifier = Modifier
+                    .height(200.dp)
+                    .verticalScroll(rememberScrollState())
+            )
             place?.types?.let { Text(text = it.formatTypesToTags()) }
             Spacer(modifier = Modifier.weight(1f))
             ExcursionsButton(
