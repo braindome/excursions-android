@@ -4,6 +4,7 @@ import android.graphics.drawable.Icon
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -50,6 +52,7 @@ import com.example.excursions.ui.navigation.ExcursionsBottomBar
 import com.example.excursions.ui.navigation.ExcursionsTopBar
 import com.example.excursions.ui.theme.GrayPolestar
 import com.example.excursions.ui.theme.polestarFontFamily
+import kotlinx.coroutines.delay
 import timber.log.Timber
 
 @Composable
@@ -65,6 +68,13 @@ fun SwipeScreen(
     var currentPlaceIndex by rememberSaveable { mutableIntStateOf(0) }
     val title by rememberSaveable { mutableStateOf(viewModel.getSearchProfileById(searchProfileId).title) }
 
+    var isLoading by remember { mutableStateOf(true) }
+
+    LaunchedEffect(Unit) {
+        delay(2000)
+        isLoading = false
+    }
+
 
 
     Timber.d("Received placeListId: $placeListId")
@@ -79,37 +89,44 @@ fun SwipeScreen(
             )},
         bottomBar = { ExcursionsBottomBar(navController = navController) }
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            ScreenTitleText(title = title)
-            Spacer(modifier = Modifier.weight(1f))
-            if (swipeList.list.isNotEmpty() && currentPlaceIndex < swipeList.list.size) {
-                SwipeCard(navController = navController, place = swipeList.list[currentPlaceIndex], viewModel = viewModel)
-                Spacer(modifier = Modifier.weight(1f))
-                SwipeActionBar(
-                    onYayClick = {
-                        //viewModel.saveDestination(searchProfileId, swipeList.list[currentPlaceIndex])
-                        viewModel.savePlaceToFirestore(searchProfileId, swipeList.list[currentPlaceIndex])
-                        currentPlaceIndex++
-                    },
-                    onNayClick = {
-                        viewModel.discardDestination(searchProfileId, swipeList.list[currentPlaceIndex])
-                        currentPlaceIndex++
-                    }
-                )
-            } else {
-                Text("No places available", modifier = Modifier
-                    .padding(16.dp)
-                    .weight(1f))
+        if (isLoading) {
+            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                CircularProgressIndicator(color = Color.Black)
             }
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                ScreenTitleText(title = title)
+                Spacer(modifier = Modifier.weight(1f))
+                if (swipeList.list.isNotEmpty() && currentPlaceIndex < swipeList.list.size) {
+                    SwipeCard(navController = navController, place = swipeList.list[currentPlaceIndex], viewModel = viewModel)
+                    Spacer(modifier = Modifier.weight(1f))
+                    SwipeActionBar(
+                        onYayClick = {
+                            //viewModel.saveDestination(searchProfileId, swipeList.list[currentPlaceIndex])
+                            viewModel.savePlaceToFirestore(searchProfileId, swipeList.list[currentPlaceIndex])
+                            currentPlaceIndex++
+                        },
+                        onNayClick = {
+                            viewModel.discardDestination(searchProfileId, swipeList.list[currentPlaceIndex])
+                            currentPlaceIndex++
+                        }
+                    )
+                } else {
+                    Text("No places available", modifier = Modifier
+                        .padding(16.dp)
+                        .weight(1f))
+                }
 
 
+            }
         }
+
     }
 }
 
