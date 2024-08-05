@@ -3,7 +3,8 @@
 ## Background
 
 As an intern at Polestar, I have learned a lot about Android Auto and Automotive OS, which are used in the car’s infotainment system. At the same time, I have been reading and learning more and more about Android development and dipped my toes in the Compose library for mobile phones. In this project, I wanted to put these two fields together and create an app which can be used both on a mobile phone and on a car, extending the phone capabilities to the larger car screen. So, with my classmate Tobias Sörensson, we came up with the idea of a Points of Interest app, where the user can pick a destination from a list of suggestions, defined by type and distance, and presented in a “swipe” format very common in dating apps.
-Purpose
+
+## Purpose
 
 The purpose of the project is to allow the product owner to present a curated list of interesting and relevant destinations for an excursion trip to the customer. The customer should primarily be able to choose between different categories of trips, save travel suggestions, and navigate to them both on their mobile device and the car's infotainment system.
 Target Users
