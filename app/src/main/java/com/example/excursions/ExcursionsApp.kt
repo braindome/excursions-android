@@ -53,11 +53,8 @@ class ExcursionsApp : Application() {
 
         // Define a variable to hold the Places API key.
         val apiKey = BuildConfig.PLACES_API_KEY
-        if (apiKey.isEmpty() || apiKey == "DEFAULT_API_KEY") {
-            Timber.e("Places test", "No api key")
-            //finish()
-            return
-        }
+        //finish()
+        return
 
         // Initialize the SDK
         Places.initializeWithNewPlacesApiEnabled(applicationContext, apiKey)

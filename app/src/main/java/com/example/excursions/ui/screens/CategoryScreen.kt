@@ -39,11 +39,17 @@ import timber.log.Timber
 @Composable
 fun CategoryScreen(
     navController: NavHostController,
-    viewModel: ExcursionsViewModel
+    viewModel: ExcursionsViewModel,
+
+    //onScreenLaunch: () -> Unit,
+    //onSearchProfileReceived: (SearchProfile) -> Unit,
+    //onProfileClick: (searchProfileId: Int) -> Unit,
+    //onProfileDelete: (searchProfileId: Int) -> Unit
 ) {
 
     DisposableEffect(Unit) {
         viewModel.fetchUserLocation()
+        // onScreenLaunch()
         onDispose {  }
     }
     

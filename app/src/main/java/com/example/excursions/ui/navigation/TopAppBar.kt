@@ -62,7 +62,7 @@ fun ExcursionsTopBar(
                     painter = painterResource(id = R.drawable.arrow_left),
                     contentDescription = null,
                     tint = OrangePolestar,
-                    modifier = Modifier.size(16.dp)
+                    modifier = Modifier.size(24.dp)
                 )
             }
 
@@ -86,7 +86,7 @@ fun ExcursionsTopBar(
                     ),
                     modifier = Modifier
                         .clip(shape = RectangleShape)
-                        .height(22.dp),
+                        .height(36.dp),
                     shape = CutCornerShape(0.dp),
                     contentPadding = PaddingValues(0.dp),
                 ) {
@@ -102,7 +102,7 @@ fun ExcursionsTopBar(
         },
         modifier = Modifier
             .fillMaxWidth()
-            .height(44.dp)
+            //.height(44.dp)
     )
 }
 

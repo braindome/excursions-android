@@ -53,8 +53,8 @@ fun ExcursionsBottomBar(navController: NavHostController) {
     // Set up the navigation bar
     NavigationBar(
         modifier = Modifier
-            .padding(5.dp)
-            .height(56.dp)
+            //.padding(5.dp)
+            //.height(56.dp)
             .fillMaxWidth()
             .background(Color.White),
         containerColor = Color.White
