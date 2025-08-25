@@ -1,6 +1,11 @@
 package com.example.excursions.ui.navigation
 
+import com.example.excursions.data.api_models.Center
+
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -37,6 +42,9 @@ import com.example.excursions.ui.screens.SwipeScreen
 fun ExcursionsNavHost(viewModel: ExcursionsViewModel) {
     // Create a NavController to navigate between screens
     val navController = rememberNavController()
+    val searchProfilesListState by viewModel.searchProfilesList.collectAsState()
+    val currentLocation: Center? by viewModel.location.observeAsState()
+    val placeList by viewModel.resultPlaceList.collectAsState()
 
     // Set up the navigation host with the start destination
     NavHost(navController = navController, startDestination = ExcursionsRoutes.Intro.route) {
@@ -45,7 +53,22 @@ fun ExcursionsNavHost(viewModel: ExcursionsViewModel) {
         composable(ExcursionsRoutes.Authentication.route) { AuthenticationScreen(navController = navController) }
         //composable("createAccount") { CreateAccountScreen(navController, viewModel) }
         composable(ExcursionsRoutes.Login.route) { LoginScreen(navController) }
-        composable(ExcursionsRoutes.Categories.route) { CategoryScreen(navController = navController, viewModel = viewModel) }
+        composable(ExcursionsRoutes.Categories.route) {
+            CategoryScreen(
+                navController = navController,
+                searchProfilesList = searchProfilesListState,
+                onScreenLaunch = viewModel::fetchUserLocation,
+                currentLocation = currentLocation,
+                onSearchProfileReceived = { searchProfile ->
+                    viewModel.updateSearchProfilesList(listOf(searchProfile))
+                },
+                onSearchPlaces = { center, types, radius, searchProfileId ->
+                    /* WIP */
+                    viewModel.searchPlacesByLocationAndRadius(center!!, types, radius, searchProfileId)
+                },
+                placeList = placeList,
+            )
+        }
         composable(ExcursionsRoutes.Search.route) { SearchScreen(navController = navController) }
         composable(ExcursionsRoutes.Favorites.route) { SavedDestinationsScreen(navController = navController, viewModel = viewModel) }
         composable(ExcursionsRoutes.Profile.route) { ProfileScreen(navController = navController, viewModel = viewModel) }

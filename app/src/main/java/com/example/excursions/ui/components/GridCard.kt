@@ -7,31 +7,22 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.R
 import com.example.excursions.data.api_models.Center
+import com.example.excursions.data.model.PlaceList
 import com.example.excursions.data.model.SearchProfile
-import com.example.excursions.data.repository.DummyExcursionsAPI
 import com.example.excursions.ui.navigation.ExcursionsRoutes
 import com.example.excursions.ui.theme.YellowPolestar
 import com.example.excursions.ui.theme.polestarFontFamily
@@ -43,15 +34,14 @@ import timber.log.Timber
 fun GridCard(
     navController: NavHostController,
     searchProfile: SearchProfile,
-    viewModel: ExcursionsViewModel,
+    placeList: PlaceList,
+    onSearchPlaces: (Center?, List<String>, Float, Int) -> Unit,
+    currentLocation: Center?,
     isEditModeOn: Boolean
 ) {
     val searchProfileId = searchProfile.id
-    val currentLocation by viewModel.location.observeAsState()
-    val nullCheckedLocation: Center = currentLocation ?: Center(0.00,0.00)
-
-
-    val placeList by rememberUpdatedState(viewModel.resultPlaceList)
+    val nullCheckedLocation: Center? = currentLocation ?: Center(0.0,0.0)
+    val coroutineScope = rememberCoroutineScope()
 
     Surface(
         modifier = Modifier
@@ -66,11 +56,11 @@ fun GridCard(
                     .map { it.jsonName }
                 Timber.d("Types into api request: $types")
 
-                viewModel.viewModelScope.launch {
+                coroutineScope.launch {
                     // API call disabled for testing
-                    viewModel.searchPlacesByLocationAndRadius(center = nullCheckedLocation, types = types, range = searchProfile.range, placeListId = searchProfileId)
+                    onSearchPlaces(nullCheckedLocation, types, searchProfile.range, searchProfileId)
                     delay(300)
-                    val placeListId = placeList.value.id
+                    val placeListId = placeList.id
                     navController.navigate("swipeScreen/${placeListId}/${searchProfileId}")
                 }
             } else {
@@ -110,8 +100,10 @@ fun GridCardPreview() {
     GridCard(
         navController = rememberNavController(),
         searchProfile = SearchProfile(id = -1),
-        viewModel = ExcursionsViewModel(api = DummyExcursionsAPI(), appContext = LocalContext.current),
-        isEditModeOn = false
+        isEditModeOn = false,
+        placeList = PlaceList(),
+        onSearchPlaces = {} as (Center?, List<String>, Float, Int) -> Unit,
+        currentLocation = null
     )
 }
 

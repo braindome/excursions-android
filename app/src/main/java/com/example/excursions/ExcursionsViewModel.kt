@@ -107,7 +107,7 @@ class ExcursionsViewModel(
                 }
             }
             .addOnFailureListener { exception ->
-                Timber.e("get failed with ", exception)
+                // Timber.e("get failed with ", exception)
                 _favoritePlace.value = null
             }
     }
