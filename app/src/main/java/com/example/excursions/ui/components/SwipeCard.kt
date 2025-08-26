@@ -45,12 +45,12 @@ import timber.log.Timber
 fun SwipeCard(
     navController: NavHostController,
     place: PlaceState,
-    viewModel: ExcursionsViewModel,
+    currentLocation: Center?,
+    calculateDistance: (Center, Center) -> Double,
 ) {
-    val currentLocation by viewModel.location.observeAsState()
     val nullCheckedLocation: Center = currentLocation ?: Center(0.00,0.00)
     val placeCoordinates = place.location.toCenter()
-    val distanceToLocation = viewModel.distanceBetweenCenters(nullCheckedLocation, placeCoordinates)
+    val distanceToLocation = calculateDistance(nullCheckedLocation, placeCoordinates)
     val placeId = place.id
 
     Surface(
@@ -61,7 +61,6 @@ fun SwipeCard(
     ) {
         Column {
             Image(
-                //painter = rememberAsyncImagePainter("https:${place.photos?.get(0)?.authorAttributions?.get(0)?.photoUri}"),
                 painter = rememberAsyncImagePainter(model = "https://places.googleapis.com/v1/${place.photos?.get(0)?.name}/media?maxHeightPx=400&maxWidthPx=400&key=${BuildConfig.API_KEY}"),
                 contentDescription = null,
                 modifier = Modifier.size(width = 343.dp, height = 216.dp),
@@ -93,7 +92,7 @@ fun SwipeCard(
     }
 }
 
-
+/*
 @Preview(showBackground = true)
 @Composable
 fun SwipeCardPreview() {
@@ -114,4 +113,6 @@ fun SwipeCardPreview() {
 
     )
 }
+
+ */
 

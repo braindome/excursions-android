@@ -90,9 +90,18 @@ fun ExcursionsNavHost(viewModel: ExcursionsViewModel) {
             backStackEntry.arguments?.getString("placeListId")?.let {
                 SwipeScreen(
                     navController = navController,
-                    viewModel = viewModel,
                     placeListId = placeListId,
-                    searchProfileId = searchProfileId
+                    searchProfileId = searchProfileId,
+                    swipeList = placeList,
+                    title = viewModel.getSearchProfileById(searchProfileId).title,
+                    onYayClick = { place ->
+                        viewModel.savePlaceToFirestore(searchProfileId, place)
+                    },
+                    onNayClick = { place ->
+                        viewModel.discardDestination(searchProfileId, place)
+                    },
+                    currentLocation = currentLocation,
+                    calculateDistance = viewModel::distanceBetweenCenters
                 )
             }
         }

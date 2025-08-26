@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -40,10 +41,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.R
+import com.example.excursions.data.api_models.Center
+import com.example.excursions.data.model.PlaceList
+import com.example.excursions.data.model.PlaceState
 import com.example.excursions.data.repository.DummyExcursionsAPI
 import com.example.excursions.ui.components.ScreenTitleText
 import com.example.excursions.ui.components.SwipeActionBar
@@ -58,15 +63,20 @@ import timber.log.Timber
 @Composable
 fun SwipeScreen(
     navController: NavHostController,
-    viewModel: ExcursionsViewModel,
     placeListId: String,
-    searchProfileId: Int
+    searchProfileId: Int,
+    swipeList: PlaceList,
+    title: String,
+    onYayClick: (PlaceState) -> Unit,
+    onNayClick: (PlaceState) -> Unit,
+    currentLocation: Center?,
+    calculateDistance: (Center, Center) -> Double,
 ) {
 
-    val swipeList by viewModel.resultPlaceList.collectAsState()
-    val searchProfile by viewModel.searchProfile.collectAsState()
+    // val swipeList by viewModel.resultPlaceList.collectAsState()
+    // val searchProfile by viewModel.searchProfile.collectAsState()
     var currentPlaceIndex by rememberSaveable { mutableIntStateOf(0) }
-    val title by rememberSaveable { mutableStateOf(viewModel.getSearchProfileById(searchProfileId).title) }
+    // val title by rememberSaveable { mutableStateOf(viewModel.getSearchProfileById(searchProfileId).title) }
 
     var isLoading by remember { mutableStateOf(true) }
 
@@ -74,8 +84,6 @@ fun SwipeScreen(
         delay(2000)
         isLoading = false
     }
-
-
 
     Timber.d("Received placeListId: $placeListId")
     Timber.d("Place list ID: ${swipeList.id}, size: ${swipeList.list.size}")
@@ -104,16 +112,23 @@ fun SwipeScreen(
                 ScreenTitleText(title = title)
                 Spacer(modifier = Modifier.weight(1f))
                 if (swipeList.list.isNotEmpty() && currentPlaceIndex < swipeList.list.size) {
-                    SwipeCard(navController = navController, place = swipeList.list[currentPlaceIndex], viewModel = viewModel)
+                    SwipeCard(
+                        navController = navController,
+                        place = swipeList.list[currentPlaceIndex],
+                        currentLocation = currentLocation,
+                        calculateDistance = calculateDistance
+                    )
                     Spacer(modifier = Modifier.weight(1f))
                     SwipeActionBar(
                         onYayClick = {
                             //viewModel.saveDestination(searchProfileId, swipeList.list[currentPlaceIndex])
-                            viewModel.savePlaceToFirestore(searchProfileId, swipeList.list[currentPlaceIndex])
+                            //viewModel.savePlaceToFirestore(searchProfileId, swipeList.list[currentPlaceIndex])
+                            onYayClick(swipeList.list[currentPlaceIndex])
                             currentPlaceIndex++
                         },
                         onNayClick = {
-                            viewModel.discardDestination(searchProfileId, swipeList.list[currentPlaceIndex])
+                            //viewModel.discardDestination(searchProfileId, swipeList.list[currentPlaceIndex])
+                            onNayClick(swipeList.list[currentPlaceIndex])
                             currentPlaceIndex++
                         }
                     )
@@ -122,8 +137,6 @@ fun SwipeScreen(
                         .padding(16.dp)
                         .weight(1f))
                 }
-
-
             }
         }
 
@@ -135,8 +148,13 @@ fun SwipeScreen(
 fun SwipeScreenPreview() {
     SwipeScreen(
         navController = rememberNavController(),
-        viewModel = ExcursionsViewModel(api = DummyExcursionsAPI(), appContext = LocalContext.current),
         placeListId = "abc",
-        searchProfileId = -1
+        searchProfileId = -1,
+        swipeList = PlaceList(),
+        title = "Swipe Screen",
+        onYayClick = {},
+        onNayClick = {},
+        currentLocation = Center(0.0,0.0),
+        calculateDistance = { a, b -> 0.0 }
     )
 }
