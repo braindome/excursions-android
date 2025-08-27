@@ -22,6 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.excursions.ExcursionsViewModel
+import com.example.excursions.data.api_models.Center
+import com.example.excursions.data.model.SearchProfile
 import com.example.excursions.data.repository.DummyExcursionsAPI
 import com.example.excursions.ui.navigation.ExcursionsBottomBar
 import com.example.excursions.ui.navigation.ExcursionsTopBar
@@ -33,15 +35,19 @@ import timber.log.Timber
 @Composable
 fun SavedDestinationsScreen(
     navController: NavHostController,
-    viewModel: ExcursionsViewModel
+    //viewModel: ExcursionsViewModel,
+    searchProfilesList: List<SearchProfile>,
+    currentLocation: Center?,
+    onFetchLocation: () -> Unit,
 ) {
     DisposableEffect(Unit) {
-        viewModel.fetchUserLocation()
+        //viewModel.fetchUserLocation()
+        onFetchLocation()
         onDispose { Timber.d("Disposed") }
     }
 
-    val searchProfilesList by viewModel.searchProfilesList.collectAsState()
-    val currentLocation by viewModel.location.observeAsState()
+    // val searchProfilesList by viewModel.searchProfilesList.collectAsState()
+    // val currentLocation by viewModel.location.observeAsState()
     Timber.d("Current coordinates: ${currentLocation?.latitude}, ${currentLocation?.longitude}")
 
     Scaffold(
@@ -69,7 +75,6 @@ fun SavedDestinationsScreen(
                         SavedDestinationsFolderCard(
                             navController = navController,
                             searchProfile = searchProfile,
-                            viewModel = viewModel
                         )
                     }
                 },
@@ -83,5 +88,10 @@ fun SavedDestinationsScreen(
 @Preview(showBackground = true)
 @Composable
 fun SavedDestinationsScreenPreview() {
-    SavedDestinationsScreen(navController = rememberNavController(), viewModel = ExcursionsViewModel(api = DummyExcursionsAPI(), appContext = LocalContext.current))
+    SavedDestinationsScreen(
+        navController = rememberNavController(),
+        searchProfilesList = TODO(),
+        currentLocation = TODO(),
+        onFetchLocation = {}
+    )
 }

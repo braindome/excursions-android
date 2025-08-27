@@ -31,7 +31,6 @@ import com.example.excursions.ui.theme.polestarFontFamily
 @Composable
 fun SavedDestinationsFolderCard(
     navController: NavHostController,
-    viewModel: ExcursionsViewModel,
     searchProfile: SearchProfile
 ) {
     val searchProfileId = searchProfile.id
@@ -71,9 +70,5 @@ fun SavedDestinationsFolderCardPreview() {
     SavedDestinationsFolderCard(
         navController = rememberNavController(),
         searchProfile = SearchProfile(id = -1),
-        viewModel = ExcursionsViewModel(
-            api = DummyExcursionsAPI(),
-            appContext = LocalContext.current
-        )
     )
 }

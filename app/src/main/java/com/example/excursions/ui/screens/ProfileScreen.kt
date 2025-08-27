@@ -26,7 +26,6 @@ import com.example.excursions.ui.navigation.ExcursionsTopBar
 @Composable
 fun ProfileScreen(
     navController: NavHostController,
-    viewModel: ExcursionsViewModel
 ) {
     //val carConnectionType by CarConnection(LocalContext.current).type.observeAsState(initial = -1)
 
@@ -72,5 +71,7 @@ fun ProjectionState(carConnectionType: Int, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun ProfileScreenPreview() {
-    ProfileScreen(navController = rememberNavController(), viewModel = ExcursionsViewModel(api = DummyExcursionsAPI(), appContext = LocalContext.current))
+    ProfileScreen(
+        navController = rememberNavController(),
+    )
 }

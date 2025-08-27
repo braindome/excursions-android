@@ -70,8 +70,15 @@ fun ExcursionsNavHost(viewModel: ExcursionsViewModel) {
             )
         }
         composable(ExcursionsRoutes.Search.route) { SearchScreen(navController = navController) }
-        composable(ExcursionsRoutes.Favorites.route) { SavedDestinationsScreen(navController = navController, viewModel = viewModel) }
-        composable(ExcursionsRoutes.Profile.route) { ProfileScreen(navController = navController, viewModel = viewModel) }
+        composable(ExcursionsRoutes.Favorites.route) {
+            SavedDestinationsScreen(
+                navController = navController,
+                searchProfilesList = searchProfilesListState,
+                currentLocation = currentLocation,
+                onFetchLocation = viewModel::fetchUserLocation
+            )
+        }
+        composable(ExcursionsRoutes.Profile.route) { ProfileScreen(navController = navController) }
 
         /**
          * Define the composable for each route with arguments. The arguments are passed to the composable
