@@ -45,6 +45,7 @@ fun ExcursionsNavHost(viewModel: ExcursionsViewModel) {
     val searchProfilesListState by viewModel.searchProfilesList.collectAsState()
     val currentLocation: Center? by viewModel.location.observeAsState()
     val placeList by viewModel.resultPlaceList.collectAsState()
+    val placeState by viewModel.favoritePlace.collectAsState()
 
     // Set up the navigation host with the start destination
     NavHost(navController = navController, startDestination = ExcursionsRoutes.Intro.route) {
@@ -181,9 +182,14 @@ fun ExcursionsNavHost(viewModel: ExcursionsViewModel) {
             val placeId: String = backStackEntry.arguments?.getString("placeId") ?: "no id"
             SavedDestinationDetailScreen(
                 navController = navController,
-                viewModel = viewModel,
                 placeId = placeId,
-                searchProfileId = searchProfileId
+                searchProfileId = searchProfileId,
+                place = placeState,
+                currentLocation = currentLocation,
+                onGetFavorite = { placeId, searchProfileId ->
+                    viewModel.getFavoriteFromFirestore(placeId, searchProfileId)
+                },
+                calculateDistance = viewModel::distanceBetweenCenters
             )
         }
     }

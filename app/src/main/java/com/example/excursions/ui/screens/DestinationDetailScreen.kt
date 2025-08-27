@@ -57,23 +57,26 @@ import timber.log.Timber
 @Composable
 fun SavedDestinationDetailScreen(
     navController: NavHostController,
-    viewModel: ExcursionsViewModel,
     placeId: String,
-    searchProfileId: Int
+    searchProfileId: Int,
+    place: PlaceState?,
+    currentLocation: Center?,
+    onGetFavorite: (String, Int) -> Unit,
+    calculateDistance: (Center, Center) -> Double
 ) {
 
     LaunchedEffect(placeId, searchProfileId) {
-        viewModel.getFavoriteFromFirestore(placeId, searchProfileId)
+        onGetFavorite(placeId, searchProfileId)
     }
 
-    val place by viewModel.favoritePlace.collectAsState()
+    // val place by viewModel.favoritePlace.collectAsState()
     //Timber.d("get place: $place")
 
-    val currentLocation by viewModel.location.observeAsState()
+    // val currentLocation by viewModel.location.observeAsState()
     val nullCheckedLocation: Center = currentLocation ?: Center(0.00,0.00)
     val placeCoordinates = place?.location?.toCenter()
     val distanceToLocation =
-        placeCoordinates?.let { viewModel.distanceBetweenCenters(nullCheckedLocation, it) }
+        placeCoordinates?.let { calculateDistance(nullCheckedLocation, it) }
     val ratingsAverage = place?.calculateRatingAverage()
 
     Scaffold(
@@ -137,9 +140,11 @@ fun SavedDestinationDetailScreen(
 fun DestinationDetailScreenPreview() {
     SavedDestinationDetailScreen(
         navController = rememberNavController(),
-        viewModel = ExcursionsViewModel(LocalContext.current, api = DummyExcursionsAPI()),
         placeId = "asd",
-        searchProfileId = 1
-
+        searchProfileId = 1,
+        place = TODO(),
+        currentLocation = TODO(),
+        onGetFavorite = TODO(),
+        calculateDistance = TODO()
     )
 }
