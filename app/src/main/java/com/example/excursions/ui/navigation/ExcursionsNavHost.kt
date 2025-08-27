@@ -122,8 +122,12 @@ fun ExcursionsNavHost(viewModel: ExcursionsViewModel) {
             backStackEntry.arguments?.getInt("searchProfileId")?.let {
                 EditSearchProfileScreen(
                     navController = navController,
-                    viewModel = viewModel,
-                    searchProfileId = searchProfileId
+                    searchProfileId = searchProfileId,
+                    onGetSearchProfile = viewModel::getSearchProfileById,
+                    currentLocation = currentLocation,
+                    onUpdateSearchProfileState = viewModel::updateSearchProfileUiState,
+                    onUpdateSearchProfileSliderPosition = viewModel::updateSearchProfileSliderPosition,
+                    onUpdateLocationTypes = viewModel::updateLocationTypes,
                 )
             }
         }
