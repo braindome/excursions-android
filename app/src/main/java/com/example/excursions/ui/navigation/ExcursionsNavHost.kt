@@ -46,6 +46,7 @@ fun ExcursionsNavHost(viewModel: ExcursionsViewModel) {
     val currentLocation: Center? by viewModel.location.observeAsState()
     val placeList by viewModel.resultPlaceList.collectAsState()
     val placeState by viewModel.favoritePlace.collectAsState()
+    val searchProfileList by viewModel.searchProfilesList.collectAsState()
 
     // Set up the navigation host with the start destination
     NavHost(navController = navController, startDestination = ExcursionsRoutes.Intro.route) {
@@ -140,8 +141,12 @@ fun ExcursionsNavHost(viewModel: ExcursionsViewModel) {
             backStackEntry.arguments?.getInt("searchProfileId")?.let {
                 FavoriteScreen(
                     navController = navController,
-                    viewModel = viewModel,
-                    searchProfileId = searchProfileId
+                    searchProfileId = searchProfileId,
+                    searchProfileList = searchProfileList,
+                    currentLocation = currentLocation,
+                    onRemoveDestinationFromFavorites = viewModel::removeDestinationFromFavorites,
+                    onCalculateDistance = viewModel::distanceBetweenCenters,
+                    onListenForFavoriteChanges = viewModel::listenForFavoriteChanges
                 )
             }
         }

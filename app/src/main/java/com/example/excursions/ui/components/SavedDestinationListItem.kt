@@ -39,7 +39,7 @@ import timber.log.Timber
 fun SavedDestinationListItem(
     isEditModeOn: Boolean,
     navController: NavHostController,
-    viewModel: ExcursionsViewModel,
+    onRemoveDestinationFromFavorites: (Int, PlaceState) -> Unit,
     onDeleteClicked: () -> Unit,
     searchProfile: SearchProfile,
     place: PlaceState,
@@ -94,7 +94,7 @@ fun SavedDestinationListItem(
                 IconButton(
                     onClick = {
                         //viewModel.removeDestinationFromFavorites(place, searchProfile)
-                        viewModel.removeDestinationFromFavorites(searchProfile.id, place)
+                        onRemoveDestinationFromFavorites(searchProfile.id, place)
                         onDeleteClicked()
                     }
                 ) {
@@ -136,12 +136,11 @@ fun SavedDestinationListItem(
 fun SavedDestinationListItemPreview() {
     SavedDestinationListItem(
         isEditModeOn = false,
-        viewModel = ExcursionsViewModel(LocalContext.current, DummyExcursionsAPI()),
         distance = 666,
         onDeleteClicked = {},
         place = PlaceState(DisplayName("", "Place name")),
         searchProfile = SearchProfile(""),
-        navController = rememberNavController()
-
+        navController = rememberNavController(),
+        onRemoveDestinationFromFavorites = { _, _ ->}
     )
 }
