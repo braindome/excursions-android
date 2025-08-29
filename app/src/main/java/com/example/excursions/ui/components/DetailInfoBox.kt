@@ -46,12 +46,12 @@ import timber.log.Timber
 @Composable
 fun DetailInfoBox(
     place: PlaceState,
-    viewModel: ExcursionsViewModel
+    currentLocation: Center?,
+    onCalculateDistance: (Center, Center) -> Double
 ) {
-    val currentLocation by viewModel.location.observeAsState()
     val nullCheckedLocation: Center = currentLocation ?: Center(0.00,0.00)
     val placeCoordinates = place.location.toCenter()
-    val distanceToLocation = viewModel.distanceBetweenCenters(nullCheckedLocation, placeCoordinates)
+    val distanceToLocation = onCalculateDistance(nullCheckedLocation, placeCoordinates)
 
     val ratingsAverage = place.calculateRatingAverage()
     val photo = place.photos?.get(0)?.authorAttributions?.get(0)?.photoUri
@@ -125,6 +125,7 @@ fun DetailInfoBox(
 fun DetailInfoBoxPreview() {
     DetailInfoBox(
         place = SearchProfileRepository.dummyPlaceA,
-        viewModel = ExcursionsViewModel(LocalContext.current, api = DummyExcursionsAPI())
+        currentLocation = TODO(),
+        onCalculateDistance = TODO(),
     )
 }

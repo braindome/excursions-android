@@ -160,7 +160,9 @@ fun ExcursionsNavHost(viewModel: ExcursionsViewModel) {
                 PlaceDetailScreen(
                     navController = navController,
                     placeId = placeId,
-                    viewModel = viewModel
+                    currentLocation = currentLocation,
+                    onCalculateDistance = viewModel::distanceBetweenCenters,
+                    onGetPlaceById = viewModel::getPlaceById
                 )
             }
 

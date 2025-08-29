@@ -25,6 +25,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.excursions.ExcursionsViewModel
 import com.example.excursions.data.api_models.Center
 import com.example.excursions.data.api_models.toCenter
+import com.example.excursions.data.model.PlaceState
 import com.example.excursions.data.repository.DummyExcursionsAPI
 import com.example.excursions.ui.components.DetailInfoBox
 import com.example.excursions.ui.components.ExcursionsButton
@@ -37,17 +38,20 @@ import timber.log.Timber
 @Composable
 fun PlaceDetailScreen(
     navController: NavHostController,
-    viewModel: ExcursionsViewModel,
-    placeId: String
+    // viewModel: ExcursionsViewModel,
+    placeId: String,
+    currentLocation: Center?,
+    onCalculateDistance: (Center, Center) -> Double,
+    onGetPlaceById: (String) -> PlaceState
 ) {
     Timber.d("placeId recevied via backstack: $placeId")
-    val place = viewModel.getPlaceById(placeId)
+    val place = onGetPlaceById(placeId)
     Timber.d("place via getPlaceById: $place")
 
-    val currentLocation by viewModel.location.observeAsState()
+    // val currentLocation by viewModel.location.observeAsState()
     val nullCheckedLocation: Center = currentLocation ?: Center(0.00,0.00)
     val placeCoordinates = place.location.toCenter()
-    val distanceToLocation = viewModel.distanceBetweenCenters(nullCheckedLocation, placeCoordinates)
+    // val distanceToLocation = viewModel.distanceBetweenCenters(nullCheckedLocation, placeCoordinates)
     Scaffold(
         topBar = {
             ExcursionsTopBar(
@@ -78,7 +82,7 @@ fun PlaceDetailScreen(
             )
             Spacer(modifier = Modifier.weight(1f))
             //DetailInfoBox(place = place, viewModel = viewModel)
-            DetailInfoBox(place = place, viewModel = viewModel)
+            DetailInfoBox(place = place, currentLocation = currentLocation, onCalculateDistance = onCalculateDistance)
             Spacer(modifier = Modifier.weight(1f))
 
             /*
@@ -133,10 +137,9 @@ fun PlaceDetailScreen(
 fun SavedDetailScreenPreview() {
     PlaceDetailScreen(
         navController = rememberNavController(),
-        viewModel = ExcursionsViewModel(
-            appContext = LocalContext.current,
-            api = DummyExcursionsAPI()
-        ),
-        placeId = ""
+        placeId = "",
+        currentLocation = TODO(),
+        onCalculateDistance = TODO(),
+        onGetPlaceById = TODO()
     )
 }
