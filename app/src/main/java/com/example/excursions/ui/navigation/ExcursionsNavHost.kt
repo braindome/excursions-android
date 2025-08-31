@@ -1,5 +1,6 @@
 package com.example.excursions.ui.navigation
 
+import androidx.compose.material3.Text
 import com.example.excursions.data.api_models.Center
 
 import androidx.compose.runtime.Composable
@@ -25,6 +26,7 @@ import com.example.excursions.ui.screens.SavedDestinationDetailScreen
 import com.example.excursions.ui.screens.SavedDestinationsScreen
 import com.example.excursions.ui.screens.SearchScreen
 import com.example.excursions.ui.screens.SwipeScreen
+import kotlin.let
 
 /**
  * This file contains the navigation setup for the Excursions app.
@@ -172,13 +174,18 @@ fun ExcursionsNavHost(viewModel: ExcursionsViewModel) {
             route = ExcursionsRoutes.Map.route + "/{placeId}",
             arguments = listOf(navArgument("placeId") { type = NavType.StringType } )
         ) {backStackEntry ->
-            val placeId: String = backStackEntry.arguments?.getString("placeId") ?: "no id"
-            backStackEntry.arguments?.getInt("placeId")?.let {
-                MapScreen(
-                    placeId = placeId,
-                    viewModel = viewModel,
-                    navController = navController
-                )
+            val placeIdArg: String? = backStackEntry.arguments?.getString("placeId")
+            placeIdArg?.let { validPlaceId ->
+                if (validPlaceId != "no id") {
+                    MapScreen(
+                        placeId = validPlaceId,
+                        onGetPlaceState = viewModel::getPlaceById
+                    )
+                } else {
+                    Text(text = "Error: Place ID not found.")
+                }
+            } ?: run {
+                Text(text = "Error: Place ID not found.")
             }
         }
 

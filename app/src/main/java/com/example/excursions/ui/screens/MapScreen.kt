@@ -32,21 +32,20 @@ import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities.Local
 @Composable
 fun MapScreen(
     placeId: String,
-    viewModel: ExcursionsViewModel,
-    navController: NavHostController
+    onGetPlaceState: (String) -> PlaceState,
 ) {
     val uiSettings by remember { mutableStateOf(MapUiSettings()) }
     val properties by remember { mutableStateOf(MapProperties(mapType = MapType.NORMAL)) }
-    val placeState = viewModel.getPlaceById(placeId)
+    val placeState = onGetPlaceState(placeId)
 
-    val cameraPositionState = CameraPositionState(
+    val cameraPositionState = remember { CameraPositionState(
         position = CameraPosition(
             LatLng(
                 placeState.location.latitude,
                 placeState.location.longitude),
             8f, 0f, 0f
         )
-    )
+    ) }
 
     val markerState by remember {
         mutableStateOf(
@@ -80,7 +79,6 @@ fun MapScreen(
 fun MapScreenPreview() {
     MapScreen(
         placeId = "asdas",
-        navController = rememberNavController(),
-        viewModel = ExcursionsViewModel(LocalContext.current, api = DummyExcursionsAPI())
+        onGetPlaceState ={ PlaceState()},
     )
 }
