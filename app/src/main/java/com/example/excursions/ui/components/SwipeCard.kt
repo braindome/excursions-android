@@ -43,10 +43,11 @@ import timber.log.Timber
 
 @Composable
 fun SwipeCard(
-    navController: NavHostController,
+    // navController: NavHostController,
     place: PlaceState,
     currentLocation: Center?,
     calculateDistance: (Center, Center) -> Double,
+    onNavigateUp: () -> Unit,
 ) {
     val nullCheckedLocation: Center = currentLocation ?: Center(0.00,0.00)
     val placeCoordinates = place.location.toCenter()
@@ -83,7 +84,8 @@ fun SwipeCard(
                 //Text(text = "Tags: ${place.types.formatTypesToTags()}",)
                 PlainTextArrowButton(
                     label = "Read more",
-                    onClick = { navController.navigate("${ExcursionsRoutes.PlaceDetailScreen.route}/${placeId}") },
+                    // onClick = { navController.navigate("${ExcursionsRoutes.PlaceDetailScreen.route}/${placeId}") },
+                    onClick = { onNavigateUp() },
                     modifier = Modifier
                 )
             }

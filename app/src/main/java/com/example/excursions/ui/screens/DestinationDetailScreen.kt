@@ -82,9 +82,10 @@ fun SavedDestinationDetailScreen(
     Scaffold(
         topBar = {
             ExcursionsTopBar(
-                navController = navController,
+                // navController = navController,
                 rightButtonDestination = "",
-                rightButtonLabel = ""
+                rightButtonLabel = "",
+                onNavigateUp = { navController::navigateUp},
             )
         },
         bottomBar = { ExcursionsBottomBar(navController = navController) }

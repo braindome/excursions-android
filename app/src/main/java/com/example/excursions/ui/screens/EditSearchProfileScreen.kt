@@ -72,10 +72,11 @@ fun EditSearchProfileScreen(
 
     Scaffold(
         topBar = { ExcursionsTopBar(
-            navController = navController,
+            // navController = navController,
             //backDestination = { navController.navigateUp() },
             rightButtonDestination = ExcursionsRoutes.Categories.route,
             rightButtonLabel = "Save",
+            onNavigateUp = { navController::navigateUp },
             onEndButtonClick = {
                 val updatedRange = searchProfile.range
                 val updatedName = searchProfile.title

@@ -62,10 +62,11 @@ fun CategoryScreen(
     Scaffold(
         topBar = {
             ExcursionsTopBar(
-                navController = navController,
+                // navController = navController,
                 rightButtonLabel = if (!isEditModeOn) "Edit" else "Cancel",
                 rightButtonDestination = null,
-                onEndButtonClick = { isEditModeOn = !isEditModeOn }
+                onEndButtonClick = { isEditModeOn = !isEditModeOn },
+                onNavigateUp = { navController::navigateUp }
 
             )
         },

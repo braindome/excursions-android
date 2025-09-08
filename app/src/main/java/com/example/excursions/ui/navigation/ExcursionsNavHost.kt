@@ -100,11 +100,12 @@ fun ExcursionsNavHost(viewModel: ExcursionsViewModel) {
             val searchProfileId: Int = backStackEntry.arguments?.getInt("searchProfileId") ?: -1
             backStackEntry.arguments?.getString("placeListId")?.let {
                 SwipeScreen(
-                    navController = navController,
+                    // navController = navController,
                     placeListId = placeListId,
                     searchProfileId = searchProfileId,
                     swipeList = placeList,
                     title = viewModel.getSearchProfileById(searchProfileId).title,
+                    onNavigateUp = { navController.navigateUp() },
                     onYayClick = { place ->
                         viewModel.savePlaceToFirestore(searchProfileId, place)
                     },

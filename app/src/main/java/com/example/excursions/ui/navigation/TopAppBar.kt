@@ -48,16 +48,18 @@ import com.example.excursions.ui.theme.PolestarTypography
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExcursionsTopBar(
-    navController: NavHostController,
+    // navController: NavHostController,
+    onNavigateUp: () -> Unit,
     rightButtonDestination: String?,
     rightButtonLabel: String?,
-    onEndButtonClick: (() -> Unit)? = null
+    onEndButtonClick: (() -> Unit)? = null,
+    onRightButtonClick: ((String?) -> Unit)? = null
 ) {
     TopAppBar(
         title = { /*TODO*/ },
         navigationIcon = {
             // The navigation icon button that navigates up in the navigation stack when clicked
-            IconButton(onClick = { navController.navigateUp() }) {
+            IconButton(onClick = { onNavigateUp }) {
                 Icon(
                     painter = painterResource(id = R.drawable.arrow_left),
                     contentDescription = null,
@@ -77,7 +79,8 @@ fun ExcursionsTopBar(
                 Button(
                     onClick = {
                         if (rightButtonDestination != null) {
-                            navController.navigate(rightButtonDestination)
+                            // navController.navigate(rightButtonDestination)
+                            onRightButtonClick?.invoke(rightButtonDestination)
                         }
                         onEndButtonClick?.invoke()
                     },

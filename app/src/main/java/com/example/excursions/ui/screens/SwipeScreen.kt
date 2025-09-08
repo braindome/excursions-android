@@ -62,11 +62,12 @@ import timber.log.Timber
 
 @Composable
 fun SwipeScreen(
-    navController: NavHostController,
+    // navController: NavHostController,
     placeListId: String,
     searchProfileId: Int,
     swipeList: PlaceList,
     title: String,
+    onNavigateUp: () -> Unit,
     onYayClick: (PlaceState) -> Unit,
     onNayClick: (PlaceState) -> Unit,
     currentLocation: Center?,
@@ -113,10 +114,11 @@ fun SwipeScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 if (swipeList.list.isNotEmpty() && currentPlaceIndex < swipeList.list.size) {
                     SwipeCard(
-                        navController = navController,
+                        // navController = navController,
                         place = swipeList.list[currentPlaceIndex],
                         currentLocation = currentLocation,
-                        calculateDistance = calculateDistance
+                        calculateDistance = calculateDistance,
+                        onNavigateUp = onNavigateUp
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     SwipeActionBar(
@@ -147,7 +149,8 @@ fun SwipeScreen(
 @Composable
 fun SwipeScreenPreview() {
     SwipeScreen(
-        navController = rememberNavController(),
+        // navController = rememberNavController(),
+        onNavigateUp = {},
         placeListId = "abc",
         searchProfileId = -1,
         swipeList = PlaceList(),
